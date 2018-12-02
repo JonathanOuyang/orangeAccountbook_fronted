@@ -1,0 +1,52 @@
+import Vue from 'vue'
+import Router from 'vue-router'
+
+Vue.use(Router)
+
+export default new Router({
+	mode: 'history',
+	base: process.env.BASE_URL,
+	routes: [
+		{
+			path: '/',
+			component: () => import('./views/Index.vue'),
+			children: [
+				{
+					path: '/',
+					name: 'home',
+					component: () => import('./views/Home.vue')
+				},
+				{
+					path: '/accounts',
+					name: 'accounts',
+					component: () => import('./views/Accounts.vue')
+				},
+				{
+					path: '/books',
+					name: 'books',
+					component: () => import('./views/Books.vue')
+				},
+				{
+					path: '/personal',
+					name: 'personal',
+					component: () => import('./views/Chart.vue')
+				}
+			]
+		},
+		{
+			path: '/calendar',
+			name: 'calendar',
+			component: () => import('./views/Calendar.vue')
+		},
+		{
+			path: '/chart',
+			name: 'chart',
+			component: () => import('./views/Chart.vue')
+		},
+		{
+			path: '/addmoney',
+			name: 'addMoney',
+			component: () => import('./views/AddMoney.vue')
+		}
+	]
+})

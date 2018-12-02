@@ -1,0 +1,58 @@
+<template>
+    <div id="app">
+        <router-view></router-view>
+    </div>
+</template>
+
+<script>
+  export default {
+        data() {
+            return {
+                
+            }
+        }
+    }
+</script>
+
+<style lang="less">
+@import "./assets/variable.less";
+html {
+    font-size : 20px;
+}
+@media only screen and (min-width: 401px){
+    html {
+        font-size: 25px !important;
+    }
+}
+@media only screen and (min-width: 428px){
+    html {
+        font-size: 26.75px !important;
+    }
+}
+@media only screen and (min-width: 481px){
+    html {
+        font-size: 30px !important; 
+    }
+}
+@media only screen and (min-width: 569px){
+    html {
+        font-size: 35px !important; 
+    }
+}
+@media only screen and (min-width: 641px){
+    html {
+        font-size: 40px !important; 
+    }
+}
+html, body, #app{
+    height: 100%;
+}
+#app {
+    font-family: 'å¾®è½¯é›…é»‘';
+    color: #2c3e50;
+    background: #fcfdff;
+    overflow-x: hidden;
+}
+
+
+</style>
