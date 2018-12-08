@@ -1,12 +1,12 @@
 <template>
     <div class="wrap-moneyList">
-        <div class="wrap-money" v-for="group in groupByDate" :key="group.date">
+        <div class="wrap-money" v-for="group in groupByDate" :key="group.date.getTime()">
             <div class="header-moneyList">
                 <div class="text-date">{{group.date | monthDateDay}}</div>
                 <div class="text-reduce">支出: {{group.outSum}}&nbsp;&nbsp;&nbsp;收入: {{group.inSum}}</div>
             </div>
             <div class="list-money">
-                <div class="item-money-wrap" v-for="money in group.moneys">
+                <div class="item-money-wrap" v-for="money in group.moneys" :key="money._id">
                     <div class="item-money">
                         <type-Icon :type="1"></type-Icon>
                         <div class="wrap-text">
