@@ -56,7 +56,7 @@ export default {
       selectedDate: TODAY,
       calendarStyle: {
         wrapper: {
-          padding: "0 6px",
+          padding: "0 4px",
           backgroundColor: "#fff",
           borderBottom: "1px solid #e6e6e6"
         },
@@ -64,11 +64,11 @@ export default {
           fontSize: `18px`
         },
         weekdays: {
-          padding: "5px 0"
+          padding: "4px 0"
         },
         dayContent: {
-          height: toRem(45),
-          fontSize: toRem(20),
+          height: toRem(44),
+          fontSize: toRem(16),
           color: primaryTextColor
         }
       }
@@ -104,6 +104,12 @@ export default {
             backgroundColor: "red"
           },
           dates: this.moneys.map(item => item.date).filter(item => item.getDate() != this.selectedDate.getDate())
+        },
+        {
+          key: "dayAfterToday",
+          highlight: {
+            opacity: 0.4
+          }
         }
       ];
     },
@@ -125,8 +131,11 @@ export default {
 
 <style lang="less">
 @import "../assets/variable.less";
+#view-calendar {
+  padding: 0 20/@rem;
+}
 .calendar-moneyList {
-  padding: 8px 16px;
+  padding: 8px 10px;
   background: #fff;
 }
 </style>
