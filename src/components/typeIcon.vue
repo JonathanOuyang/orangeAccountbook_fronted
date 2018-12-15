@@ -1,9 +1,9 @@
 <template>
-    <div class="typeIcon" :class="namePositionClass">
-        <div class="typeIcon-icon" :class="{unSelected}">
-            <Icon :name="incomeTypes[type].icon"></Icon>
+    <div class="typeIcon" :class="namePositionClass" @click="handleClick">
+        <div class="typeIcon-icon" :class="{'unSelected':checker&&!selected}">
+            <Icon :name="icon"></Icon>
         </div>
-        <div class="typeIcon-name">{{incomeTypes[type].name}}</div>
+        <div class="typeIcon-name">{{name}}</div>
     </div>
 </template>
 
@@ -15,9 +15,11 @@
     }
     export default {
         props: {
-            type: {
-                type: Number,
-                required: true
+            name: {
+                type: String
+            },
+            icon: {
+                type: String
             },
             isShowName: {
                 type: Boolean,
@@ -27,19 +29,17 @@
                 type: String,
                 default: 'right'
             },
-            unSelected: {
+            checker: {
                 type: Boolean,
-                default: true
+                default: false
+            },
+            selected: {
+                type: Boolean,
+                default: false
             }
         },
         data(){
-            return {
-                incomeTypes: [
-                    new MoneyType('餐饮', 'canyin'),
-                    new MoneyType('交通', 'jiaotong'),
-                    new MoneyType('购物', 'gouwu')
-                ]
-            }
+            return {}
         },
         computed: {
             namePositionClass() {
@@ -48,6 +48,11 @@
                 } else if (this.namePosition == 'bottom') {
                     return 'typeIcon-name-bottom';
                 }
+            }
+        },
+        methods: {
+            handleClick(){
+                this.$emit('select')
             }
         }
     }
@@ -66,6 +71,7 @@
             background: @primaryColor;
             color: @textPrimaryColor;
             text-align: center;
+            font-size: 20/@rem;
             .iconfont {
                 line-height: 34/@rem;
                 font-size: 24/@rem;
@@ -78,15 +84,14 @@
     }
     .typeIcon-name-right {
         .typeIcon-name{
-            font-size: 20/@rem;
             margin-left: 8/@rem;
         }
     }
     .typeIcon-name-bottom {
         flex-direction: column;
-        font-size: 20/@rem;
         .typeIcon-name{
-            font-size: 16/@rem;       
+            margin-top: 2px;
+            font-size: 14/@rem;       
         }
     }
 </style>

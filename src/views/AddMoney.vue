@@ -20,15 +20,20 @@
             </div>
             <div class="addMoney-val-money">￥{{value}}</div>
         </div>
-        <van-swipe :autoplay="0" indicator-color="#f6717d">
-            <van-swipe-item>
+        <van-swipe :autoplay="0" indicator-color="#f6717d" :loop="false">
+            <van-swipe-item v-for="(page, pageIdx) in typeList" :key="pageIdx">
                 <div class="addMoney-type">
-                    <type-icon :type="0" name-position="bottom" v-for="i in 15" class="addMoney-type-item"></type-icon>
-                </div>
-            </van-swipe-item>
-            <van-swipe-item>
-                <div class="addMoney-type">
-                    <type-icon :type="0" name-position="bottom" v-for="i in 15" class="addMoney-type-item"></type-icon>
+                    <type-icon
+											checker 
+											:type="0" 
+											name-position="bottom"
+											v-for="(type, typeIdx) in page"
+											:key="type.name"
+											:name="type.name"
+											:icon="type.icon"
+											:selected="selectedType[0] == pageIdx && selectedType[1] == typeIdx"
+											@select="handleSelectType(pageIdx, typeIdx)"
+											class="addMoney-type-item"></type-icon>
                 </div>
             </van-swipe-item>
         </van-swipe>
@@ -55,6 +60,7 @@
 </template>
 
 <script>
+const MAX_TYPE = 15;
 export default {
   name: "addMoney",
   data() {
@@ -62,48 +68,91 @@ export default {
       intStack: [],
       floatStack: [],
       isInputInt: true,
-			desc: ''
+      desc: "",
+      typeList: [],
+      selectedType: [0, 0]
     };
+  },
+  created() {
+    this.getTypeList();
   },
   computed: {
     value() {
       const hasInt = Boolean(this.intStack.length),
-      		  hasFloat = Boolean(this.floatStack.length);
+        hasFloat = Boolean(this.floatStack.length);
       if (hasInt || hasFloat) {
         if (!hasInt) {
           return `0.${this.floatStack.join("")}`;
         } else if (!hasFloat) {
           return `${this.intStack.join("")}`;
         }
-				return `${this.intStack.join("")}.${this.floatStack.join("")}`;
-      } else return '0'
+        return `${this.intStack.join("")}.${this.floatStack.join("")}`;
+      } else return "0";
     }
   },
   methods: {
+    getTypeList() {
+      const data = [
+        { name: "餐饮", icon: "canyin", whereabouts: 0 },
+        { name: "购物", icon: "gouwu", whereabouts: 0 },
+        { name: "服饰", icon: "fushi", whereabouts: 0 },
+        { name: "交通", icon: "jiaotong", whereabouts: 0 },
+        { name: "娱乐", icon: "yule", whereabouts: 0 },
+        { name: "社交", icon: "shejiao", whereabouts: 0 },
+        { name: "居家", icon: "jujia", whereabouts: 0 },
+        { name: "通讯", icon: "tongxun", whereabouts: 0 },
+        { name: "零食", icon: "lingshi", whereabouts: 0 },
+        { name: "美容", icon: "meirong", whereabouts: 0 },
+        { name: "运动", icon: "yundong", whereabouts: 0 },
+        { name: "旅行", icon: "lvxing", whereabouts: 0 },
+        { name: "数码", icon: "shuma", whereabouts: 0 },
+        { name: "学习", icon: "xuexi", whereabouts: 0 },
+        { name: "医疗", icon: "yiliao", whereabouts: 0 },
+        { name: "书籍", icon: "shuji", whereabouts: 0 },
+        { name: "宠物", icon: "chongwu", whereabouts: 0 },
+        { name: "彩票", icon: "caipiao1", whereabouts: 0 },
+        { name: "汽车", icon: "qiche", whereabouts: 0 },
+        { name: "办公", icon: "bangong", whereabouts: 0 },
+        { name: "住房", icon: "zhufang", whereabouts: 0 },
+        { name: "维修", icon: "weixiu", whereabouts: 0 },
+        { name: "孩子", icon: "haizi", whereabouts: 0 },
+        { name: "长辈", icon: "changbei", whereabouts: 0 },
+        { name: "礼物", icon: "liwu", whereabouts: 0 },
+        { name: "礼金", icon: "lijin", whereabouts: 0 },
+        { name: "还款", icon: "huankuan", whereabouts: 0 },
+        { name: "捐赠", icon: "juanzeng", whereabouts: 0 }
+      ];
+      this.typeList.push(data.slice(0, MAX_TYPE), data.slice(MAX_TYPE));
+    },
     handleInputNumber(key) {
-      if (key == ".") this.isInputInt = false;
-      else {
-        if (this.isInputInt) {
-          this.intStack.push(key);
-        } else {
-          if (this.floatStack.length <= 1) this.floatStack.push(key);
+      if (this.value.length < 9) {
+        if (key == ".") this.isInputInt = false;
+        else {
+          if (this.isInputInt) {
+            this.intStack.push(key);
+          } else {
+            if (this.floatStack.length <= 1) this.floatStack.push(key);
+          }
         }
       }
     },
     handleDeleteNumber() {
-			const hasInt = Boolean(this.intStack.length),
-      		  hasFloat = Boolean(this.floatStack.length);
-			if (hasFloat){
-				this.floatStack.pop();
-				if(hasFloat){
-					this.isInputInt = true;
-				}
-			} else {
-				if(hasInt){
-					this.intStack.pop();
-				}
-			}
-		}
+      const hasInt = Boolean(this.intStack.length),
+        hasFloat = Boolean(this.floatStack.length);
+      if (hasFloat) {
+        this.floatStack.pop();
+        if (hasFloat) {
+          this.isInputInt = true;
+        }
+      } else {
+        if (hasInt) {
+          this.intStack.pop();
+        }
+      }
+    },
+    handleSelectType(page, type) {
+      this.selectedType = [page, type];
+    }
   }
 };
 </script>
@@ -144,7 +193,7 @@ export default {
   &-account {
     display: flex;
     align-items: center;
-    padding: 0 40 / @rem 0 20 / @rem;
+    padding: 0 20 / @rem;
     height: 60%;
     border-right: 1px solid @dividerColor;
     font-size: 20 / @rem;
@@ -161,8 +210,8 @@ export default {
     }
   }
   &-money {
-    font-size: 36 / @rem;
-    padding: 0 12 / @rem;
+    font-size: 32 / @rem;
+    padding: 0 8 / @rem;
   }
 }
 
@@ -172,12 +221,12 @@ export default {
   .addMoney-type {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-around;
-    height: 90%;
-    padding: 12 / @rem 18 / @rem 16 / @rem;
+    justify-content: flex-start;
+    height: 88%;
+    padding: 12 / @rem 18 / @rem 18 / @rem;
     &-item {
       width: 20%;
-      margin: 6 / @rem 0;
+      margin: 4 / @rem 0;
     }
   }
 }
