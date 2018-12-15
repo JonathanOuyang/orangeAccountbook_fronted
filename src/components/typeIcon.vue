@@ -1,6 +1,6 @@
 <template>
     <div class="typeIcon" :class="namePositionClass">
-        <div class="typeIcon-icon">
+        <div class="typeIcon-icon" :class="{unSelected}">
             <Icon :name="incomeTypes[type].icon"></Icon>
         </div>
         <div class="typeIcon-name">{{incomeTypes[type].name}}</div>
@@ -26,6 +26,10 @@
             namePosition: {
                 type: String,
                 default: 'right'
+            },
+            unSelected: {
+                type: Boolean,
+                default: true
             }
         },
         data(){
@@ -65,6 +69,10 @@
             .iconfont {
                 line-height: 34/@rem;
                 font-size: 24/@rem;
+            }
+            &.unSelected {
+                background: #cccccc;
+                color: @textPrimaryColor;
             }
         }
     }
