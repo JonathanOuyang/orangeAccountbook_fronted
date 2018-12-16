@@ -12,14 +12,24 @@
 @rem: 20rem;
 
 //页头卡片
-.info-panel{
-    margin: -12.5% auto 20/20rem auto;
-    padding: 0 30/@rem;
+.info-panel(@top){
+    margin: @top auto 20/20rem auto;
     background: #ffffff;
-    border-radius: 10px;
     /* transform: translateY(-50%); */
     box-shadow: #e4e4e4 0px 25/@rem 25/@rem -10/@rem;
-    opacity: 0.96;
+    opacity: 0.99;
+}
+
+.header-background(@height){
+    width: 84%;
+	height: @height;
+	padding: 16/@rem 58% 0 58%;
+	display: flex;
+	justify-content: space-between;
+	transform: translateX(-25%);
+	border-radius: 0 0 50% 50%;
+	background: linear-gradient(to right, @lightPrimaryColor, @lightPrimaryColor 25%, @primaryColor 75%, @primaryColor);
+	color: @textPrimaryColor;
 }
 
 //账单类型图标

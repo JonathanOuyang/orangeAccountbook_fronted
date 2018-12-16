@@ -1,12 +1,15 @@
 <template>
     <div id="view-calendar">
-      <v-calendar :attributes='attrs' is-expanded :theme-styles="calendarStyle" @dayclick="handleDay">
-        <!-- <template slot='day-content' slot-scope='props'>
-           <div class="day-money">
-            {{ props.attributes }}
-           </div>
-        </template> -->
-      </v-calendar>
+      <div class="calendar-background"></div>
+      <div class="calendar-wrap">
+        <v-calendar :attributes='attrs' is-expanded :theme-styles="calendarStyle" @dayclick="handleDay">
+          <!-- <template slot='day-content' slot-scope='props'>
+            <div class="day-money">
+              {{ props.attributes }}
+            </div>
+          </template> -->
+        </v-calendar>
+      </div>
       <money-list :data="moneysInDay" class="calendar-moneyList"></money-list>
     </div>
 </template>
@@ -23,6 +26,7 @@ const secondaryTextColor = "#a1a1a1";
 const dividerColor = "#e6e6e6";
 const grey = "#fafafa";
 const linearColor = `linear-gradient(to right, ${lightPrimaryColor}, ${primaryColor})`;
+const daySize = 36
 
 const toRem = size => size / 20 + "rem";
 
@@ -56,18 +60,23 @@ export default {
       selectedDate: TODAY,
       calendarStyle: {
         wrapper: {
-          padding: "0 4px",
+          padding: "6px 4px",
           backgroundColor: "#fff",
-          borderBottom: "1px solid #e6e6e6"
+          borderBottom: "1px solid #e6e6e6",
+          borderRadius: "10px"
+        },
+        header: {
+          padding: '6px 8px'
         },
         headerTitle: {
           fontSize: `18px`
         },
         weekdays: {
-          padding: "4px 0"
+          padding: "4px 0",
+          fontSize: toRem(16),          
         },
         dayContent: {
-          height: toRem(44),
+          height: toRem(daySize+2),
           fontSize: toRem(16),
           color: primaryTextColor
         }
@@ -80,19 +89,18 @@ export default {
         {
           key: "today",
           highlight: {
-            width: toRem(45),
-            height: toRem(45),
+            width: toRem(daySize),
+            height: toRem(daySize),
             borderColor: primaryColor,
-            borderWidth: "1px",
-            borderRadius: "8px"
+            borderWidth: "1px"
           },
           dates: this.selectedDate.getDate() == TODAY.getDate() ? null : TODAY
         },
         {
           key: "selectedDay",
           highlight: {
-            width: toRem(45),
-            height: toRem(45),
+            width: toRem(daySize),
+            height: toRem(daySize),
             backgroundColor: lightPrimaryColor,
             borderRadius: "8px"
           },
@@ -139,6 +147,13 @@ export default {
 @import "../assets/variable.less";
 #view-calendar {
   padding: 0 20 / @rem;
+  .calendar-background{
+    .header-background(200px);
+  }
+  .calendar-wrap{
+    .info-panel(-56%);
+    border-radius: 10px;
+  }
 }
 .calendar-moneyList {
   padding: 8px 10px;

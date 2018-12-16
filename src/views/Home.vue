@@ -89,17 +89,8 @@ export default {
 		color: @primaryTextColor;
 	}
 	.home-header-banner {
-		width: 84%;
-		height: 120/@rem;
-		padding: 16/@rem 58% 0 58%;
-		display: flex;
-		justify-content: space-between;
-		transform: translateX(-25%);
-		border-radius: 0 0 50% 50%;
-		background: linear-gradient(to right, @lightPrimaryColor, @lightPrimaryColor 25%, @primaryColor 75%, @primaryColor);
-		z-index: 2;
-		color: @textPrimaryColor;
-		
+		.header-background(120);
+
 		.text-book {
 			font-size: 24/@rem;
 		}
@@ -114,7 +105,9 @@ export default {
 		height: 120/@rem;
 		display: flex;
 		align-items: center;
-		.info-panel();
+    	border-radius: 10px;
+    	padding: 0 30/@rem;
+		.info-panel(-12.5%);
 		.home-panel-text {
 			display: flex;
 			flex-direction: column;
