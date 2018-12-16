@@ -83,7 +83,7 @@ export default {
             width: toRem(45),
             height: toRem(45),
             borderColor: primaryColor,
-            borderWidth: '1px',
+            borderWidth: "1px",
             borderRadius: "8px"
           },
           dates: this.selectedDate.getDate() == TODAY.getDate() ? null : TODAY
@@ -103,7 +103,13 @@ export default {
           dot: {
             backgroundColor: "red"
           },
-          dates: this.moneys.map(item => item.date).filter(item => item.getDate() != this.selectedDate.getDate())
+          dates: this.moneys
+            .map(item => item.date)
+            .filter(
+              item =>
+                item.getDate() != this.selectedDate.getDate() &&
+                item.getDate() != TODAY.getDate()
+            )
         },
         {
           key: "dayAfterToday",
@@ -132,7 +138,7 @@ export default {
 <style lang="less">
 @import "../assets/variable.less";
 #view-calendar {
-  padding: 0 20/@rem;
+  padding: 0 20 / @rem;
 }
 .calendar-moneyList {
   padding: 8px 10px;

@@ -8,7 +8,7 @@
             <div class="list-money">
                 <div class="item-money-wrap" v-for="money in group.moneys" :key="money._id">
                     <div class="item-money">
-                        <type-Icon :type="1"></type-Icon>
+                        <type-Icon :typeId="1" :whereabouts="0"></type-Icon>
                         <div class="wrap-text">
                             <span class="text-value">{{money.value | currency}}</span>
                         </div>

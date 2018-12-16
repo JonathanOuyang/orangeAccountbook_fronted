@@ -1,15 +1,11 @@
 <template>
     <div id="view-addMoney">
         <div class="addMoney-header">
-            <icon name="quxiao" class="addMoney-header-icon"></icon>
-            <div class="addMoney-header-tab">
-                <van-tabs type="card" color="#f6717d">
-                    <van-tab title="收入"></van-tab>
-                    <van-tab title="支出"></van-tab>
-                    <van-tab title="转账"></van-tab>
-                </van-tabs>
-            </div>
-            <icon name="queren" class="addMoney-header-icon"></icon>
+          <van-tabs color="#f6717d" :line-width="tabWidth">
+            <van-tab title="收入"></van-tab>
+            <van-tab title="支出"></van-tab>
+            <van-tab title="转账"></van-tab>
+          </van-tabs>
         </div>
         <div class="addMoney-val">
             <div class="addMoney-val-account">
@@ -24,13 +20,12 @@
             <van-swipe-item v-for="(page, pageIdx) in typeList" :key="pageIdx">
                 <div class="addMoney-type">
                     <type-icon
-											checker 
-											:type="0" 
-											name-position="bottom"
+											checker
 											v-for="(type, typeIdx) in page"
 											:key="type.name"
-											:name="type.name"
-											:icon="type.icon"
+											:whereabouts="0"
+											:typeId="typeIdx"
+											name-position="bottom"
 											:selected="selectedType[0] == pageIdx && selectedType[1] == typeIdx"
 											@select="handleSelectType(pageIdx, typeIdx)"
 											class="addMoney-type-item"></type-icon>
@@ -48,12 +43,13 @@
         </div>
         <div class="addMoney-numberKeyborad">
             <van-number-keyboard
-            :show="true"
-            extra-key="."
-            @blur="show = false"
-            theme="custom"
-            @input="handleInputNumber"
-            @delete="handleDeleteNumber"
+							:show="true"
+							extra-key="."
+							@blur="show = false"
+							theme="custom"
+							@input="handleInputNumber"
+							@delete="handleDeleteNumber"
+							close-button-text="保存"
             />
         </div>
     </div>
@@ -61,6 +57,8 @@
 
 <script>
 const MAX_TYPE = 15;
+const MAX_MONEY = 9;
+const CLIENT_WIDTH = document.body.clientWidth
 export default {
   name: "addMoney",
   data() {
@@ -70,7 +68,8 @@ export default {
       isInputInt: true,
       desc: "",
       typeList: [],
-      selectedType: [0, 0]
+      selectedType: [0, 0],
+			tabWidth: CLIENT_WIDTH/3
     };
   },
   created() {
@@ -92,40 +91,14 @@ export default {
   },
   methods: {
     getTypeList() {
-      const data = [
-        { name: "餐饮", icon: "canyin", whereabouts: 0 },
-        { name: "购物", icon: "gouwu", whereabouts: 0 },
-        { name: "服饰", icon: "fushi", whereabouts: 0 },
-        { name: "交通", icon: "jiaotong", whereabouts: 0 },
-        { name: "娱乐", icon: "yule", whereabouts: 0 },
-        { name: "社交", icon: "shejiao", whereabouts: 0 },
-        { name: "居家", icon: "jujia", whereabouts: 0 },
-        { name: "通讯", icon: "tongxun", whereabouts: 0 },
-        { name: "零食", icon: "lingshi", whereabouts: 0 },
-        { name: "美容", icon: "meirong", whereabouts: 0 },
-        { name: "运动", icon: "yundong", whereabouts: 0 },
-        { name: "旅行", icon: "lvxing", whereabouts: 0 },
-        { name: "数码", icon: "shuma", whereabouts: 0 },
-        { name: "学习", icon: "xuexi", whereabouts: 0 },
-        { name: "医疗", icon: "yiliao", whereabouts: 0 },
-        { name: "书籍", icon: "shuji", whereabouts: 0 },
-        { name: "宠物", icon: "chongwu", whereabouts: 0 },
-        { name: "彩票", icon: "caipiao1", whereabouts: 0 },
-        { name: "汽车", icon: "qiche", whereabouts: 0 },
-        { name: "办公", icon: "bangong", whereabouts: 0 },
-        { name: "住房", icon: "zhufang", whereabouts: 0 },
-        { name: "维修", icon: "weixiu", whereabouts: 0 },
-        { name: "孩子", icon: "haizi", whereabouts: 0 },
-        { name: "长辈", icon: "changbei", whereabouts: 0 },
-        { name: "礼物", icon: "liwu", whereabouts: 0 },
-        { name: "礼金", icon: "lijin", whereabouts: 0 },
-        { name: "还款", icon: "huankuan", whereabouts: 0 },
-        { name: "捐赠", icon: "juanzeng", whereabouts: 0 }
-      ];
-      this.typeList.push(data.slice(0, MAX_TYPE), data.slice(MAX_TYPE));
+			let typeSort = [];
+      for (let idx = 0; idx < 29; idx++) {
+				typeSort.push(idx);
+			}
+			this.typeList.push(typeSort.slice(0, MAX_TYPE), typeSort.slice(MAX_TYPE));
     },
     handleInputNumber(key) {
-      if (this.value.length < 9) {
+      if (this.value.length < MAX_MONEY) {
         if (key == ".") this.isInputInt = false;
         else {
           if (this.isInputInt) {
@@ -173,16 +146,7 @@ export default {
   }
 }
 .addMoney-header {
-  padding: 12 / @rem 18 / @rem;
-  display: flex;
-  align-items: center;
   border-bottom: 1px solid @dividerColor;
-  &-icon {
-    font-size: 18 / @rem;
-  }
-  &-tab {
-    flex: 1;
-  }
 }
 .addMoney-val {
   display: flex;
