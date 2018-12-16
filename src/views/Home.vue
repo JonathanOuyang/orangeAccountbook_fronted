@@ -89,7 +89,7 @@ export default {
 		color: @primaryTextColor;
 	}
 	.home-header-banner {
-		.header-background(120);
+		.header-background(120px);
 
 		.text-book {
 			font-size: 24/@rem;

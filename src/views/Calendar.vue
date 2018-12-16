@@ -60,7 +60,7 @@ export default {
       selectedDate: TODAY,
       calendarStyle: {
         wrapper: {
-          padding: "6px 4px",
+          padding: "8px",
           backgroundColor: "#fff",
           borderBottom: "1px solid #e6e6e6",
           borderRadius: "10px"
@@ -76,7 +76,7 @@ export default {
           fontSize: toRem(16),          
         },
         dayContent: {
-          height: toRem(daySize+2),
+          height: toRem(daySize),
           fontSize: toRem(16),
           color: primaryTextColor
         }
