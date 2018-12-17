@@ -2,16 +2,17 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
+import axios from "axios";
 
 import { Button, Cell, CellGroup, Tabbar, TabbarItem, Tab, Tabs, NumberKeyboard, Field, Swipe, SwipeItem } from 'vant';
 import VCalendar from 'v-calendar';
 import 'v-calendar/lib/v-calendar.min.css';
-
 import OIcon from './components/o-icon'
 import infoPanel from './components/infoPanel'
 import moneyList from './components/moneyList'
 import typeIcon from "./components/typeIcon";
 
+import {post, get} from './utils/api'
 
 Vue.config.productionTip = false
 Vue.use(Tabbar).use(TabbarItem)
@@ -31,6 +32,7 @@ Vue.use(VCalendar, {
   locale: 'zh'
 });
 
+Vue.prototype.$post = post;
 
 new Vue({
   router,
