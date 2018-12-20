@@ -6,12 +6,7 @@ axios.defaults.baseURL = "http://localhost:3000";
 //请求开始时，开启加载中动画，出错了提示并关闭动画
 axios.interceptors.request.use(
   config => {
-    Toast.loading({
-      duration: 0,
-      forbidClick: true,
-      mask: true,
-      message: "加载中"
-    });
+    
     return config;
   },
   error => {
@@ -75,6 +70,12 @@ export default {
     return new Promise((resolve, reject) => {
       axios.post(url, params).then(
         response => {
+          Toast.loading({
+            duration: 0,
+            forbidClick: true,
+            mask: true,
+            message: "加载中"
+          });
           resolve(response);
         },
         err => {

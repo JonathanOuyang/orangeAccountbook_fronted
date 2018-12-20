@@ -10,7 +10,14 @@
           </template> -->
         </v-calendar>
       </div>
-      <money-list :data="moneysInDay" class="calendar-moneyList"></money-list>
+      <router-link class="orange-button" tag="div" to="/calendar">
+			记一笔
+		</router-link>
+      <div class="noMoneys-wrap" v-if="hasMoneys">
+        <div class="noMoneys-tip">这天没有账单哦</div>
+        
+      </div>
+      <money-list :data="moneysInDay" class="calendar-moneyList" v-else></money-list>
     </div>
 </template>
 
@@ -37,6 +44,7 @@ export default {
   data() {
     return {
       moneys: [],
+      hasMoneys: true,
       selectedDate: TODAY,
       calendarStyle: {
         wrapper: {
@@ -136,8 +144,12 @@ export default {
     reqDay_Moneys(data) {
       getDayMoneys(data).then(res => {
         const dayMoneys = res.data;
-        dayMoneys.map(item => (item.time = new Date(item.time)));
-        this.moneys = dayMoneys;
+        if (dayMoneys.length == 0) {
+          this.hasMoneys = false;
+        } else {
+          dayMoneys.map(item => (item.time = new Date(item.time)));
+          this.moneys = dayMoneys;
+        }
       });
     }
   }
@@ -152,12 +164,19 @@ export default {
     .header-background(200px);
   }
   .calendar-wrap {
-    .panel(-56%);
+    .panel(-60%);
     border-radius: 10px;
   }
 }
 .calendar-moneyList {
   padding: 8px 10px;
   background: #fff;
+}
+.noMoneys-wrap{
+  padding-top: 60/@rem;
+  margin: 0 auto;
+  text-align: center;
+  font-size: 14/@rem;
+  color: @secondaryTextColor;
 }
 </style>

@@ -26,11 +26,11 @@
 		</div>
 	</header>
 	<div class="home-button-group">
-		<router-link class="home-button" tag="div" to="/calendar">
+		<router-link class="home-button orange-button" tag="div" to="/calendar">
 			<icon name="rili" class="button-icon"></icon>
 			所有账单
 		</router-link>
-		<router-link class="home-button" tag="div" to="/chart">
+		<router-link class="home-button orange-button" tag="div" to="/chart">
 			<icon name="tubiaobingzhuangtu" class="button-icon"></icon>
 			财务报表
 		</router-link>
@@ -147,16 +147,7 @@ export default {
 		width: 80%;
 		.home-button {
 			margin: 6/@rem;
-			padding: 12/@rem 0;
 			flex: 1;
-			border-radius: 4px;
-			background: @linearColor;
-			font-size: 16/@rem;
-			color: @textPrimaryColor;
-			text-align: center;
-			.button-icon {
-				font-size: 16/@rem;
-			}
 		}
 	}
 

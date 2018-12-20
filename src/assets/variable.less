@@ -1,35 +1,53 @@
-@darkPrimaryColor:   #ff3c50;
-@primaryColor:       #f6717d;
-@lightPrimaryColor:  #fe997b;
-@textPrimaryColor:   #fafafa;
-@accentColor:        #ffe1e6;
-@primaryTextColor:   #505050;
+@darkPrimaryColor: #ff3c50;
+@primaryColor: #f6717d;
+@lightPrimaryColor: #fe997b;
+@textPrimaryColor: #fafafa;
+@accentColor: #ffe1e6;
+@primaryTextColor: #505050;
 @secondaryTextColor: #767676;
-@dividerColor:       #e6e6e6;
-@grey:               #fafafa;
-@linearColor:        linear-gradient(to right, @lightPrimaryColor, @primaryColor);
+@dividerColor: #e6e6e6;
+@grey: #fafafa;
+@linearColor: linear-gradient(to right, @lightPrimaryColor, @primaryColor);
 
 @rem: 20rem;
 
 //页头卡片
-.panel(@top){
-	margin: @top auto 20/20rem auto;
-    background: #ffffff;
-    /* transform: translateY(-50%); */
-    box-shadow: #e4e4e4 0px 10/@rem 10/@rem -5/@rem;
-    opacity: 0.99;
+.panel(@top) {
+  margin: @top auto 15/20rem auto;
+  background: #ffffff;
+  /* transform: translateY(-50%); */
+  box-shadow: #e4e4e4 0px 10 / @rem 10 / @rem -5 / @rem;
+  opacity: 0.99;
 }
 
-.header-background(@height){
-    width: 84%;
-	height: @height;
-	padding: 16/@rem 58% 0 58%;
-	display: flex;
-	justify-content: space-between;
-	transform: translateX(-25%);
-	border-radius: 0 0 50% 50%;
-	background: linear-gradient(to right, @lightPrimaryColor, @lightPrimaryColor 25%, @primaryColor 75%, @primaryColor);
-	color: @textPrimaryColor;
+.header-background(@height) {
+  width: 84%;
+  height: @height;
+  padding: 16 / @rem 58% 0 58%;
+  display: flex;
+  justify-content: space-between;
+  transform: translateX(-25%);
+  border-radius: 0 0 50% 50%;
+  background: linear-gradient(
+    to right,
+    @lightPrimaryColor,
+    @lightPrimaryColor 25%,
+    @primaryColor 75%,
+    @primaryColor
+  );
+  color: @textPrimaryColor;
+}
+
+.orange-button {
+  padding: 10 / @rem 0;
+  border-radius: 4px;
+  background: @linearColor;
+  font-size: 16 / @rem;
+  color: @textPrimaryColor;
+  text-align: center;
+  .button-icon {
+    font-size: 16 / @rem;
+  }
 }
 
 //账单类型图标
