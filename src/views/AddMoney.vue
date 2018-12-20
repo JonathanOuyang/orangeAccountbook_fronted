@@ -1,7 +1,7 @@
 <template>
     <div id="view-addMoney">
         <div class="addMoney-header">
-          <van-tabs color="#f6717d" :line-width="tabWidth">
+          <van-tabs color="#f6717d" :line-width="tabWidth" v-model="whereabouts">
             <van-tab title="收入"></van-tab>
             <van-tab title="支出"></van-tab>
             <van-tab title="转账"></van-tab>
@@ -38,7 +38,7 @@
                 <icon name="rili30"></icon>
             </div>
             <van-cell-group>
-                <van-field v-model="desc" placeholder="请输入备注" />
+                <van-field v-model="note" placeholder="请输入备注" />
             </van-cell-group>
         </div>
         <div class="addMoney-numberKeyborad">
@@ -49,6 +49,7 @@
 							theme="custom"
 							@input="handleInputNumber"
 							@delete="handleDeleteNumber"
+              @close="handleClose"
 							close-button-text="保存"
             />
         </div>
@@ -56,9 +57,10 @@
 </template>
 
 <script>
+import { createMoney } from "../api/moneys.js";
 const MAX_TYPE = 15;
 const MAX_MONEY = 9;
-const CLIENT_WIDTH = document.body.clientWidth
+const CLIENT_WIDTH = document.body.clientWidth;
 export default {
   name: "addMoney",
   data() {
@@ -66,10 +68,11 @@ export default {
       intStack: [],
       floatStack: [],
       isInputInt: true,
-      desc: "",
+      whereabouts: 0,
+      note: "",
       typeList: [],
       selectedType: [0, 0],
-			tabWidth: CLIENT_WIDTH/3
+      tabWidth: CLIENT_WIDTH / 3
     };
   },
   created() {
@@ -87,16 +90,37 @@ export default {
         }
         return `${this.intStack.join("")}.${this.floatStack.join("")}`;
       } else return "0";
+    },
+    selectedTypeVal() {
+      if (this.selectedType[0] == 0) {
+        return this.selectedType[1];
+      } else {
+        return this.selectedType[1] + this.selectedType[0] * 15;
+      }
     }
   },
   methods: {
     getTypeList() {
-			let typeSort = [];
+      let typeSort = [];
       for (let idx = 0; idx < 29; idx++) {
-				typeSort.push(idx);
-			}
-			this.typeList.push(typeSort.slice(0, MAX_TYPE), typeSort.slice(MAX_TYPE));
+        typeSort.push(idx);
+      }
+      this.typeList.push(typeSort.slice(0, MAX_TYPE), typeSort.slice(MAX_TYPE));
     },
+    postMoneys() {
+      const data = {
+        userId: "5c179e948b4450478c646a93",
+        whereabouts: this.whereabouts,
+        value: this.value,
+        type: this.selectedTypeVal,
+        time: new Date(),
+        note: this.note
+      };
+      createMoney(data).then(res => {
+        console.log(res);
+      });
+    },
+
     handleInputNumber(key) {
       if (this.value.length < MAX_MONEY) {
         if (key == ".") this.isInputInt = false;
@@ -122,6 +146,9 @@ export default {
           this.intStack.pop();
         }
       }
+    },
+    handleClose() {
+      this.postMoneys();
     },
     handleSelectType(page, type) {
       this.selectedType = [page, type];

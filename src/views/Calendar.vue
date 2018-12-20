@@ -15,6 +15,8 @@
 </template>
 
 <script>
+import { getDayMoneys } from "../api/moneys.js";
+
 const TODAY = new Date();
 const darkPrimaryColor = "#ff3c50";
 const primaryColor = "#f6717d";
@@ -26,7 +28,7 @@ const secondaryTextColor = "#a1a1a1";
 const dividerColor = "#e6e6e6";
 const grey = "#fafafa";
 const linearColor = `linear-gradient(to right, ${lightPrimaryColor}, ${primaryColor})`;
-const daySize = 36
+const daySize = 36;
 
 const toRem = size => size / 20 + "rem";
 
@@ -34,29 +36,7 @@ export default {
   name: "calendar",
   data() {
     return {
-      moneys: [
-        {
-          _id: 0,
-          date: new Date(2018, 11, 12),
-          type: 0,
-          value: 80,
-          isOutcome: true
-        },
-        {
-          _id: 1,
-          date: new Date(2018, 11, 16),
-          type: 1,
-          value: 65,
-          isOutcome: false
-        },
-        {
-          _id: 2,
-          date: new Date(2018, 11, 24),
-          type: 0,
-          value: 80,
-          isOutcome: true
-        }
-      ],
+      moneys: [],
       selectedDate: TODAY,
       calendarStyle: {
         wrapper: {
@@ -66,14 +46,14 @@ export default {
           borderRadius: "10px"
         },
         header: {
-          padding: '6px 8px'
+          padding: "6px 8px"
         },
         headerTitle: {
           fontSize: `18px`
         },
         weekdays: {
           padding: "4px 0",
-          fontSize: toRem(16),          
+          fontSize: toRem(16)
         },
         dayContent: {
           height: toRem(daySize),
@@ -112,7 +92,7 @@ export default {
             backgroundColor: "red"
           },
           dates: this.moneys
-            .map(item => item.date)
+            .map(item => item.time)
             .filter(
               item =>
                 item.getDate() != this.selectedDate.getDate() &&
@@ -129,15 +109,36 @@ export default {
     },
     moneysInDay() {
       return this.moneys.filter(
-        item => item.date.getDate() == this.selectedDate.getDate()
+        item => item.time.getDate() == this.selectedDate.getDate()
       );
     }
+  },
+  created() {
+    this.reqDay_Moneys({
+      userId: "5c179e948b4450478c646a93",
+      year: TODAY.getFullYear(),
+      month: TODAY.getMonth() + 1,
+      date: TODAY.getDate()
+    });
   },
   methods: {
     handleDay(day) {
       if (day.inMonth) {
         this.selectedDate = day.date;
+        this.reqDay_Moneys({
+          userId: "5c179e948b4450478c646a93",
+          year: day.date.getFullYear(),
+          month: day.date.getMonth() + 1,
+          date: day.date.getDate()
+        });
       }
+    },
+    reqDay_Moneys(data) {
+      getDayMoneys(data).then(res => {
+        const dayMoneys = res.data;
+        dayMoneys.map(item => (item.time = new Date(item.time)));
+        this.moneys = dayMoneys;
+      });
     }
   }
 };
@@ -147,11 +148,11 @@ export default {
 @import "../assets/variable.less";
 #view-calendar {
   padding: 0 20 / @rem;
-  .calendar-background{
+  .calendar-background {
     .header-background(200px);
   }
-  .calendar-wrap{
-    .info-panel(-56%);
+  .calendar-wrap {
+    .panel(-56%);
     border-radius: 10px;
   }
 }

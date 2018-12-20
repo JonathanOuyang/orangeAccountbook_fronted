@@ -107,7 +107,7 @@ export default {
 		align-items: center;
     	border-radius: 10px;
     	padding: 0 30/@rem;
-		.info-panel(-12.5%);
+		.panel(-12.5%);
 		.home-panel-text {
 			display: flex;
 			flex-direction: column;

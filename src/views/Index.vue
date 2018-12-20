@@ -14,25 +14,12 @@
 </template>
 
 <script>
-import qs from 'qs'
 export default {
   data() {
     return {
       pages: ["calendar", "accounts", "home", "chart", "personal"],
       tabbarActive: 1
     };
-  },
-  created() {
-    this.$post("users/checkUserLogin", {
-      email: "test12",
-      password: "test122"
-    })
-      .then(response => {
-        console.log(response);
-      })
-      .catch(err => {
-        console.error(err);
-      });
   },
   computed: {
     tabbar() {

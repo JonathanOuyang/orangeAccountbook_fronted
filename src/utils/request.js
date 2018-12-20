@@ -6,7 +6,12 @@ axios.defaults.baseURL = "http://localhost:3000";
 //请求开始时，开启加载中动画，出错了提示并关闭动画
 axios.interceptors.request.use(
   config => {
-    Toast.loading({ duration: 0, forbidClick: true });
+    Toast.loading({
+      duration: 0,
+      forbidClick: true,
+      mask: true,
+      message: "加载中"
+    });
     return config;
   },
   error => {
@@ -22,7 +27,7 @@ axios.interceptors.response.use(
     Toast.clear();
     //一切正常，返回数据或空对象
     // if (response.data.code === 0) {
-      return response.data
+    return response.data;
     // } else {
     //   //没有数据，只有提示信息，则弹出提示信息，
     //   if (response.data.text != null && response.data.text.length > 0) {
@@ -40,40 +45,42 @@ axios.interceptors.response.use(
   }
 );
 
-/**
- * get方法，对应get请求
- * @param {String} url [请求的url地址]
- * @param {Object} params [请求时携带的参数]
- */
-export function get(url, params) {
-  return new Promise((resolve, reject) => {
-    axios
-      .get(url, {
-        params: params
-      })
-      .then(res => {
-        resolve(res.data);
-      })
-      .catch(err => {
-        reject(err.data);
-      });
-  });
-}
+export default {
+  /**
+   * get方法，对应get请求
+   * @param {String} url [请求的url地址]
+   * @param {Object} params [请求时携带的参数]
+   */
+  get: (url, params) => {
+    return new Promise((resolve, reject) => {
+      axios
+        .get(url, {
+          params: params
+        })
+        .then(res => {
+          resolve(res.data);
+        })
+        .catch(err => {
+          reject(err.data);
+        });
+    });
+  },
 
-/**
- * post方法，对应post请求
- * @param {String} url [请求的url地址]
- * @param {Object} params [请求时携带的参数]
- */
-export function post(url, params) {
-  return new Promise((resolve, reject) => {
-    axios.post(url, qs.stringify(params)).then(
-      response => {
-        resolve(response);
-      },
-      err => {
-        reject(err);
-      }
-    );
-  });
-}
+  /**
+   * post方法，对应post请求
+   * @param {String} url [请求的url地址]
+   * @param {Object} params [请求时携带的参数]
+   */
+  post: (url, params) => {
+    return new Promise((resolve, reject) => {
+      axios.post(url, params).then(
+        response => {
+          resolve(response);
+        },
+        err => {
+          reject(err);
+        }
+      );
+    });
+  }
+};
