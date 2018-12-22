@@ -90,7 +90,7 @@ export default {
   },
   methods: {
     handleClick() {
-      this.$emit("select");
+      this.$emit("select", this.typeId)
     }
   }
 };

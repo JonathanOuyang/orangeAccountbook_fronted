@@ -155,7 +155,6 @@ export default {
   }
   .calendar-wrap {
     .panel(-60%);
-    border-radius: 10px;
   }
 }
 .calendar-moneyList {

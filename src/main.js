@@ -22,6 +22,7 @@ import "v-calendar/lib/v-calendar.min.css";
 import OIcon from "./components/o-icon";
 import moneyList from "./components/moneyList";
 import typeIcon from "./components/typeIcon";
+import { filterDate, filterDatetime, filterCurrency } from "./utils/filter";
 
 Vue.config.productionTip = false;
 Vue.use(Tabbar)
@@ -43,6 +44,10 @@ Vue.component("moneyList", moneyList);
 Vue.use(VCalendar, {
   locale: "zh"
 });
+
+Vue.filter("date", filterDate);
+Vue.filter("datetime", filterDatetime);
+Vue.filter("currency", filterCurrency);
 
 new Vue({
   router,

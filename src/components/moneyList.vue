@@ -7,13 +7,13 @@
 <template>
   <div class="wrap-moneyList" v-if="data.length">
     <div class="header-moneyList">
-      <div class="text-date">{{data[0].time | monthDateDay}}</div>
+      <div class="text-date">{{data[0].time | date}}</div>
         <!-- <div class="text-reduce">支出: {{data.outSum}}&nbsp;&nbsp;&nbsp;收入: {{data.inSum}}</div> -->
       </div>
     <div class="list-money">
-      <div class="item-money-wrap" v-for="money in data" :key="money._id">
+      <div class="item-money-wrap" v-for="money in data" :key="money._id" @click="handleTapMoney(money._id)">
         <div class="item-money">
-          <type-Icon :typeId="money.type" :whereabouts="0"></type-Icon>
+          <type-Icon :typeId="money.type" :whereabouts="0" @select="handleTapType"></type-Icon>
           <div class="wrap-text">
             <span class="text-value">{{money.value | currency}}</span>
           </div>
@@ -82,13 +82,13 @@ export default {
     //   return newArr;
     // }
   },
-  filters: {
-    monthDateDay(val) {
-      const DATE = new Date(val)
-      return `${DATE.getMonth() + 1}月${DATE.getDate()}日`;
+  methods: {
+    handleTapMoney(id) {
+      this.$emit("tapMoney", id);
+      this.$router.push('/moneyDetail/'+id)
     },
-    currency(val) {
-      return parseFloat(Number(val).toFixed(2)).toLocaleString();
+    handleTapType(type) {
+      this.$emit("tapType", type);
     }
   }
 };

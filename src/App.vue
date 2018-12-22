@@ -49,7 +49,7 @@ html, body, #app{
 }
 #app {
     font-family: 'å¾®è½¯é›…é»‘';
-    color: #2c3e50;
+    color: @primaryTextColor;
     background: #fcfdff;
     overflow-x: hidden;
 }

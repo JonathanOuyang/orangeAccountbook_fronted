@@ -19,3 +19,6 @@ export const getDayMoneys = data =>
 
 /* 获得主页数据 */
 export const getHomeData = () => request.get('moneys/getHomeData')
+
+/* 获得指定账单信息 */
+export const getMoneyDetail = data => request.get('moneys/getMoneyDetail?id='+data.id)

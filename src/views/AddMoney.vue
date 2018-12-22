@@ -24,10 +24,10 @@
 											v-for="(type, typeIdx) in page"
 											:key="type.name"
 											:whereabouts="0"
-											:typeId="typeIdx"
+											:typeId="type"
 											name-position="bottom"
-											:selected="selectedType[0] == pageIdx && selectedType[1] == typeIdx"
-											@select="handleSelectType(pageIdx, typeIdx)"
+											:selected="selectedType == type"
+											@select="handleSelectType"
 											class="addMoney-type-item"></type-icon>
                 </div>
             </van-swipe-item>
@@ -71,7 +71,7 @@ export default {
       whereabouts: 0,
       note: "",
       typeList: [],
-      selectedType: [0, 0],
+      selectedType: 0,
       tabWidth: CLIENT_WIDTH / 3
     };
   },
@@ -149,8 +149,8 @@ export default {
     handleClose() {
       this.postMoneys();
     },
-    handleSelectType(page, type) {
-      this.selectedType = [page, type];
+    handleSelectType(type) {
+      this.selectedType = type;
     }
   }
 };

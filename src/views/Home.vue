@@ -44,109 +44,108 @@
 </template>
 
 <script>
-import {getHomeData} from '../api/api.js'
+import { getHomeData } from "../api/api.js";
 export default {
-	name: 'home',
-	data(){
-		return {
-			bookName: '生活账本',
-			moneyDay: 1,
-			income: 0,
-			outcome: 0,
-			moneys: []
-		}
-	},
-	created() {
-		this.getHomeData();
-	},
-	methods: {
-		getHomeData(){
-			getHomeData().then(res => {
-				this.income = res.data.income;
-				this.outcome = res.data.outcome;
-				this.moneys = res.data.moneys;
-			})
-		}
-	},
-}
+  name: "home",
+  data() {
+    return {
+      bookName: "生活账本",
+      moneyDay: 1,
+      income: 0,
+      outcome: 0,
+      moneys: []
+    };
+  },
+  created() {
+    this.getHomeData();
+  },
+  methods: {
+    getHomeData() {
+      getHomeData().then(res => {
+        this.income = res.data.income;
+        this.outcome = res.data.outcome;
+        this.moneys = res.data.moneys;
+      });
+    }
+  }
+};
 </script>
 
 <style lang="less">
-	@import "../assets/variable.less";
-	#view-home{
-	    height: 100%;	
-		color: @primaryTextColor;
-	}
-	.home-header-banner {
-		.header-background(120px);
+@import "../assets/variable.less";
+#view-home {
+  height: 100%;
+  color: @primaryTextColor;
+}
+.home-header-banner {
+  .header-background(120px);
 
-		.text-book {
-			font-size: 24/@rem;
-		}
-		.text-extra {
-			font-size: 14/@rem;
-			margin-top: 4/@rem;
-		}
-	}
+  .text-book {
+    font-size: 24 / @rem;
+  }
+  .text-extra {
+    font-size: 14 / @rem;
+    margin-top: 4 / @rem;
+  }
+}
 
-	.home-panel {
-		width: 66%;
-		height: 120/@rem;
-		display: flex;
-		align-items: center;
-    border-radius: 10px;
-    padding: 0 30/@rem;
-		.panel(-12.5%);
-		.home-panel-text {
-			display: flex;
-			flex-direction: column;
-			flex: 1;
-		}
-		.home-panel-outcome {
-			flex: 1;	
-			.info-title{
-				font-size: 16/@rem;
-			}
-			.info-value {
-				font-size: 36/@rem;
-				margin-left: -4/@rem; 
-			}
-		}
-		.home-panel-income {
-			display: flex;
-			.info-title, .info-value{
-				font-size: 16/@rem;
-			}
-			.info-title {
-				margin-right: 6px;
-			}
-		}
-		.info-budget {
-			width: 90/20em;
-			height: 90/20em;
-			border-radius: 50%;
-			background: @primaryColor;
-		}
-	}
+.home-panel {
+  width: 66%;
+  height: 120 / @rem;
+  display: flex;
+  align-items: center;
+  padding: 0 30 / @rem;
+  .panel(-12.5%);
+  .home-panel-text {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+  .home-panel-outcome {
+    flex: 1;
+    .info-title {
+      font-size: 16 / @rem;
+    }
+    .info-value {
+      font-size: 36 / @rem;
+      margin-left: -4 / @rem;
+    }
+  }
+  .home-panel-income {
+    display: flex;
+    .info-title,
+    .info-value {
+      font-size: 16 / @rem;
+    }
+    .info-title {
+      margin-right: 6px;
+    }
+  }
+  .info-budget {
+    width: 90/20em;
+    height: 90/20em;
+    border-radius: 50%;
+    background: @primaryColor;
+  }
+}
 
-	.home-button-group {
-		display: flex;
-		// justify-content: center;
-		margin: 0 auto;
-		width: 80%;
-		.home-button {
-			margin: 6/@rem;
-			flex: 1;
-		}
-	}
+.home-button-group {
+  display: flex;
+  // justify-content: center;
+  margin: 0 auto;
+  width: 80%;
+  .home-button {
+    margin: 6 / @rem;
+    flex: 1;
+  }
+}
 
-	.moneyList {
-		margin-top: 22/@rem;
-		padding: 0 20/@rem;
-		.title-moneyList {
-			font-size: 16/@rem;
-			margin: 18/@rem 0;
-		}
-	}
-
+.moneyList {
+  margin-top: 22 / @rem;
+  padding: 0 20 / @rem;
+  .title-moneyList {
+    font-size: 16 / @rem;
+    margin: 18 / @rem 0;
+  }
+}
 </style>
