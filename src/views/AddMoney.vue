@@ -57,7 +57,7 @@
 </template>
 
 <script>
-import { createMoney } from "../api/moneys.js";
+import { createMoney } from "../api/api.js";
 const MAX_TYPE = 15;
 const MAX_MONEY = 9;
 const CLIENT_WIDTH = document.body.clientWidth;

@@ -10,14 +10,13 @@
 		</router-link>
       <div class="noMoneys-wrap" v-if="noMoneys">
         <div class="noMoneys-tip">这天没有账单哦</div>
-        
       </div>
       <money-list :data="moneys" class="calendar-moneyList" v-else></money-list>
     </div>
 </template>
 
 <script>
-import { getDayMoneys } from "../api/moneys.js";
+import { getDayMoneys } from "../api/api.js";
 
 const TODAY = new Date();
 const darkPrimaryColor = "#ff3c50";
@@ -136,7 +135,6 @@ export default {
         
         if (dayMoneys.length) {
           this.noMoneys = false;
-          dayMoneys.map(item => (item.time = new Date(item.time)));
           this.moneys = dayMoneys;
         } else {
           this.noMoneys = true;

@@ -84,7 +84,8 @@ export default {
   },
   filters: {
     monthDateDay(val) {
-      return `${val.getMonth() + 1}月${val.getDate()}日`;
+      const DATE = new Date(val)
+      return `${DATE.getMonth() + 1}月${DATE.getDate()}日`;
     },
     currency(val) {
       return parseFloat(Number(val).toFixed(2)).toLocaleString();

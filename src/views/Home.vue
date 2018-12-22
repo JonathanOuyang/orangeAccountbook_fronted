@@ -15,14 +15,13 @@
 			<div class="home-panel-text">
 				<div class="home-panel-outcome">
 					<div class="info-title">本月支出</div>
-					<div class="info-value">1200</div>
+					<div class="info-value">{{outcome}}</div>
 				</div>
 				<div class="home-panel-income">
 					<div class="info-title">本月收入</div>
-					<div class="info-value">2000</div>
+					<div class="info-value">{{income}}</div>
 				</div>
 			</div>
-			<div class="info-budget"></div>
 		</div>
 	</header>
 	<div class="home-button-group">
@@ -45,40 +44,30 @@
 </template>
 
 <script>
+import {getHomeData} from '../api/api.js'
 export default {
 	name: 'home',
 	data(){
 		return {
 			bookName: '生活账本',
 			moneyDay: 1,
-			moneys: [
-				{
-					date: new Date(2018, 9, 30),
-					type: 0,
-					value: 80,
-					isOutcome: true
-				},
-				{
-					date: new Date(2018, 9, 30),
-					type: 1,
-					value: 65,
-					isOutcome: false
-				},
-				{
-					date: new Date(2018, 9, 30),
-					type: 0,
-					value: 80,
-					isOutcome: true
-				},
-				{
-					date: new Date(2018, 9, 29),
-					type: 2,
-					value: 80,
-					isOutcome: true
-				}
-			]
+			income: 0,
+			outcome: 0,
+			moneys: []
 		}
-	}
+	},
+	created() {
+		this.getHomeData();
+	},
+	methods: {
+		getHomeData(){
+			getHomeData().then(res => {
+				this.income = res.data.income;
+				this.outcome = res.data.outcome;
+				this.moneys = res.data.moneys;
+			})
+		}
+	},
 }
 </script>
 
@@ -105,8 +94,8 @@ export default {
 		height: 120/@rem;
 		display: flex;
 		align-items: center;
-    	border-radius: 10px;
-    	padding: 0 30/@rem;
+    border-radius: 10px;
+    padding: 0 30/@rem;
 		.panel(-12.5%);
 		.home-panel-text {
 			display: flex;
