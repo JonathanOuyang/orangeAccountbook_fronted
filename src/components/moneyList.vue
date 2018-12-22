@@ -1,3 +1,9 @@
+/**
+ * moneyList
+ * @desc 账单列表
+ * @param {Array} [data] 账单数据
+ * @example <money-list :data="moneys"></money-list>
+ */
 <template>
   <div class="wrap-moneyList" v-if="data.length">
     <div class="header-moneyList">

@@ -9,7 +9,6 @@
   "dependencies": {
     "axios": "^0.18.0",
     "babel-plugin-import": "^1.10.0",
-    "moment": "^2.22.2",
     "postcss": "^7.0.5",
     "postcss-pxtorem": "^4.0.1",
     "v-calendar": "^0.9.7",

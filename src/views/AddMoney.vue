@@ -109,7 +109,6 @@ export default {
     },
     postMoneys() {
       const data = {
-        userId: "5c179e948b4450478c646a93",
         whereabouts: this.whereabouts,
         value: this.value,
         type: this.selectedTypeVal,

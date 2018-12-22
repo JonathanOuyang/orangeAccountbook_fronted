@@ -3,21 +3,16 @@
       <div class="calendar-background"></div>
       <div class="calendar-wrap">
         <v-calendar :attributes='attrs' is-expanded :theme-styles="calendarStyle" @dayclick="handleDay">
-          <!-- <template slot='day-content' slot-scope='props'>
-            <div class="day-money">
-              {{ props.attributes }}
-            </div>
-          </template> -->
         </v-calendar>
       </div>
       <router-link class="orange-button" tag="div" to="/calendar">
 			记一笔
 		</router-link>
-      <div class="noMoneys-wrap" v-if="hasMoneys">
+      <div class="noMoneys-wrap" v-if="noMoneys">
         <div class="noMoneys-tip">这天没有账单哦</div>
         
       </div>
-      <money-list :data="moneysInDay" class="calendar-moneyList" v-else></money-list>
+      <money-list :data="moneys" class="calendar-moneyList" v-else></money-list>
     </div>
 </template>
 
@@ -44,7 +39,7 @@ export default {
   data() {
     return {
       moneys: [],
-      hasMoneys: true,
+      noMoneys: true,
       selectedDate: TODAY,
       calendarStyle: {
         wrapper: {
@@ -94,19 +89,19 @@ export default {
           },
           dates: this.selectedDate
         },
-        {
-          key: "dayHasMoneys",
-          dot: {
-            backgroundColor: "red"
-          },
-          dates: this.moneys
-            .map(item => item.time)
-            .filter(
-              item =>
-                item.getDate() != this.selectedDate.getDate() &&
-                item.getDate() != TODAY.getDate()
-            )
-        },
+        // {
+        //   key: "dayHasMoneys",
+        //   dot: {
+        //     backgroundColor: "red"
+        //   },
+        //   dates: this.moneys
+        //     .map(item => item.time)
+        //     .filter(
+        //       item =>
+        //         item.getDate() != this.selectedDate.getDate() &&
+        //         item.getDate() != TODAY.getDate()
+        //     )
+        // },
         {
           key: "dayAfterToday",
           highlight: {
@@ -114,16 +109,10 @@ export default {
           }
         }
       ];
-    },
-    moneysInDay() {
-      return this.moneys.filter(
-        item => item.time.getDate() == this.selectedDate.getDate()
-      );
     }
   },
   created() {
     this.reqDay_Moneys({
-      userId: "5c179e948b4450478c646a93",
       year: TODAY.getFullYear(),
       month: TODAY.getMonth() + 1,
       date: TODAY.getDate()
@@ -143,12 +132,15 @@ export default {
     },
     reqDay_Moneys(data) {
       getDayMoneys(data).then(res => {
-        const dayMoneys = res.data;
-        if (dayMoneys.length == 0) {
-          this.hasMoneys = false;
-        } else {
+        const dayMoneys = res.data.moneys;
+        
+        if (dayMoneys.length) {
+          this.noMoneys = false;
           dayMoneys.map(item => (item.time = new Date(item.time)));
           this.moneys = dayMoneys;
+        } else {
+          this.noMoneys = true;
+          this.moneys = [];
         }
       });
     }

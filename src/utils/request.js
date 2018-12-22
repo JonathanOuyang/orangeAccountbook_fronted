@@ -6,7 +6,6 @@ axios.defaults.baseURL = "http://localhost:3000";
 //请求开始时，开启加载中动画，出错了提示并关闭动画
 axios.interceptors.request.use(
   config => {
-    
     return config;
   },
   error => {
@@ -43,39 +42,47 @@ axios.interceptors.response.use(
 export default {
   /**
    * get方法，对应get请求
-   * @param {String} url [请求的url地址]
-   * @param {Object} params [请求时携带的参数]
+   * @param {String} [url] 请求的url地址
+   * @param {Object} [params] 请求时携带的参数
+   * @param {Boolean} [isLoading] 是否在获得响应前显示加载动画, 默认为false
    */
-  get: (url, params) => {
+  get: (url, params, isLoading = false) => {
     return new Promise((resolve, reject) => {
       axios
-        .get(url, {
-          params: params
-        })
-        .then(res => {
-          resolve(res.data);
+        .get(url, params)
+        .then(response => {
+          isLoading &&
+            Toast.loading({
+              duration: 0,
+              forbidClick: true,
+              mask: true,
+              message: "加载中"
+            });
+          resolve(response);
         })
         .catch(err => {
-          reject(err.data);
+          reject(err);
         });
     });
   },
 
   /**
    * post方法，对应post请求
-   * @param {String} url [请求的url地址]
-   * @param {Object} params [请求时携带的参数]
+   * @param {String} [url] 请求的url地址
+   * @param {Object} [params] 请求时携带的参数
+   * @param {Boolean} [isLoading] 是否在获得响应前显示加载动画, 默认为false
    */
-  post: (url, params) => {
+  post: (url, params, isLoading = false) => {
     return new Promise((resolve, reject) => {
       axios.post(url, params).then(
         response => {
-          Toast.loading({
-            duration: 0,
-            forbidClick: true,
-            mask: true,
-            message: "加载中"
-          });
+          isLoading &&
+            Toast.loading({
+              duration: 0,
+              forbidClick: true,
+              mask: true,
+              message: "加载中"
+            });
           resolve(response);
         },
         err => {

@@ -1,3 +1,14 @@
+/**
+ * typeIcon
+ * @desc 账单类型组件
+ * @param {Number} [typeId] 类型id
+ * @param {Number} [whereabouts] 账单去向
+ * @param {Boolean} [isShowName] 是否显示类型名
+ * @param {String} [namePosition] 类型名相对图标的位置, 可选值: "right", "bottom", 默认为"right"
+ * @param {Boolean} [checker] 是否开启可选择模式(可用于将该组件设为单选框或者复选框), 默认为false
+ * @param {selected} [checker] 是否为选中状态, 默认为false. checker参数值为true时有效
+ * @example <money-list :data="moneys"></money-list>
+ */
 <template>
     <div class="typeIcon" :class="namePositionClass" @click="handleClick">
         <div class="typeIcon-icon" :class="{'unSelected':checker&&!selected}">
