@@ -1,14 +1,21 @@
 <template>
     <div id="view-calendar">
-      <div class="calendar-banner" :class="thisWeek > -1?`calendar_columns-${thisWeek}`:''">
+      <div class="calendar-banner" :class="isShrink? `calendar_columns-${thisWeek}`:''">
         <div class="calendar-background"></div>
         <div class="calendar-wrap">
           <v-calendar 
             :attributes='attrs' 
             is-expanded 
             :theme-styles="calendarStyle" 
+            nav-visibility="hidden"
             title-position="left"
             @dayclick="handleDay">
+            <div slot='header-title' slot-scope='{ shortMonthLabel, yearLabel }'>
+			        <div :class="isShrink? 'calendar-button_arrowDown' : 'calendar-button_arrowUp'" @click="handleClickArrow">
+                <Icon name="jiantou"></Icon>  
+              </div>              
+              {{ yearLabel }}年 {{ shortMonthLabel }}
+            </div>
           </v-calendar>
         </div>
       </div>
@@ -36,7 +43,7 @@ const secondaryTextColor = "#a1a1a1";
 const dividerColor = "#e6e6e6";
 const grey = "#fafafa";
 const linearColor = `linear-gradient(to right, ${lightPrimaryColor}, ${primaryColor})`;
-const daySize = 40;
+const daySize = 38;
 
 const toRem = size => size / 20 + "rem";
 
@@ -48,6 +55,7 @@ export default {
       noMoneys: true,
       selectedDate: TODAY,
       thisWeek: 0,
+      isShrink: true,
       calendarStyle: {
         wrapper: {
           padding: "4px",
@@ -78,7 +86,8 @@ export default {
           color: primaryTextColor
         },
         dayCell: {
-          height: toRem(daySize)
+          height: toRem(daySize),
+          margin: '2px 0'
         }
       }
     };
@@ -99,8 +108,8 @@ export default {
         {
           key: "selectedDay",
           highlight: {
-            width: toRem(daySize - 4),
-            height: toRem(daySize - 4),
+            width: toRem(daySize-4),
+            height: toRem(daySize-4),
             backgroundColor: lightPrimaryColor,
             borderRadius: "8px"
           },
@@ -129,6 +138,7 @@ export default {
     }
   },
   created() {
+    this.thisWeek = this.getWeek(TODAY);
     this.reqDay_Moneys({
       year: TODAY.getFullYear(),
       month: TODAY.getMonth() + 1,
@@ -137,7 +147,7 @@ export default {
   },
   methods: {
     handleDay(day) {
-      console.log(day.week);
+      this.thisWeek = day.week;
 
       if (day.inMonth) {
         this.selectedDate = day.date;
@@ -148,6 +158,9 @@ export default {
           date: day.date.getDate()
         });
       }
+    },
+    handleClickArrow() {
+      this.isShrink = !this.isShrink;
     },
     reqDay_Moneys(data) {
       getDayMoneys(data).then(res => {
@@ -161,6 +174,17 @@ export default {
           this.moneys = [];
         }
       });
+    },
+    getWeek(date) {
+      // 先计算出该日期为第几周
+      let week = Math.ceil(date.getDate() / 7);
+      // 判断这个月前7天是周几，如果不是周一，则计入上个月
+      if (date.getDate() < 7) {
+        if (date.getDay() !== 1) {
+          week = 5;
+        }
+      }
+      return week;
     }
   }
 };
@@ -171,12 +195,12 @@ export default {
 .generate-columns(@n, @i: 0) when (@i =< @n) {
   .calendar_columns-@{i} {
     .c-weeks-rows-wrapper {
-      height: 36 / @rem;
-      transform: translateY(-40 / @rem * @i);
+      height: 40 / @rem;
+      transform: translateY(-42 / @rem * (@i - 1));
     }
     .calendar-background {
       height: 80px;
-      margin-bottom:  -25%;
+      margin-bottom: -25%;
     }
   }
   .generate-columns(@n, (@i + 1));
@@ -196,6 +220,19 @@ export default {
     height: 240 / @rem;
     transform-origin: top;
     transition: all 0.6s;
+  }
+  .calendar-button_arrowDown,
+  .calendar-button_arrowUp {
+    display: inline-block;
+    margin-right: 4px;
+    transition: all 0.6s;
+  }
+
+  .calendar-button_arrowDown {
+    transform: rotate(90deg);
+  }
+  .calendar-button_arrowUp {
+    transform: rotate(-90deg);
   }
 }
 
