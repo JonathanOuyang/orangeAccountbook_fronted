@@ -1,9 +1,16 @@
 <template>
     <div id="view-calendar">
-      <div class="calendar-background"></div>
-      <div class="calendar-wrap">
-        <v-calendar :attributes='attrs' is-expanded :theme-styles="calendarStyle" @dayclick="handleDay">
-        </v-calendar>
+      <div class="calendar-banner" :class="thisWeek > -1?`calendar_columns-${thisWeek}`:''">
+        <div class="calendar-background"></div>
+        <div class="calendar-wrap">
+          <v-calendar 
+            :attributes='attrs' 
+            is-expanded 
+            :theme-styles="calendarStyle" 
+            title-position="left"
+            @dayclick="handleDay">
+          </v-calendar>
+        </div>
       </div>
       <router-link class="orange-button" tag="div" to="/calendar">
 			记一笔
@@ -29,7 +36,7 @@ const secondaryTextColor = "#a1a1a1";
 const dividerColor = "#e6e6e6";
 const grey = "#fafafa";
 const linearColor = `linear-gradient(to right, ${lightPrimaryColor}, ${primaryColor})`;
-const daySize = 36;
+const daySize = 40;
 
 const toRem = size => size / 20 + "rem";
 
@@ -40,27 +47,38 @@ export default {
       moneys: [],
       noMoneys: true,
       selectedDate: TODAY,
+      thisWeek: 0,
       calendarStyle: {
         wrapper: {
-          padding: "8px",
+          padding: "4px",
           backgroundColor: "#fff",
           borderBottom: "1px solid #e6e6e6",
           borderRadius: "10px"
         },
         header: {
-          padding: "6px 8px"
+          padding: "6px 18px 10px 18px"
         },
         headerTitle: {
           fontSize: `18px`
         },
-        weekdays: {
-          padding: "4px 0",
-          fontSize: toRem(16)
+        headerHorizontalDivider: {
+          borderTop: `solid ${dividerColor} 1px`,
+          width: "90%"
         },
+        weekdays: {
+          padding: `6px ${toRem(5)} 0`,
+          fontSize: toRem(12)
+        },
+        // weeks: {
+        //   height: toRem(daySize),
+        // },
         dayContent: {
-          height: toRem(daySize),
+          height: toRem(daySize - 4),
           fontSize: toRem(16),
           color: primaryTextColor
+        },
+        dayCell: {
+          height: toRem(daySize)
         }
       }
     };
@@ -71,8 +89,8 @@ export default {
         {
           key: "today",
           highlight: {
-            width: toRem(daySize),
-            height: toRem(daySize),
+            width: toRem(daySize - 6),
+            height: toRem(daySize - 6),
             borderColor: primaryColor,
             borderWidth: "1px"
           },
@@ -81,8 +99,8 @@ export default {
         {
           key: "selectedDay",
           highlight: {
-            width: toRem(daySize),
-            height: toRem(daySize),
+            width: toRem(daySize - 4),
+            height: toRem(daySize - 4),
             backgroundColor: lightPrimaryColor,
             borderRadius: "8px"
           },
@@ -119,6 +137,8 @@ export default {
   },
   methods: {
     handleDay(day) {
+      console.log(day.week);
+
       if (day.inMonth) {
         this.selectedDate = day.date;
         this.reqDay_Moneys({
@@ -132,7 +152,7 @@ export default {
     reqDay_Moneys(data) {
       getDayMoneys(data).then(res => {
         const dayMoneys = res.data.moneys;
-        
+
         if (dayMoneys.length) {
           this.noMoneys = false;
           this.moneys = dayMoneys;
@@ -148,24 +168,52 @@ export default {
 
 <style lang="less">
 @import "../assets/variable.less";
+.generate-columns(@n, @i: 0) when (@i =< @n) {
+  .calendar_columns-@{i} {
+    .c-weeks-rows-wrapper {
+      height: 36 / @rem;
+      transform: translateY(-40 / @rem * @i);
+    }
+    .calendar-background {
+      height: 80px;
+      margin-bottom:  -25%;
+    }
+  }
+  .generate-columns(@n, (@i + 1));
+}
+
 #view-calendar {
   padding: 0 20 / @rem;
-  .calendar-background {
-    .header-background(200px);
-  }
-  .calendar-wrap {
-    .panel(-60%);
+}
+.calendar-background {
+  transform-origin: top;
+  transition: all 0.6s;
+  .header-background(200px, -60%);
+}
+.calendar-wrap {
+  .panel(-60%);
+  .c-weeks-rows-wrapper {
+    height: 240 / @rem;
+    transform-origin: top;
+    transition: all 0.6s;
   }
 }
+
+.c-weeks {
+  overflow: hidden;
+}
+
+.generate-columns(6);
+
 .calendar-moneyList {
   padding: 8px 10px;
   background: #fff;
 }
-.noMoneys-wrap{
-  padding-top: 60/@rem;
+.noMoneys-wrap {
+  padding-top: 60 / @rem;
   margin: 0 auto;
   text-align: center;
-  font-size: 14/@rem;
+  font-size: 14 / @rem;
   color: @secondaryTextColor;
 }
 </style>

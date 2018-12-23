@@ -13,15 +13,16 @@
 
 //页头卡片
 .panel(@top) {
-  margin: @top auto 15/20rem auto;
+  margin: 0 auto 20/@rem;
   background: #ffffff;
-  /* transform: translateY(-50%); */
+  // transform: translateY(@top);
   border-radius: 10px;
   box-shadow: #e4e4e4 0px 10 / @rem 10 / @rem -5 / @rem;
   opacity: 0.99;
 }
 
-.header-background(@height) {
+.header-background(@height, @bottom: 0) {
+  margin-bottom:  @bottom;
   width: 84%;
   height: @height;
   padding: 16 / @rem 58% 0 58%;
