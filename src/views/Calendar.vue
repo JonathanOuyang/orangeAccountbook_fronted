@@ -1,8 +1,27 @@
 <template>
     <div id="view-calendar">
-      <div class="calendar-banner" :class="isShrink? `calendar_columns-${thisWeek}`:''">
-        <div class="calendar-background"></div>
-        <div class="calendar-wrap">
+      <div class="calendar-header">
+        <div class="header-date">
+          <div class="header-date-yearMonth">{{dayInfo.date.getFullYear()}}年{{dayInfo.date.getMonth()+1}}月</div>  
+          <div class="header-date-date"
+                  @click="toggleCalendar">
+            <Icon :name="'rili'+dayInfo.date.getDate()" 
+                  class="icon-date"></Icon>
+            </div>
+        </div>
+        <div class="header-moneySum">
+          <div class="header-moneySum-item">收入: {{dayInfo.income}}</div>
+          <div class="header-moneySum-item">支出: {{dayInfo.outcome}}</div>
+        </div>
+      </div>
+      <router-link class="orange-button" tag="div" to="/addMoney">
+			记一笔
+		</router-link>
+      <div class="noMoneys-wrap" v-if="noMoneys">
+        <div class="noMoneys-tip">这天没有账单哦</div>
+      </div>
+      <money-list :data="moneys" class="calendar-moneyList" v-else></money-list>
+      <div class="calendar-wrap" v-show="isShowCalendar" @click="toggleCalendar">
           <v-calendar 
             :attributes='attrs' 
             is-expanded 
@@ -10,22 +29,8 @@
             nav-visibility="hidden"
             title-position="left"
             @dayclick="handleDay">
-            <div slot='header-title' slot-scope='{ shortMonthLabel, yearLabel }'>
-			        <div :class="isShrink? 'calendar-button_arrowDown' : 'calendar-button_arrowUp'" @click="handleClickArrow">
-                <Icon name="jiantou"></Icon>  
-              </div>              
-              {{ yearLabel }}年 {{ shortMonthLabel }}
-            </div>
           </v-calendar>
         </div>
-      </div>
-      <router-link class="orange-button" tag="div" to="/calendar">
-			记一笔
-		</router-link>
-      <div class="noMoneys-wrap" v-if="noMoneys">
-        <div class="noMoneys-tip">这天没有账单哦</div>
-      </div>
-      <money-list :data="moneys" class="calendar-moneyList" v-else></money-list>
     </div>
 </template>
 
@@ -52,10 +57,14 @@ export default {
   data() {
     return {
       moneys: [],
+      dayInfo: {
+        date: new Date('2019-09-12'),
+        income: '20',
+        outcome: '60'
+      },
       noMoneys: true,
       selectedDate: TODAY,
-      thisWeek: 0,
-      isShrink: true,
+      isShowCalendar: false,
       calendarStyle: {
         wrapper: {
           padding: "4px",
@@ -162,6 +171,12 @@ export default {
     handleClickArrow() {
       this.isShrink = !this.isShrink;
     },
+    handleClickCalendarMask() {
+      
+    },
+    toggleCalendar() {
+      this.isShowCalendar = !this.isShowCalendar;
+    },
     reqDay_Moneys(data) {
       getDayMoneys(data).then(res => {
         const dayMoneys = res.data.moneys;
@@ -179,11 +194,11 @@ export default {
       // 先计算出该日期为第几周
       let week = Math.ceil(date.getDate() / 7);
       // 判断这个月前7天是周几，如果不是周一，则计入上个月
-      if (date.getDate() < 7) {
-        if (date.getDay() !== 1) {
-          week = 5;
-        }
-      }
+      // if (date.getDate() < 7) {
+      //   if (date.getDay() !== 1) {
+      //     week = 5;
+      //   }
+      // }
       return week;
     }
   }
@@ -192,55 +207,36 @@ export default {
 
 <style lang="less">
 @import "../assets/variable.less";
-.generate-columns(@n, @i: 0) when (@i =< @n) {
-  .calendar_columns-@{i} {
-    .c-weeks-rows-wrapper {
-      height: 40 / @rem;
-      transform: translateY(-42 / @rem * (@i - 1));
-    }
-    .calendar-background {
-      height: 80px;
-      margin-bottom: -25%;
-    }
-  }
-  .generate-columns(@n, (@i + 1));
-}
 
 #view-calendar {
   padding: 0 20 / @rem;
 }
-.calendar-background {
-  transform-origin: top;
-  transition: all 0.6s;
-  .header-background(200px, -60%);
-}
-.calendar-wrap {
-  .panel(-60%);
-  .c-weeks-rows-wrapper {
-    height: 240 / @rem;
-    transform-origin: top;
-    transition: all 0.6s;
-  }
-  .calendar-button_arrowDown,
-  .calendar-button_arrowUp {
-    display: inline-block;
-    margin-right: 4px;
-    transition: all 0.6s;
+
+.calendar-header {
+  .header-background(24px);
+  display: flex;
+  padding-bottom: 12px;
+
+  .header-date {
+    flex: 1;
   }
 
-  .calendar-button_arrowDown {
-    transform: rotate(90deg);
+  .header-date-yearMonth {
+    font-size: 16px;
   }
-  .calendar-button_arrowUp {
-    transform: rotate(-90deg);
+
+  .header-date-date {
+    font-size: 36px;
+  }
+
+  .icon-date {
+    font-size: 60px;
+  }
+
+  .header-moneySum {
+    font-size: 18px;
   }
 }
-
-.c-weeks {
-  overflow: hidden;
-}
-
-.generate-columns(6);
 
 .calendar-moneyList {
   padding: 8px 10px;
@@ -252,5 +248,16 @@ export default {
   text-align: center;
   font-size: 14 / @rem;
   color: @secondaryTextColor;
+}
+
+.calendar-wrap {
+  box-sizing: border-box;
+  padding: 120px 10px 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
 }
 </style>

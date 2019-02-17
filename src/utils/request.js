@@ -2,7 +2,8 @@ import axios from "axios";
 import { Toast } from "vant";
 import qs from "qs";
 
-axios.defaults.baseURL = "http://localhost:3000";
+// 192.168.191.1
+axios.defaults.baseURL = "http://192.168.191.1:3000";
 //请求开始时，开启加载中动画，出错了提示并关闭动画
 axios.interceptors.request.use(
   config => {

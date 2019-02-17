@@ -1,66 +1,68 @@
 <template>
     <div id="view-addMoney">
-        <div class="addMoney-header">
-          <van-tabs color="#f6717d" :line-width="tabWidth" v-model="whereabouts">
-            <van-tab title="收入"></van-tab>
-            <van-tab title="支出"></van-tab>
-            <van-tab title="转账"></van-tab>
-          </van-tabs>
-        </div>
-        <div class="addMoney-val">
-            <div class="addMoney-val-account">
-                <!-- <div class="account-icon">
-                    <icon name="zhifubaob"></icon>
-                </div> -->
-                <div class="account-name">支付宝</div>
-            </div>
-            <div class="addMoney-val-money">￥{{value}}</div>
-        </div>
-        <van-swipe :autoplay="0" indicator-color="#f6717d" :loop="false">
-            <van-swipe-item v-for="(page, pageIdx) in typeList" :key="pageIdx">
-                <div class="addMoney-type">
-                    <type-icon
-											checker
-											v-for="(type, typeIdx) in page"
-											:key="type.name"
-											:whereabouts="0"
-											:typeId="type"
-											name-position="bottom"
-											:selected="selectedType == type"
-											@select="handleSelectType"
-											class="addMoney-type-item"></type-icon>
-                </div>
-            </van-swipe-item>
-        </van-swipe>
-        <div class="addMoney-tagBar"></div>
-        <div class="addMoney-infoBar">
-            <div class="addMoney-infoBar-date" slot="label">
-                <icon name="rili30"></icon>
-            </div>
-            <van-cell-group>
-                <van-field v-model="note" placeholder="请输入备注" />
-            </van-cell-group>
-        </div>
-        <div class="addMoney-numberKeyborad">
-            <van-number-keyboard
-							:show="true"
-							extra-key="."
-							@blur="show = false"
-							theme="custom"
-							@input="handleInputNumber"
-							@delete="handleDeleteNumber"
-              @close="handleClose"
-							close-button-text="保存"
-            />
-        </div>
+      <div class="addMoney-header">
+        <van-tabs color="#f6717d" :line-width="tabWidth" v-model="whereabouts">
+          <van-tab title="收入"></van-tab>
+          <van-tab title="支出"></van-tab>
+          <van-tab title="转账"></van-tab>
+        </van-tabs>
+      </div>
+      <div class="addMoney-val">
+          <div class="addMoney-val-account">
+              <!-- <div class="account-icon">
+                  <icon name="zhifubaob"></icon>
+              </div> -->
+              <div class="account-name">支付宝</div>
+          </div>
+          <div class="addMoney-val-money" @click="isShowNumKey = !isShowNumKey">￥{{value}}</div>
+      </div>
+      <van-swipe :autoplay="0" indicator-color="#f6717d" :loop="false">
+          <van-swipe-item v-for="(page, pageIdx) in categoryList" :key="pageIdx">
+              <div class="addMoney-type">
+                  <type-icon
+										checker
+										v-for="(type) in page"
+										:key="type.name"
+										:whereabouts="0"
+										:typeId="type"
+										name-position="bottom"
+										:selected="selectedCategory == type"
+										@select="handleSelectCategory"
+										class="addMoney-type-item"></type-icon>
+              </div>
+          </van-swipe-item>
+      </van-swipe>
+      <van-cell-group>
+        <van-cell title="时间" is-link :value="formatDate(date)" @click="isShowDate = !isShowDate"/>
+            <van-field v-model="note" placeholder="输入备注" />
+          </van-cell-group>
+      <!-- <div class="addMoney-numberKeyborad"> -->
+          <van-number-keyboard
+						:show="isShowNumKey"
+						extra-key="."
+						@blur="show = false"
+						theme="custom"
+						@input="handleInputNumber"
+						@delete="handleDeleteNumber"
+            @close="handleClose"
+						close-button-text="保存"
+          />
+      <!-- </div> -->
+      <van-popup v-model="isShowDate" position="bottom">
+        <van-datetime-picker
+          v-model="date"
+          type="datetime"
+        />
+      </van-popup>
     </div>
 </template>
 
 <script>
 import { createMoney } from "../api/api.js";
-const MAX_TYPE = 15;
+const MAX_TYPE = 10;
 const MAX_MONEY = 9;
 const CLIENT_WIDTH = document.body.clientWidth;
+const TODAY = new Date();
 export default {
   name: "addMoney",
   data() {
@@ -68,11 +70,15 @@ export default {
       intStack: [],
       floatStack: [],
       isInputInt: true,
-      whereabouts: 0,
+      type: 0,
       note: "",
-      typeList: [],
-      selectedType: 0,
-      tabWidth: CLIENT_WIDTH / 3
+      categoryList: [],
+      selectedCategory: 0,
+      tabWidth: CLIENT_WIDTH / 3,
+      isShowNumKey: false,
+      isShowDate: false,
+      date: TODAY,
+      today: TODAY
     };
   },
   created() {
@@ -105,19 +111,24 @@ export default {
       for (let idx = 0; idx < 29; idx++) {
         typeSort.push(idx);
       }
-      this.typeList.push(typeSort.slice(0, MAX_TYPE), typeSort.slice(MAX_TYPE));
+      for (let x = 0; x < Math.ceil(typeSort.length / MAX_TYPE); x++) {
+        let start = x * MAX_TYPE;
+        let end = start + MAX_TYPE;
+        this.categoryList.push(typeSort.slice(start, end));
+      }
     },
     postMoneys() {
       const data = {
         whereabouts: this.whereabouts,
         value: this.value,
         type: this.selectedTypeVal,
-        time: new Date(),
+        time: date,
         note: this.note
       };
       createMoney(data).then(res => {
         console.log(res);
       });
+      this.$router.push("/home");
     },
 
     handleInputNumber(key) {
@@ -149,8 +160,11 @@ export default {
     handleClose() {
       this.postMoneys();
     },
-    handleSelectType(type) {
-      this.selectedType = type;
+    handleSelectCategory(idx) {
+      this.selectedCategory = idx;
+    },
+    formatDate(date) {
+      return `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
     }
   }
 };
@@ -161,15 +175,9 @@ export default {
 #view-addMoney {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   height: 100%;
   color: @primaryTextColor;
   background-color: #fff;
-  &::after {
-    content: "";
-    width: 100%;
-    height: 216px;
-  }
 }
 .addMoney-header {
   border-bottom: 1px solid @dividerColor;
@@ -178,45 +186,47 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 70 / @rem;
+  height: 72px;
   border-bottom: 1px solid @dividerColor;
   &-account {
     display: flex;
     align-items: center;
-    padding: 0 20 / @rem;
+    padding: 0 20px;
     height: 60%;
     border-right: 1px solid @dividerColor;
-    font-size: 20 / @rem;
+    font-size: 18px;
     .account-icon {
       display: flex;
       justify-content: center;
       align-items: center;
-      width: 36 / @rem;
-      height: 36 / @rem;
-      border-radius: 4 / @rem;
+      width: 36px;
+      height: 36px;
+      border-radius: 4px;
       background: #2873ff;
       color: #fff;
-      font-size: 36 / @rem;
+      font-size: 40px;
     }
   }
   &-money {
-    font-size: 32 / @rem;
-    padding: 0 8 / @rem;
+    flex: 1;
+    padding: 0 12px;
+    height: 100%;
+    line-height: 72px;
+    text-align: right;
+    font-size: 30px;
   }
 }
 
 .van-swipe {
-  flex: 1;
-
   .addMoney-type {
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;
-    height: 88%;
-    padding: 12 / @rem 18 / @rem 18 / @rem;
+    height: 160px;
+    padding: 14px 18px 12px;
     &-item {
       width: 20%;
-      margin: 4 / @rem 0;
+      margin: 4px 0;
     }
   }
 }
@@ -225,12 +235,14 @@ export default {
   display: flex;
   align-items: center;
   background: #fff;
-  // border-top: 1px solid @dividerColor;
+  border-top: 1px solid @dividerColor;
   .addMoney-infoBar-date {
-    padding: 0 16px;
+    display: inline-block;
+    padding: 0 10px;
+    line-height: 36px;
     border-right: 1px solid @dividerColor;
     .iconfont {
-      font-size: 26px;
+      font-size: 30px;
     }
   }
 }

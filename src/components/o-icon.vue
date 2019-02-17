@@ -4,19 +4,18 @@
 
 <script type="text/javascript">
 export default {
-
-  	props: {
-  		name:{
-  			type: String,
-  			required: true
-		},
-		link: {
-			type: String
-		}
-  	}
-}
+  props: {
+    name: {
+      type: String,
+      required: true
+    },
+    link: {
+      type: String
+    }
+  }
+};
 </script>
 
 <style lang="less">
-@import '../assets/icon/iconfont.css';
+@import "../assets/icon/iconfont.css";
 </style>

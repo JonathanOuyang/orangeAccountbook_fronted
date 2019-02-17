@@ -12,17 +12,15 @@
 			</div>
 		</div>
 		<div class="home-panel">
-			<div class="home-panel-text">
-				<div class="home-panel-outcome">
+				<div class="home-panel-item">
 					<div class="info-title">本月支出</div>
 					<div class="info-value">{{outcome}}</div>
 				</div>
-				<div class="home-panel-income">
+				<div class="home-panel-item">
 					<div class="info-title">本月收入</div>
 					<div class="info-value">{{income}}</div>
 				</div>
 			</div>
-		</div>
 	</header>
 	<div class="home-button-group">
 		<router-link class="home-button orange-button" tag="div" to="/calendar">
@@ -36,7 +34,7 @@
 	</div>
 	<div class="moneyList">
 		<div class="title-moneyList">
-			<span>近期新增账单</span>
+			<span>今天新增账单</span>
 		</div>
 		<money-list :data="moneys"></money-list>
 	</div>
@@ -78,48 +76,39 @@ export default {
   color: @primaryTextColor;
 }
 .home-header-banner {
-  .header-background(120px, -12%);
+  .header-background(-12%, 120px);
 
   .text-book {
-    font-size: 24 / @rem;
+    font-size: 24px;
   }
   .text-extra {
-    font-size: 14 / @rem;
-    margin-top: 4 / @rem;
+    font-size: 14px;
+    margin-top: 4px;
   }
 }
 
 .home-panel {
   width: 66%;
-  height: 120 / @rem;
   display: flex;
-  align-items: center;
-  padding: 0 30 / @rem;
+  padding: 16px 20px;
   .panel(-12.5%);
-  .home-panel-text {
-    display: flex;
-    flex-direction: column;
+  .home-panel-item {
     flex: 1;
-  }
-  .home-panel-outcome {
-    flex: 1;
+    text-align: center;
     .info-title {
-      font-size: 16 / @rem;
+      font-size: 16px;
     }
     .info-value {
-      font-size: 36 / @rem;
-      margin-left: -4 / @rem;
+      font-size: 24px;
+      margin-left: -4px;
     }
   }
-  .home-panel-income {
-    display: flex;
-    .info-title,
-    .info-value {
-      font-size: 16 / @rem;
-    }
-    .info-title {
-      margin-right: 6px;
-    }
+  .home-panel-item:first-child {
+    padding-right: 6px;
+    border-right: 1px solid @dividerColor;
+  }
+  .home-panel-item:last-child {
+    padding-left: 6px;
   }
   .info-budget {
     width: 90/20em;
@@ -135,17 +124,17 @@ export default {
   margin: 0 auto;
   width: 80%;
   .home-button {
-    margin: 6 / @rem;
+    margin: 6px;
     flex: 1;
   }
 }
 
 .moneyList {
-  margin-top: 22 / @rem;
-  padding: 0 20 / @rem;
+  margin-top: 22px;
+  padding: 0 20px;
   .title-moneyList {
-    font-size: 16 / @rem;
-    margin: 18 / @rem 0;
+    font-size: 16px;
+    margin: 18px 0;
   }
 }
 </style>

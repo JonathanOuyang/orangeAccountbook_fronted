@@ -5,7 +5,7 @@
 @accentColor: #ffe1e6;
 @primaryTextColor: #505050;
 @secondaryTextColor: #767676;
-@dividerColor: #e6e6e6;
+@dividerColor: #eee;
 @grey: #fafafa;
 @linearColor: linear-gradient(to right, @lightPrimaryColor, @primaryColor);
 
@@ -21,13 +21,12 @@
   opacity: 0.99;
 }
 
-.header-background(@height, @bottom: 0) {
+.header-background(@bottom: 0, @height: auto) {
   margin-bottom:  @bottom;
-  width: 84%;
+  box-sizing: border-box;
+  width: 200%;
   height: @height;
-  padding: 16 / @rem 58% 0 58%;
-  display: flex;
-  justify-content: space-between;
+  padding: 12px 52% 0 52%;
   transform: translateX(-25%);
   border-radius: 0 0 50% 50%;
   background: linear-gradient(
@@ -38,17 +37,18 @@
     @primaryColor
   );
   color: @textPrimaryColor;
+  box-shadow: #e4e4e4 0px 10 / @rem 10 / @rem -5 / @rem;
 }
 
 .orange-button {
-  padding: 10 / @rem 0;
+  padding: 10px 0;
   border-radius: 4px;
   background: @linearColor;
-  font-size: 16 / @rem;
+  font-size: 16px;
   color: @textPrimaryColor;
   text-align: center;
   .button-icon {
-    font-size: 16 / @rem;
+    font-size: 16px;
   }
 }
 

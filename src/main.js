@@ -15,7 +15,9 @@ import {
   NumberKeyboard,
   Field,
   Swipe,
-  SwipeItem
+  SwipeItem,
+  DatetimePicker,
+  Popup
 } from "vant";
 import VCalendar from "v-calendar";
 import "v-calendar/lib/v-calendar.min.css";
@@ -35,7 +37,9 @@ Vue.use(Tabbar)
   .use(Tabs)
   .use(Field)
   .use(Swipe)
-  .use(SwipeItem);
+  .use(SwipeItem)
+  .use(DatetimePicker)
+  .use(Popup);
 Vue.component("Icon", OIcon);
 Vue.component("typeIcon", typeIcon);
 Vue.component("moneyList", moneyList);

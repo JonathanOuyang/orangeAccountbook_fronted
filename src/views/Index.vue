@@ -31,7 +31,7 @@ export default {
         },
         {
           icon: "jizhang",
-          link: this.$route.name == "home" ? "/addmoney" : "/"
+          link: this.$route.name == "home" ? "/addMoney" : "/"
         },
 
         {

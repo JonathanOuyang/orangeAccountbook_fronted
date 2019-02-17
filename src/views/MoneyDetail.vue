@@ -26,6 +26,16 @@
         <div class="detail-item_info">{{note}}</div>
       </div>
     </div>
+    <div class="detail-footer">
+      <div class="detail-footer_btn">
+        <Icon name="bianji"></Icon>
+        <span>编辑</span>
+      </div>
+      <div class="detail-footer_btn">
+        <Icon name="shanchu1"></Icon>
+        <span>删除</span>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -67,13 +77,17 @@ export default {
 @import "../assets/variable.less";
 #view-moneyDetail {
   box-sizing: border-box;
-  padding: 30px 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 30/@rem 0 0;
   background: @linearColor;
   height: 100%;
 }
 .detail-wrap {
   .panel(0);
-  padding: 20px 12px;
+  margin: 0 16/@rem;
+  padding: 20/@rem 12/@rem;
 
   .detail-header,
   .detail-cell {
@@ -102,6 +116,31 @@ export default {
 
   .detail-note .detail-item_title {
     padding-bottom: 6px;
+  }
+}
+.detail-footer {
+  display: flex;
+}
+.detail-footer_btn {
+  display: flex;
+  justify-content: center;
+  flex: 1;
+  background-color: #fff;
+  padding: 18px 0;
+
+  &:first-child {
+    border-right: 1px solid @dividerColor;
+  }
+
+  .iconfont {
+    line-height: 18/@rem;
+    font-size: 18/@rem;
+    margin-right: 4px;
+  }
+
+  span {
+    line-height: 16/@rem;
+    font-size: 16/@rem;
   }
 }
 </style>
