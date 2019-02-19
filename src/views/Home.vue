@@ -73,6 +73,7 @@ export default {
 @import "../assets/variable.less";
 #view-home {
   height: 100%;
+  padding: 0 20px;
   color: @primaryTextColor;
 }
 .home-header-banner {
@@ -88,9 +89,9 @@ export default {
 }
 
 .home-panel {
-  width: 66%;
+  width: 90%;
   display: flex;
-  padding: 16px 20px;
+  padding: 16px 0;
   .panel(-12.5%);
   .home-panel-item {
     flex: 1;
@@ -122,7 +123,7 @@ export default {
   display: flex;
   // justify-content: center;
   margin: 0 auto;
-  width: 80%;
+  width: 90%;
   .home-button {
     margin: 6px;
     flex: 1;
@@ -131,7 +132,6 @@ export default {
 
 .moneyList {
   margin-top: 22px;
-  padding: 0 20px;
   .title-moneyList {
     font-size: 16px;
     margin: 18px 0;

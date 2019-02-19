@@ -10,6 +10,7 @@
 @linearColor: linear-gradient(to right, @lightPrimaryColor, @primaryColor);
 
 @rem: 20rem;
+@shadow: #e4e4e4 0px 10px 10px -5px;
 
 //页头卡片
 .panel(@top) {
@@ -17,7 +18,7 @@
   background: #ffffff;
   // transform: translateY(@top);
   border-radius: 10px;
-  box-shadow: #e4e4e4 0px 10 / @rem 10 / @rem -5 / @rem;
+  box-shadow: #e4e4e4 0px 10px 10px -5px;
   opacity: 0.99;
 }
 
@@ -26,7 +27,7 @@
   box-sizing: border-box;
   width: 200%;
   height: @height;
-  padding: 12px 52% 0 52%;
+  padding: 12px 50% 0 50%;
   transform: translateX(-25%);
   border-radius: 0 0 50% 50%;
   background: linear-gradient(
@@ -37,12 +38,13 @@
     @primaryColor
   );
   color: @textPrimaryColor;
-  box-shadow: #e4e4e4 0px 10 / @rem 10 / @rem -5 / @rem;
+  box-shadow: #e4e4e4 0px 10px 10px -5px;
 }
 
 .orange-button {
-  padding: 10px 0;
-  border-radius: 4px;
+  height: 44px;
+  line-height: 42px;
+  border-radius: 2px;
   background: @linearColor;
   font-size: 16px;
   color: @textPrimaryColor;

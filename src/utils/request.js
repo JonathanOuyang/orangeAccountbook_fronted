@@ -3,10 +3,19 @@ import { Toast } from "vant";
 import qs from "qs";
 
 // 192.168.191.1
-axios.defaults.baseURL = "http://192.168.191.1:3000";
+axios.defaults.baseURL = "http://localhost:3000";
 //请求开始时，开启加载中动画，出错了提示并关闭动画
 axios.interceptors.request.use(
   config => {
+    isLoading &&
+      Toast.loading({
+        duration: 0,
+        forbidClick: true,
+        mask: true,
+        message: "加载中"
+      });
+    const token = localStorage.getItem('token');
+    config.headers.common['Authorization'] = token;
     return config;
   },
   error => {
@@ -52,13 +61,6 @@ export default {
       axios
         .get(url, params)
         .then(response => {
-          isLoading &&
-            Toast.loading({
-              duration: 0,
-              forbidClick: true,
-              mask: true,
-              message: "加载中"
-            });
           resolve(response);
         })
         .catch(err => {
@@ -77,13 +79,6 @@ export default {
     return new Promise((resolve, reject) => {
       axios.post(url, params).then(
         response => {
-          isLoading &&
-            Toast.loading({
-              duration: 0,
-              forbidClick: true,
-              mask: true,
-              message: "加载中"
-            });
           resolve(response);
         },
         err => {

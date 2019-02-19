@@ -1,37 +1,30 @@
 <template>
-    <div id="view-calendar">
-      <div class="calendar-header">
-        <div class="header-date">
-          <div class="header-date-yearMonth">{{dayInfo.date.getFullYear()}}年{{dayInfo.date.getMonth()+1}}月</div>  
-          <div class="header-date-date"
-                  @click="toggleCalendar">
-            <Icon :name="'rili'+dayInfo.date.getDate()" 
-                  class="icon-date"></Icon>
-            </div>
-        </div>
-        <div class="header-moneySum">
-          <div class="header-moneySum-item">收入: {{dayInfo.income}}</div>
-          <div class="header-moneySum-item">支出: {{dayInfo.outcome}}</div>
-        </div>
-      </div>
-      <router-link class="orange-button" tag="div" to="/addMoney">
-			记一笔
-		</router-link>
-      <div class="noMoneys-wrap" v-if="noMoneys">
-        <div class="noMoneys-tip">这天没有账单哦</div>
-      </div>
-      <money-list :data="moneys" class="calendar-moneyList" v-else></money-list>
-      <div class="calendar-wrap" v-show="isShowCalendar" @click="toggleCalendar">
-          <v-calendar 
-            :attributes='attrs' 
-            is-expanded 
-            :theme-styles="calendarStyle" 
-            nav-visibility="hidden"
-            title-position="left"
-            @dayclick="handleDay">
-          </v-calendar>
-        </div>
+  <div id="view-calendar">
+    <div class="calendar-header">
     </div>
+      <div class="calendar-wrap">
+        <v-calendar :attributes='attrs'
+                    is-expanded
+                    :theme-styles="calendarStyle"
+                    nav-visibility="hidden"
+                    title-position="left"
+                    @dayclick="handleDay">
+        </v-calendar>
+      </div>
+    <router-link class="orange-button"
+                 tag="div"
+                 to="/addMoney">
+      记一笔
+    </router-link>
+    <div class="noMoneys-wrap"
+         v-if="noMoneys">
+      <div class="noMoneys-tip">这天没有账单哦</div>
+    </div>
+    <money-list :data="moneys"
+                class="calendar-moneyList"
+                v-else></money-list>
+
+  </div>
 </template>
 
 <script>
@@ -58,18 +51,17 @@ export default {
     return {
       moneys: [],
       dayInfo: {
-        date: new Date('2019-09-12'),
-        income: '20',
-        outcome: '60'
+        date: new Date("2019-09-12"),
+        income: "20",
+        outcome: "60"
       },
       noMoneys: true,
       selectedDate: TODAY,
-      isShowCalendar: false,
       calendarStyle: {
         wrapper: {
           padding: "4px",
           backgroundColor: "#fff",
-          borderBottom: "1px solid #e6e6e6",
+          boxShadow: "#e4e4e4 0px 10px 10px -5px",
           borderRadius: "10px"
         },
         header: {
@@ -96,7 +88,7 @@ export default {
         },
         dayCell: {
           height: toRem(daySize),
-          margin: '2px 0'
+          margin: "2px 0"
         }
       }
     };
@@ -117,8 +109,8 @@ export default {
         {
           key: "selectedDay",
           highlight: {
-            width: toRem(daySize-4),
-            height: toRem(daySize-4),
+            width: toRem(daySize - 4),
+            height: toRem(daySize - 4),
             backgroundColor: lightPrimaryColor,
             borderRadius: "8px"
           },
@@ -171,9 +163,7 @@ export default {
     handleClickArrow() {
       this.isShrink = !this.isShrink;
     },
-    handleClickCalendarMask() {
-      
-    },
+    handleClickCalendarMask() {},
     toggleCalendar() {
       this.isShowCalendar = !this.isShowCalendar;
     },
@@ -209,33 +199,15 @@ export default {
 @import "../assets/variable.less";
 
 #view-calendar {
-  padding: 0 20 / @rem;
+  padding: 0 20px;
 }
 
 .calendar-header {
-  .header-background(24px);
-  display: flex;
-  padding-bottom: 12px;
+  .header-background(-60px, 80px);
+}
 
-  .header-date {
-    flex: 1;
-  }
-
-  .header-date-yearMonth {
-    font-size: 16px;
-  }
-
-  .header-date-date {
-    font-size: 36px;
-  }
-
-  .icon-date {
-    font-size: 60px;
-  }
-
-  .header-moneySum {
-    font-size: 18px;
-  }
+.calendar-wrap {
+  .panel(0)
 }
 
 .calendar-moneyList {
@@ -243,21 +215,10 @@ export default {
   background: #fff;
 }
 .noMoneys-wrap {
-  padding-top: 60 / @rem;
+  padding-top: 60px;
   margin: 0 auto;
   text-align: center;
-  font-size: 14 / @rem;
+  font-size: 14px;
   color: @secondaryTextColor;
-}
-
-.calendar-wrap {
-  box-sizing: border-box;
-  padding: 120px 10px 0;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
 }
 </style>
