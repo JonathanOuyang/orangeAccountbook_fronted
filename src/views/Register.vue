@@ -6,13 +6,15 @@
       <div class="form-wrap">
         <van-cell-group>
           <van-field v-model="name"
-                     placeholder="昵称" />
+                     label="昵称" />
           <van-field v-model="email"
-                     placeholder="邮箱" />
+                     label="邮箱" />
           <van-field v-model="password"
-                     placeholder="密码" />
+                     type="password"
+                     label="密码" />
           <van-field v-model="password_"
-                     placeholder="确认密码" />
+                     type="password"
+                     label="确认密码" />
         </van-cell-group>
       </div>
       <van-button size="large"
@@ -24,6 +26,9 @@
 
 <script>
 import { register } from "../api/api";
+const PASSWORD_MIN_LENGTH = 6;
+const EMAIL_RE = /^[A-Za-z\d]+([-_.][A-Za-z\d]+)*@([A-Za-z\d]+[-.])+[A-Za-z\d]{2,4}$/;
+
 export default {
   name: "register",
   data() {
@@ -36,7 +41,55 @@ export default {
   },
   methods: {
     handleConfirm() {
-      register.then(res => {});
+      const data = {
+        name: this.name,
+        email: this.email,
+        password: this.password
+      };
+      if (!this.name) {
+        this.$notify({
+          message: "请输入昵称",
+          background: this.$color["error"]
+        });
+        return;
+      }
+      if (!EMAIL_RE.test(this.email)) {
+        this.$notify({
+          message: "请输入正确格式的邮箱地址",
+          background: this.$color["error"]
+        });
+        return;
+      }
+      if (this.password.length < PASSWORD_MIN_LENGTH) {
+        this.$notify({
+          message: "请输入大于6个字符的密码",
+          background: this.$color["error"]
+        });
+        return;
+      }
+      if (this.password !== this.password_) {
+        this.$notify({
+          message: "前后密码不一致",
+          background: this.$color["error"]
+        });
+        return;
+      }
+      register(data).then(res => {
+        if (res.data.code === "success") {
+          this.$notify({
+            message: res.data.summary,
+            background: this.$color["success"]
+          });
+          setTimeout(()=> {
+            this.$router.push('/login');
+          }, 800)
+        } else {
+          this.$notify({
+            message: res.data.summary,
+            background: this.$color["error"]
+          });
+        }
+      });
     }
   }
 };
@@ -48,7 +101,7 @@ export default {
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
-  padding: 20px 30px;
+  padding: 40px 30px;
   height: 100%;
   background: @linearColor;
 

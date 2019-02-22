@@ -10,5 +10,5 @@ export const filterDatetime = date => {
 };
 
 export const filterCurrency = val => {
-  return parseFloat(Number(val).toFixed(2)).toLocaleString();
+  return '¥ '+parseFloat(Number(val).toFixed(2)).toLocaleString();
 };

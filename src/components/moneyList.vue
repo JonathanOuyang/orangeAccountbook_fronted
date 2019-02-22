@@ -5,20 +5,34 @@
  * @example <money-list :data="moneys"></money-list>
  */
 <template>
-  <div class="wrap-moneyList" v-if="data.length">
-    <div class="header-moneyList">
-      <div class="text-date">{{data[0].time | date}}</div>
-        <!-- <div class="text-reduce">支出: {{data.outSum}}&nbsp;&nbsp;&nbsp;收入: {{data.inSum}}</div> -->
-      </div>
-    <div class="list-money">
-      <div class="item-money-wrap" v-for="money in data" :key="money._id" @click="handleTapMoney(money._id)">
+  <div class="wrap-moneyList">
+    <!-- <div class="header-moneyList">
+      <div class="text-date">{{list[0].moneyTime | date}}</div>
+    </div> -->
+    <div class="list-money"
+         v-if="list.length">
+      <div class="item-money-wrap"
+           v-for="money in list"
+           :key="money._id"
+           @click="handleTapMoney(money._id)">
         <div class="item-money">
-          <type-Icon :typeId="money.type" :whereabouts="0" @select="handleTapType"></type-Icon>
-          <div class="wrap-text">
-            <span class="text-value">{{money.value | currency}}</span>
+          <type-Icon :icon="money.categoryIcon"
+                     :type="money.type"
+                     @select="handleTapType"></type-Icon>
+          <div class="wrap-text-left">
+            <div class="text-category">{{money.categoryName}}</div>
+            <div class="text-time">{{$moment(money.moneyTime).format('YYYY-MM-DD HH:mm')}}</div>
+          </div>
+          <div class="wrap-text-right">
+            <div class="text-value">{{money.value | currency}}</div>
+            <div class="text-account">{{money.accountName}}</div>
           </div>
         </div>
       </div>
+    </div>
+    <div class="noMoneys-wrap"
+         v-else>
+      <div class="noMoneys-tip">这天没有账单哦</div>
     </div>
   </div>
 </template>
@@ -29,66 +43,27 @@ export default {
     return {};
   },
   props: {
-    data: {
+    list: {
       type: Array,
       required: true
+    },
+    options: {
+      type: Object,
+      default: () => ({
+        date: false
+      })
     }
-  },
-  computed: {
-    // groupByDate() {
-    //   let newArr = [];
-    //   this.data.forEach(elem => {
-    //     let index = -1;
-    //     let newMoney = {
-    //       type: elem.type,
-    //       value: elem.value,
-    //       isOutcome: elem.isOutcome
-    //     };
-    //     let alreadyExists = newArr.some((newGroup, j) => {
-    //       if (
-    //         elem.time.getFullYear() === newGroup.time.getFullYear() &&
-    //         elem.time.getMonth() === newGroup.time.getMonth() &&
-    //         elem.time.getDate() === newGroup.time.getDate()
-    //       ) {
-    //         index = j;
-    //         return true;
-    //       }
-    //     });
-    //     if (alreadyExists) {
-    //       newArr[index].moneys.push(newMoney);
-    //       if (newMoney.isOutcome) {
-    //         newArr[index].outSum += newMoney.value;
-    //       } else {
-    //         newArr[index].inSum += newMoney.value;
-    //       }
-    //     } else {
-    //       if (newMoney.isOutcome) {
-    //         newArr.push({
-    //           date: elem.date,
-    //           moneys: [newMoney],
-    //           outSum: newMoney.value,
-    //           inSum: 0
-    //         });
-    //       } else {
-    //         newArr.push({
-    //           time: elem.time,
-    //           moneys: [newMoney],
-    //           outSum: 0,
-    //           inSum: newMoney.value
-    //         });
-    //       }
-    //     }
-    //   });
-    //   return newArr;
-    // }
   },
   methods: {
     handleTapMoney(id) {
       this.$emit("tapMoney", id);
-      this.$router.push('/moneyDetail/'+id)
+      this.$router.push("/moneyDetail/" + id);
     },
     handleTapType(type) {
       this.$emit("tapType", type);
+    },
+    moment() {
+      return moment;
     }
   }
 };
@@ -97,10 +72,10 @@ export default {
 <style lang="less">
 @import "../assets/variable.less";
 .header-moneyList {
-  margin: 4 / @rem 0;
+  margin: 4px 0;
   display: flex;
   justify-content: space-between;
-  font-size: 12 / @rem;
+  font-size: 12px;
   color: @secondaryTextColor;
 }
 .item-money-wrap {
@@ -115,18 +90,41 @@ export default {
   }
 }
 .list-money {
-  margin: 4 / @rem 0 14 / @rem 0;
+  margin: 4px 0 14px 0;
   .item-money {
     display: flex;
-    justify-content: space-between;
     align-items: center;
     width: 100%;
-    padding: 14 / @rem 0;
-    .wrap-text {
-      display: inline-flex;
-      justify-content: space-between;
-      font-size: 22 / @rem;
+    height: 40px;
+    padding: 10px 0;
+    .wrap-text-left {
+      flex: 1;
+      margin-left: 8px;
+    }
+    .wrap-text-right {
+      text-align: right;
+    }
+    .text-category {
+      flex: 1;
+      font-size: 18px;
+    }
+    .text-time {
+      font-size: 12px;
+    }
+    .text-value {
+      font-size: 18px;
+    }
+    .text-account {
+      font-size: 14px;
     }
   }
+}
+
+.noMoneys-wrap {
+  padding-top: 40px;
+  margin: 0 auto;
+  text-align: center;
+  font-size: 14px;
+  color: @secondaryTextColor;
 }
 </style>

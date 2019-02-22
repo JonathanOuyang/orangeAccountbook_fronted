@@ -9,10 +9,14 @@ export const login = data => request.post('users/login', data)
 export const addMoney = data => request.post('moneys/addMoney', data)
 
 /* 查询账单 */
-export const getDayMoneys = data => request.post(`moneys/searchMoneyList`, data)
+export const searchMoneyList = data => request.post(`moneys/searchMoneyList`, data)
 
-/* 获得指定账单信息 */
-export const getMoneyDetail = data => request.post('moneys/getMoneyDetail', data)
+/* 查询账单总额 */
+export const getMoneySum = data => request.post(`moneys/getMoneySum`, data)
+
+/* 获取指定账单信息 */
+export const getMoneyDetail = data =>
+  request.post('moneys/getMoneyDetail', data)
 
 /* 删除账单 */
 export const deleteMoney = data => request.post('moneys/deleteMoney', data)
@@ -20,8 +24,9 @@ export const deleteMoney = data => request.post('moneys/deleteMoney', data)
 /* 编辑账单 */
 export const updateMoney = data => request.post('moneys/updateMoney', data)
 
-/* 获得分类 */
-export const getCategoryMap = data => request.post('moneys/getCategoryMap', data)
+/* 获取分类 */
+export const getCategoryList = data =>
+  request.post('users/getCategoryList', data)
 
-/* 获得账户 */
-export const getAccountMap = data => request.post('moneys/getAccountMap', data)
+/* 获取账户 */
+export const getAccountList = data => request.post('users/getAccountList', data)

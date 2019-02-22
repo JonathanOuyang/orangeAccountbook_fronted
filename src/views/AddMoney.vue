@@ -1,68 +1,74 @@
 <template>
-    <div id="view-addMoney">
-      <div class="addMoney-header">
-        <van-tabs color="#f6717d" :line-width="tabWidth" v-model="whereabouts">
-          <van-tab title="收入"></van-tab>
-          <van-tab title="支出"></van-tab>
-          <van-tab title="转账"></van-tab>
-        </van-tabs>
-      </div>
-      <div class="addMoney-val">
-          <div class="addMoney-val-account">
-              <!-- <div class="account-icon">
-                  <icon name="zhifubaob"></icon>
-              </div> -->
-              <div class="account-name">支付宝</div>
-          </div>
-          <div class="addMoney-val-money" @click="isShowNumKey = !isShowNumKey">￥{{value}}</div>
-      </div>
-      <van-swipe :autoplay="0" indicator-color="#f6717d" :loop="false">
-          <van-swipe-item v-for="(page, pageIdx) in categoryList" :key="pageIdx">
-              <div class="addMoney-type">
-                  <type-icon
-										checker
-										v-for="(type) in page"
-										:key="type.name"
-										:whereabouts="0"
-										:typeId="type"
-										name-position="bottom"
-										:selected="selectedCategory == type"
-										@select="handleSelectCategory"
-										class="addMoney-type-item"></type-icon>
-              </div>
-          </van-swipe-item>
-      </van-swipe>
-      <van-cell-group>
-        <van-cell title="时间" is-link :value="formatDate(date)" @click="isShowDate = !isShowDate"/>
-            <van-field v-model="note" placeholder="输入备注" />
-          </van-cell-group>
-      <!-- <div class="addMoney-numberKeyborad"> -->
-          <van-number-keyboard
-						:show="isShowNumKey"
-						extra-key="."
-						@blur="show = false"
-						theme="custom"
-						@input="handleInputNumber"
-						@delete="handleDeleteNumber"
-            @close="handleClose"
-						close-button-text="保存"
-          />
-      <!-- </div> -->
-      <van-popup v-model="isShowDate" position="bottom">
-        <van-datetime-picker
-          v-model="date"
-          type="datetime"
-        />
-      </van-popup>
+  <div id="view-addMoney">
+    <div class="addMoney-header">
+      <van-tabs color="#f6717d"
+                :line-width="tabWidth"
+                v-model="type">
+        <van-tab title="收入"></van-tab>
+        <van-tab title="支出"></van-tab>
+        <van-tab title="转账"></van-tab>
+      </van-tabs>
     </div>
+    <div class="addMoney-val">
+      <div class="addMoney-val-account">
+        <div class="account-name">支付宝</div>
+      </div>
+      <div class="addMoney-val-money"
+           @click="isShowNumKey = !isShowNumKey">￥{{value}}</div>
+    </div>
+    <van-swipe :autoplay="0"
+               indicator-color="#f6717d"
+               :loop="false">
+      <van-swipe-item v-for="(page, pageIdx) in [outCategoryList,inCategoryList][type]"
+                      :key="pageIdx">
+        <div class="addMoney-type">
+          <type-icon class="addMoney-type-item"
+                     checker
+                     v-for="(category) in page"
+                     :key="category._id"
+                     :_id="category._id"
+                     :type="0"
+                     :icon="category.icon"
+                     :title="category.name"
+                     title-position="bottom"
+                     :selected="selectedCategory == category._id"
+                     @select="handleSelectCategory"></type-icon>
+        </div>
+      </van-swipe-item>
+    </van-swipe>
+    <van-cell-group>
+      <van-cell title="时间"
+                is-link
+                :value="formatDate(date)"
+                @click="isShowDate = !isShowDate" />
+      <van-field v-model="note"
+                 placeholder="输入备注" />
+    </van-cell-group>
+    <!-- <div class="addMoney-numberKeyborad"> -->
+    <van-number-keyboard :show="isShowNumKey"
+                         extra-key="."
+                         @blur="show = false"
+                         theme="custom"
+                         @input="handleInputNumber"
+                         @delete="handleDeleteNumber"
+                         @close="handleClose"
+                         close-button-text="保存" />
+    <!-- </div> -->
+    <van-popup v-model="isShowDate"
+               position="bottom">
+      <van-datetime-picker v-model="date"
+                           type="datetime" />
+    </van-popup>
+  </div>
 </template>
 
 <script>
-import { createMoney } from "../api/api.js";
-const MAX_TYPE = 10;
-const MAX_MONEY = 9;
+import { addMoney, getCategoryList, getAccountList } from "../api/api.js";
+const CATEGORY_PAGE_SIZE = 10; // 每页分类数
+const MAX_MONEY = 9; // 金额位数
 const CLIENT_WIDTH = document.body.clientWidth;
 const TODAY = new Date();
+
 export default {
   name: "addMoney",
   data() {
@@ -72,7 +78,9 @@ export default {
       isInputInt: true,
       type: 0,
       note: "",
-      categoryList: [],
+      inCategoryList: [],
+      outCategoryList: [],
+      accountList: [],
       selectedCategory: 0,
       tabWidth: CLIENT_WIDTH / 3,
       isShowNumKey: false,
@@ -82,7 +90,12 @@ export default {
     };
   },
   created() {
-    this.getTypeList();
+    this.init();
+  },
+  watch: {
+    type(newVal) {
+      this.selectFirstCategory();
+    }
   },
   computed: {
     value() {
@@ -97,31 +110,49 @@ export default {
         return `${this.intStack.join("")}.${this.floatStack.join("")}`;
       } else return "0";
     },
-    selectedTypeVal() {
-      if (this.selectedType[0] == 0) {
-        return this.selectedType[1];
-      } else {
-        return this.selectedType[1] + this.selectedType[0] * 15;
-      }
-    }
   },
   methods: {
-    getTypeList() {
-      let typeSort = [];
-      for (let idx = 0; idx < 29; idx++) {
-        typeSort.push(idx);
+    init() {
+      getCategoryList().then(res => {
+        const inCategorys = [];
+        const outCategorys = [];
+        res.data.data.list.forEach(elem => {
+          if (elem.type == 0) {
+            outCategorys.push(elem);
+          } else if (elem.type == 1) {
+            inCategorys.push(elem);
+          }
+        });
+        this.inCategoryList = this.groupToPage(inCategorys, CATEGORY_PAGE_SIZE);
+        this.outCategoryList = this.groupToPage(outCategorys, CATEGORY_PAGE_SIZE);
+        this.selectFirstCategory();
+      });
+      getAccountList().then(res => {
+        this.accountList = res.data.data.list
+      })
+    },
+    groupToPage(list, pageSize) {
+      let result = [];
+      for (
+        let x = 0;
+        x < Math.ceil(list.length / pageSize);
+        x++
+      ) {
+        let start = x * pageSize;
+        let end = start + pageSize;
+        result.push(list.slice(start, end));
       }
-      for (let x = 0; x < Math.ceil(typeSort.length / MAX_TYPE); x++) {
-        let start = x * MAX_TYPE;
-        let end = start + MAX_TYPE;
-        this.categoryList.push(typeSort.slice(start, end));
-      }
+      return result;
+    },
+    selectFirstCategory() {
+      this.selectedCategory = [this.outCategoryList,this.inCategoryList][this.type][0][0]._id
+
     },
     postMoneys() {
       const data = {
-        whereabouts: this.whereabouts,
+        type: this.type,
         value: this.value,
-        type: this.selectedTypeVal,
+        category: this.selectedCategory,
         time: date,
         note: this.note
       };
@@ -160,11 +191,12 @@ export default {
     handleClose() {
       this.postMoneys();
     },
-    handleSelectCategory(idx) {
-      this.selectedCategory = idx;
+    handleSelectCategory(id) {
+      this.selectedCategory = id;
     },
     formatDate(date) {
-      return `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
+      return `${date.getFullYear()}-${date.getMonth() +
+        1}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
     }
   }
 };

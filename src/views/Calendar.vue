@@ -16,13 +16,8 @@
                  to="/addMoney">
       记一笔
     </router-link>
-    <div class="noMoneys-wrap"
-         v-if="noMoneys">
-      <div class="noMoneys-tip">这天没有账单哦</div>
-    </div>
     <money-list :data="moneys"
-                class="calendar-moneyList"
-                v-else></money-list>
+                class="calendar-moneyList"></money-list>
 
   </div>
 </template>
@@ -213,12 +208,5 @@ export default {
 .calendar-moneyList {
   padding: 8px 10px;
   background: #fff;
-}
-.noMoneys-wrap {
-  padding-top: 60px;
-  margin: 0 auto;
-  text-align: center;
-  font-size: 14px;
-  color: @secondaryTextColor;
 }
 </style>

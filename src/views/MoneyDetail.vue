@@ -2,59 +2,48 @@
   <div id="view-moneyDetail">
     <div class="detail-wrap">
       <div class="detail-header">
-        <type-Icon :typeId="Number(type)" :whereabouts="whereabouts"></type-Icon>
-        <div class="detail-value">￥{{value}}</div>
+        <type-Icon :icon="category.icon" :type="money.type" :title="category.name"></type-Icon>
+        <div class="detail-value">￥{{money.value}}</div>
       </div>
       <div class="detail-cell">
-        <div class="detail-item_title">流向</div>
-        <div class="detail-item_info">{{whereaboutsData[whereabouts]}}</div>
+        <div class="detail-item_title">类型</div>
+        <div class="detail-item_info">{{type[money.type]}}</div>
       </div>
-      <div class="detail-cell">
+      <!-- <div class="detail-cell">
         <div class="detail-item_title">账本</div>
         <div class="detail-item_info">{{book? book : '未选择'}}</div>
-      </div>
+      </div> -->
       <div class="detail-cell">
         <div class="detail-item_title">账户</div>
-        <div class="detail-item_info">{{account? account : '未选择'}}</div>
+        <div class="detail-item_info">{{account.name}}</div>
       </div>
       <div class="detail-cell">
         <div class="detail-item_title">时间</div>
-        <div class="detail-item_info">{{time | datetime}}</div>
+        <div class="detail-item_info">{{$moment(money.moneyTime).format('YYYY-MM-DD HH:mm')}}</div>
       </div>
       <div class="detail-cell">
         <div class="detail-item_title">备注</div>
-        <div class="detail-item_info">{{note}}</div>
+        <div class="detail-item_info">{{money.note || '无'}}</div>
       </div>
-    </div>
-    <div class="detail-footer">
-      <div class="detail-footer_btn">
-        <Icon name="bianji"></Icon>
-        <span>编辑</span>
-      </div>
-      <div class="detail-footer_btn">
-        <Icon name="shanchu1"></Icon>
-        <span>删除</span>
+      <div class="detail-cell">
+        <van-button size="small">编辑</van-button>
+        <van-button size="small" type="danger">删除</van-button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import {getMoneyDetail} from '../api/api.js'
+import { getMoneyDetail } from "../api/api.js";
 export default {
   name: "moneyDetail",
   data() {
     return {
-      type: -1,
-      whereabouts: -1,
-      value: 0,
-      time: '',
-      note: '',
-      id: '',
-      book: '',
-      account: '',
-      whereaboutsData: ['支出','收入','转账']
-    }
+      money: {},
+      category: {},
+      account: {},
+      type: ["支出", "收入", "转账"]
+    };
   },
   created() {
     this.id = this.$route.params.id;
@@ -62,12 +51,11 @@ export default {
   },
   methods: {
     getMoneyDetail() {
-      getMoneyDetail({id: this.id}).then(res => {
-        this.type = res.data.money.type;
-        this.value = res.data.money.value;
-        this.time = res.data.money.time;
-        this.note = res.data.money.note;
-      })
+      getMoneyDetail({ moneyId: this.id }).then(res => {
+        this.money = res.data.data.detail;
+        this.category = res.data.data.category;
+        this.account = res.data.data.account;
+      });
     }
   }
 };
@@ -80,18 +68,21 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 30/@rem 0 0;
+  padding: 50px 16px 0;
   background: @linearColor;
   height: 100%;
 }
 .detail-wrap {
-  .panel(0);
-  margin: 0 16/@rem;
-  padding: 20/@rem 12/@rem;
+  background-color: #fff;
+  border-radius: 4px;
+  padding: 16px 12px 8px;
 
   .detail-header,
   .detail-cell {
     display: flex;
+  }
+
+  .detail-header {
     justify-content: space-between;
   }
 
@@ -102,45 +93,29 @@ export default {
   }
 
   .detail-value {
-    font-size: 32/@rem;
+    font-size: 32px;
   }
   
   .detail-item_title{
-    font-size: 16/@rem;
+    flex: 1;
+    font-size: 16px;
   }
 
   .detail-item_info {
     color: @secondaryTextColor;
-    font-size: 14/@rem;    
+    font-size: 14px;    
   }
 
   .detail-note .detail-item_title {
     padding-bottom: 6px;
   }
-}
-.detail-footer {
-  display: flex;
-}
-.detail-footer_btn {
-  display: flex;
-  justify-content: center;
-  flex: 1;
-  background-color: #fff;
-  padding: 18px 0;
 
-  &:first-child {
-    border-right: 1px solid @dividerColor;
-  }
-
-  .iconfont {
-    line-height: 18/@rem;
-    font-size: 18/@rem;
-    margin-right: 4px;
-  }
-
-  span {
-    line-height: 16/@rem;
-    font-size: 16/@rem;
+  .detail-cell:last-child {
+    display: flex;
+    justify-content: flex-end;
+    .van-button--small:not(:last-child) {
+      margin-right: 4px;
+    }
   }
 }
 </style>
