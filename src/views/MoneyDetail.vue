@@ -26,19 +26,21 @@
         <div class="detail-item_info">{{money.note || '无'}}</div>
       </div>
       <div class="detail-cell">
-        <van-button size="small">编辑</van-button>
-        <van-button size="small" type="danger">删除</van-button>
+        <van-button :to="`/addMoney/${moneyId}`">编辑</van-button>
+        <van-button type="danger" 
+                    @click="handleDelete">删除</van-button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { getMoneyDetail } from "../api/api.js";
+import { getMoneyDetail, deleteMoney } from "../api/api.js";
 export default {
   name: "moneyDetail",
   data() {
     return {
+      moneyId: "",
       money: {},
       category: {},
       account: {},
@@ -46,16 +48,32 @@ export default {
     };
   },
   created() {
-    this.id = this.$route.params.id;
+    this.moneyId = this.$route.params.id;
     this.getMoneyDetail();
   },
   methods: {
     getMoneyDetail() {
-      getMoneyDetail({ moneyId: this.id }).then(res => {
+      getMoneyDetail({ moneyId: this.moneyId }).then(res => {
         this.money = res.data.data.detail;
         this.category = res.data.data.category;
         this.account = res.data.data.account;
       });
+    },
+    handleDelete() {
+      this.$dialog.confirm({
+        title: "提示",
+        message: "确认删除该账单？"
+      })
+        .then(() => {
+          deleteMoney({ moneyId: this.moneyId }).then(res => {
+            this.$notify({
+              message: res.data.summary,
+              background: this.$color["success"]
+            });
+            this.$router.go(-1);
+          });
+        })
+        .catch(() => {});
     }
   }
 };
@@ -95,15 +113,15 @@ export default {
   .detail-value {
     font-size: 32px;
   }
-  
-  .detail-item_title{
+
+  .detail-item_title {
     flex: 1;
     font-size: 16px;
   }
 
   .detail-item_info {
     color: @secondaryTextColor;
-    font-size: 14px;    
+    font-size: 14px;
   }
 
   .detail-note .detail-item_title {
@@ -113,7 +131,7 @@ export default {
   .detail-cell:last-child {
     display: flex;
     justify-content: flex-end;
-    .van-button--small:not(:last-child) {
+    .van-button--normal:not(:last-child) {
       margin-right: 4px;
     }
   }

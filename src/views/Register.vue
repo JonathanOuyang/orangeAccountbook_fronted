@@ -75,20 +75,13 @@ export default {
         return;
       }
       register(data).then(res => {
-        if (res.data.code === "success") {
-          this.$notify({
-            message: res.data.summary,
-            background: this.$color["success"]
-          });
-          setTimeout(()=> {
-            this.$router.push('/login');
-          }, 800)
-        } else {
-          this.$notify({
-            message: res.data.summary,
-            background: this.$color["error"]
-          });
-        }
+        this.$notify({
+          message: res.data.summary,
+          background: this.$color["success"]
+        });
+        setTimeout(() => {
+          this.$router.push("/login");
+        }, 800);
       });
     }
   }

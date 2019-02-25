@@ -21,7 +21,10 @@
                      @select="handleTapType"></type-Icon>
           <div class="wrap-text-left">
             <div class="text-category">{{money.categoryName}}</div>
-            <div class="text-time">{{$moment(money.moneyTime).format('YYYY-MM-DD HH:mm')}}</div>
+            <div class="text-secondary">
+              {{$moment(money.moneyTime).format(option.date)}} 
+              {{option.note && money.note}}
+            </div>
           </div>
           <div class="wrap-text-right">
             <div class="text-value">{{money.value | currency}}</div>
@@ -47,10 +50,11 @@ export default {
       type: Array,
       required: true
     },
-    options: {
+    option: {
       type: Object,
       default: () => ({
-        date: false
+        date: 'YYYY-MM-DD HH:mm',
+        note: true
       })
     }
   },
@@ -108,7 +112,8 @@ export default {
       flex: 1;
       font-size: 18px;
     }
-    .text-time {
+    .text-secondary {
+      color: @secondaryTextColor;
       font-size: 12px;
     }
     .text-value {

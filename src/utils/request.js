@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { Toast } from 'vant'
+import { Toast, Notify } from 'vant'
 import qs from 'qs'
 
 // 192.168.191.1
@@ -32,13 +32,12 @@ axios.interceptors.response.use(
   response => {
     Toast.clear()
     //一切正常，返回数据或空对象
-    // if (response.data.code === 0) {
+    if (response.data.code === "success") {
     return response
-    // } else {
-    //   //没有数据，只有提示信息，则弹出提示信息，
-    //   if (response.data.text != null && response.data.text.length > 0) {
-    //   }
-    // }
+    } else {
+      Notify(response.data.summary);
+      return;
+    }
   },
   error => {
     Toast.clear()

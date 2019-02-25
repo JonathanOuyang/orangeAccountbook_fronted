@@ -51,17 +51,17 @@ export default {
   margin-bottom: 90px;
 }
 .van-tabbar {
-  box-shadow: #ececec 0 -10/20rem 20/20rem -2/20rem;
+  box-shadow: #ececec 0 -10px 20px -2px;
   &-item--active {
     color: @primaryColor;
-    text-shadow: #e0e0e0 0 0 6/20rem;
+    text-shadow: #e0e0e0 0 0 6px;
   }
   .wrap-addBtn {
     display: inline-block;
     color: @textPrimaryColor;
-    width: 30/20rem;
-    height: 30/20rem;
-    padding: 3/20rem;
+    width: 30px;
+    height: 30px;
+    padding: 3px;
     border-radius: 50%;
     background: @linearColor;
   }

@@ -116,7 +116,7 @@ export default {
   color: @primaryTextColor;
 }
 .home-header-banner {
-  .header-background(-12%, 120px);
+  .header-background(-40px, 120px);
 
   .text-book {
     font-size: 24px;

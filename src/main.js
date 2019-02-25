@@ -19,7 +19,9 @@ import {
   DatetimePicker,
   Popup,
   Notify,
-  Panel
+  Panel,
+  Actionsheet,
+  Dialog
 } from "vant";
 import VCalendar from "v-calendar";
 import "v-calendar/lib/v-calendar.min.css";
@@ -44,7 +46,9 @@ Vue.use(Tabbar)
   .use(DatetimePicker)
   .use(Notify)
   .use(Panel)
-  .use(Popup);
+  .use(Popup)
+  .use(Actionsheet)
+  .use(Dialog);
 Vue.component("Icon", OIcon);
 Vue.component("typeIcon", typeIcon);
 Vue.component("moneyList", moneyList);

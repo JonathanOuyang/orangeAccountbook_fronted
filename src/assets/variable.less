@@ -14,7 +14,7 @@
 
 //页头卡片
 .panel(@top) {
-  margin: 0 auto 20/@rem;
+  margin: 0 auto 20px;
   background: #ffffff;
   // transform: translateY(@top);
   border-radius: 4px;
@@ -23,7 +23,7 @@
 }
 
 .header-background(@bottom: 0, @height: auto) {
-  margin-bottom:  @bottom;
+  margin-bottom: @bottom;
   box-sizing: border-box;
   width: 200%;
   height: @height;
@@ -52,6 +52,16 @@
   .button-icon {
     font-size: 16px;
   }
+}
+
+.van-button--primary {
+  background-color: @primaryColor;
+  border-color: @primaryColor;
+}
+.van-button--primary.van-button--plain {
+  background-color: #fff;  
+  border-color: @primaryColor;
+  color: @primaryColor;
 }
 
 //账单类型图标

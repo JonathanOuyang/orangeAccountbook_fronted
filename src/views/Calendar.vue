@@ -11,19 +11,17 @@
                     @dayclick="handleDay">
         </v-calendar>
       </div>
-    <router-link class="orange-button"
+    <!-- <router-link class="orange-button"
                  tag="div"
                  to="/addMoney">
       记一笔
-    </router-link>
-    <money-list :data="moneys"
-                class="calendar-moneyList"></money-list>
-
+    </router-link> -->
+    <money-list :list="moneys" :option="moneyListOption"></money-list>
   </div>
 </template>
 
 <script>
-import { getDayMoneys } from "../api/api.js";
+import { searchMoneyList, getCalendarInfo } from "../api/api.js";
 
 const TODAY = new Date();
 const darkPrimaryColor = "#ff3c50";
@@ -45,11 +43,11 @@ export default {
   data() {
     return {
       moneys: [],
-      dayInfo: {
-        date: new Date("2019-09-12"),
-        income: "20",
-        outcome: "60"
+      moneyListOption: {
+        date: 'HH:mm',
+        note: true
       },
+      dayHasMoneys: [],
       noMoneys: true,
       selectedDate: TODAY,
       calendarStyle: {
@@ -70,19 +68,19 @@ export default {
           width: "90%"
         },
         weekdays: {
-          padding: `6px ${toRem(5)} 0`,
-          fontSize: toRem(12)
+          padding: `6px 5px 0`,
+          fontSize: '12px'
         },
         // weeks: {
         //   height: toRem(daySize),
         // },
         dayContent: {
-          height: toRem(daySize - 4),
-          fontSize: toRem(16),
+          height: (daySize - 4) + 'px',
+          fontSize: '16px',
           color: primaryTextColor
         },
         dayCell: {
-          height: toRem(daySize),
+          height: (daySize) + 'px',
           margin: "2px 0"
         }
       }
@@ -93,37 +91,29 @@ export default {
       return [
         {
           key: "today",
-          highlight: {
-            width: toRem(daySize - 6),
-            height: toRem(daySize - 6),
-            borderColor: primaryColor,
-            borderWidth: "1px"
+          contentStyle: {
+            color: primaryColor,
+            fontWeight: 'bolder'
           },
           dates: this.selectedDate.getDate() == TODAY.getDate() ? null : TODAY
         },
         {
           key: "selectedDay",
           highlight: {
-            width: toRem(daySize - 4),
-            height: toRem(daySize - 4),
+            width: (daySize - 4) + 'px',
+            lineHeight: (daySize - 4) + 'px',
             backgroundColor: lightPrimaryColor,
             borderRadius: "8px"
           },
           dates: this.selectedDate
         },
-        // {
-        //   key: "dayHasMoneys",
-        //   dot: {
-        //     backgroundColor: "red"
-        //   },
-        //   dates: this.moneys
-        //     .map(item => item.time)
-        //     .filter(
-        //       item =>
-        //         item.getDate() != this.selectedDate.getDate() &&
-        //         item.getDate() != TODAY.getDate()
-        //     )
-        // },
+        {
+          key: "dayHasMoneys",
+          dot: {
+            backgroundColor: primaryColor
+          },
+          dates: this.dayHasMoneys.filter(elem => elem != this.$moment(this.selectedDate).format('YYYY-MM-DD'))
+        },
         {
           key: "dayAfterToday",
           highlight: {
@@ -134,57 +124,43 @@ export default {
     }
   },
   created() {
-    this.thisWeek = this.getWeek(TODAY);
-    this.reqDay_Moneys({
-      year: TODAY.getFullYear(),
-      month: TODAY.getMonth() + 1,
-      date: TODAY.getDate()
-    });
+    this.init();
   },
   methods: {
-    handleDay(day) {
-      this.thisWeek = day.week;
-
-      if (day.inMonth) {
-        this.selectedDate = day.date;
-        this.reqDay_Moneys({
-          userId: "5c179e948b4450478c646a93",
-          year: day.date.getFullYear(),
-          month: day.date.getMonth() + 1,
-          date: day.date.getDate()
-        });
+    init() {
+      const data = {
+        year: TODAY.getFullYear(),
+        month: TODAY.getMonth()+1
       }
+      getCalendarInfo(data).then(res => {
+        this.dayHasMoneys = res.data.data.calendarInfo
+      })
+      this.getMoneyListByDay(TODAY);      
     },
-    handleClickArrow() {
-      this.isShrink = !this.isShrink;
+    handleDay(day) {
+      this.selectedDate = day.date;
+      this.getMoneyListByDay(day.date);
     },
-    handleClickCalendarMask() {},
-    toggleCalendar() {
-      this.isShowCalendar = !this.isShowCalendar;
-    },
-    reqDay_Moneys(data) {
-      getDayMoneys(data).then(res => {
-        const dayMoneys = res.data.moneys;
-
-        if (dayMoneys.length) {
-          this.noMoneys = false;
-          this.moneys = dayMoneys;
-        } else {
-          this.noMoneys = true;
-          this.moneys = [];
+    getMoneyListByDay(date) {
+      const moment = this.$moment(date)      
+      const data = {
+        searchValue: {
+          moneyTimeStart: moment.startOf('day').valueOf(),
+          moneyTimeEnd: moment.endOf('day').valueOf()
+        },
+        sortOption: {
+          moneyTime: -1
         }
-      });
-    },
-    getWeek(date) {
-      // 先计算出该日期为第几周
-      let week = Math.ceil(date.getDate() / 7);
-      // 判断这个月前7天是周几，如果不是周一，则计入上个月
-      // if (date.getDate() < 7) {
-      //   if (date.getDay() !== 1) {
-      //     week = 5;
-      //   }
-      // }
-      return week;
+      }
+      searchMoneyList(data).then(res => {
+        const resData = res.data.data;
+        this.moneys = resData.list.map(item => ({
+          ...item,
+          categoryName: resData.categoryMap[item.categoryId].name,
+          categoryIcon: resData.categoryMap[item.categoryId].icon,
+          accountName: resData.accountMap[item.accountId].name
+        }));
+      })
     }
   }
 };
@@ -202,7 +178,7 @@ export default {
 }
 
 .calendar-wrap {
-  .panel(0)
+  .panel(0);
 }
 
 .calendar-moneyList {
