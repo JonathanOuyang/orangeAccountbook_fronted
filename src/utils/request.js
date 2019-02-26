@@ -1,9 +1,16 @@
 import axios from 'axios'
-import { Toast, Notify } from 'vant'
+import { Toast, Notify, Dialog } from 'vant'
+import router from "../router";
 import qs from 'qs'
 
+const BASE_URL = 'http://localhost:3000';
+const API_NO_TOKEN = {
+  'users/login': 1,
+  'users/register': 1,
+}
+
 // 192.168.191.1
-axios.defaults.baseURL = 'http://localhost:3000'
+axios.defaults.baseURL = BASE_URL;
 //请求开始时，开启加载中动画，出错了提示并关闭动画
 axios.interceptors.request.use(
   config => {
@@ -13,11 +20,20 @@ axios.interceptors.request.use(
     //   mask: true,
     //   message: "加载中"
     // });
-    if (config.method === 'post') {
-      // config.data = qs.stringify(config.data)
+    if(!API_NO_TOKEN[config.url]) {
+      
+      const token = localStorage.getItem('token')
+      if (!token) {
+        return Dialog.confirm({
+          title: "提示",
+          message: "登录状态失效，请重新登录",
+          showCancelButton: false
+        }).then(() => {
+          router.push('/login');
+        })
+      }
+      config.headers.common['Authorization'] = token
     }
-    const token = localStorage.getItem('token')
-    config.headers.common['Authorization'] = token
     return config;
   },
   error => {

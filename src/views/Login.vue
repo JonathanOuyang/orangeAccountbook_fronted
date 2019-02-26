@@ -46,15 +46,24 @@ export default {
         return;
       }
       login(data).then(res => {
-        this.$notify({
-          message: res.data.summary,
-          background: this.$color["success"]
-        });
-        localStorage.setItem("token", res.data.token);
-        localStorage.setItem("token_exp", new Date().getTime());
-        setTimeout(() => {
-          this.$router.push("/home");
-        }, 800);
+        if (res.data.code === "success") {
+          const nowMoment = 
+
+          this.$notify({
+            message: res.data.summary,
+            background: this.$color["success"]
+          });
+          localStorage.setItem('token', res.data.token);
+          localStorage.setItem('token_exp', this.$moment().add(2, 'days').valueOf());
+          setTimeout(()=> {
+            this.$router.push('/home');
+          }, 800)
+        } else {
+          this.$notify({
+            message: res.data.summary,
+            background: this.$color["error"]
+          });
+        }
       });
     }
   }
