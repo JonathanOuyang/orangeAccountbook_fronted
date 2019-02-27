@@ -30,8 +30,8 @@ export const getCalendarInfo = data =>
 
 /* 获取分类 */
 export const getCategoryList = data =>
-  request.post("users/getCategoryList", data);
+  request.post("categorys/getCategoryList", data);
 
 /* 获取账户 */
 export const getAccountList = data =>
-  request.post("users/getAccountList", data);
+  request.post("accounts/getAccountList", data);

@@ -91,12 +91,7 @@ export default {
 
       searchMoneyList(searchData).then(res => {
         const resData = res.data.data;
-        this.moneys = resData.list.map(item => ({
-          ...item,
-          categoryName: resData.categoryMap[item.categoryId].name,
-          categoryIcon: resData.categoryMap[item.categoryId].icon,
-          accountName: resData.accountMap[item.accountId].name
-        }));
+        this.moneys = resData.list;
       });
 
       getMoneySum(sumData).then(res => {
