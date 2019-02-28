@@ -113,12 +113,11 @@ export default {
 <style lang="less">
 @import "../assets/variable.less";
 #view-home {
-  padding: 0 20px;
   color: @primaryTextColor;
 }
 .home-header-banner {
   .header-background(-40px, 120px);
-
+  
   .text-book {
     font-size: 24px;
   }
@@ -129,9 +128,9 @@ export default {
 }
 
 .home-panel {
-  width: 90%;
+  width: 80%;
   display: flex;
-  margin: 0 auto 20px;
+  margin: 0 10% 20px;
   padding: 16px 0;
   .panel();
   .home-panel-item {
@@ -163,7 +162,7 @@ export default {
 .home-button-group {
   display: flex;
   // justify-content: center;
-  margin: 0 auto;
+  margin: 0 5%;
   width: 90%;
   .home-button {
     margin: 6px;
@@ -174,8 +173,8 @@ export default {
 .moneyList {
   margin-top: 22px;
   .title-moneyList {
+    margin: 0 20px;
     font-size: 16px;
-    margin: 18px 0;
   }
 }
 </style>
