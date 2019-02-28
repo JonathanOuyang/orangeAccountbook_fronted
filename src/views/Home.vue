@@ -65,15 +65,19 @@ export default {
     };
   },
   created() {
-    this.getHomeData();
-
+    this.init();
   },
   methods: {
+    init() {
+      this.getHomeData();
+    },
     getHomeData() {
       const searchData = {
         searchValue: {
-          moneyTimeStart: this.$moment().subtract(SHOW_MONEYS_DAY, 'days').format('YYYY-MM-DD HH:mm:ss'),
-          moneyTimeEnd: this.$moment().format('YYYY-MM-DD HH:mm:ss')
+          moneyTimeStart: this.$moment()
+            .subtract(SHOW_MONEYS_DAY, "days")
+            .format("YYYY-MM-DD HH:mm:ss"),
+          moneyTimeEnd: this.$moment().format("YYYY-MM-DD HH:mm:ss")
         },
         sortOption: {
           moneyTime: -1
@@ -84,8 +88,10 @@ export default {
 
       const sumData = {
         searchValue: {
-          moneyTimeStart: this.$moment().startOf('month').format('YYYY-MM-DD HH:mm:ss'),
-          moneyTimeEnd: this.$moment().format('YYYY-MM-DD HH:mm:ss')
+          moneyTimeStart: this.$moment()
+            .startOf("month")
+            .format("YYYY-MM-DD HH:mm:ss"),
+          moneyTimeEnd: this.$moment().format("YYYY-MM-DD HH:mm:ss")
         }
       };
 
@@ -98,7 +104,7 @@ export default {
         const sums = res.data.data;
         this.income = sums.incomeSum;
         this.outcome = sums.outcomeSum;
-      })
+      });
     }
   }
 };
@@ -125,8 +131,9 @@ export default {
 .home-panel {
   width: 90%;
   display: flex;
+  margin: 0 auto 20px;
   padding: 16px 0;
-  .panel(-12.5%);
+  .panel();
   .home-panel-item {
     flex: 1;
     text-align: center;

@@ -22,7 +22,7 @@
           <div class="wrap-text-left">
             <div class="text-category">{{money.category.name}}</div>
             <div class="text-secondary">
-              {{$moment(money.moneyTime).format(option.date)}} 
+              {{$moment(money.moneyTime).format(option.date)}}
               {{option.note && money.note}}
             </div>
           </div>
@@ -53,7 +53,7 @@ export default {
     option: {
       type: Object,
       default: () => ({
-        date: 'YYYY-MM-DD HH:mm',
+        date: "YYYY-MM-DD HH:mm",
         note: true
       })
     }
@@ -86,15 +86,19 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
+  padding: 0 24px;
   &:after {
     content: "";
     width: 88%;
     height: 1px;
     background: @dividerColor;
   }
+  &:active {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
 }
 .list-money {
-  margin: 4px 0 14px 0;
+  margin: 4px 0 14px;
   .item-money {
     display: flex;
     align-items: center;

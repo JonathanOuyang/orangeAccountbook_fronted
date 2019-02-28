@@ -1,6 +1,9 @@
 <template>
     <div id="view-index">
+      <keep-alive :max="1" :include="keepAlivePage">
         <router-view></router-view>
+      </keep-alive>
+        
         <van-tabbar v-model="tabbarActive">
             <van-tabbar-item v-for="(item, index) in tabbar" :key="index" :to="item.link">
                 <Icon slot="icon" :name="item.icon" class="tabbar-item-icon"
@@ -18,7 +21,8 @@ export default {
   data() {
     return {
       pages: ["calendar", "accounts", "home", "chart", "personal"],
-      tabbarActive: 1
+      tabbarActive: 1,
+      keepAlivePage: 'Calendar'
     };
   },
   computed: {

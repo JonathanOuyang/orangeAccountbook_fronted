@@ -47,8 +47,6 @@ export default {
       }
       login(data).then(res => {
         if (res.data.code === "success") {
-          const nowMoment = 
-
           this.$notify({
             message: res.data.summary,
             background: this.$color["success"]

@@ -1,40 +1,52 @@
 import axios from 'axios'
 import { Toast, Notify, Dialog } from 'vant'
-import router from "../router";
+import router from '../router'
 import qs from 'qs'
 
-const BASE_URL = 'http://localhost:3000';
+const BASE_URL = 'http://localhost:3000'
 const API_NO_TOKEN = {
   'users/login': 1,
   'users/register': 1,
 }
 
 // 192.168.191.1
-axios.defaults.baseURL = BASE_URL;
+axios.defaults.baseURL = BASE_URL
 //请求开始时，开启加载中动画，出错了提示并关闭动画
 axios.interceptors.request.use(
   config => {
+    const TOKEN = localStorage.getItem('token')
+    const TOKEN_EXP = localStorage.getItem('token_exp')
     // Toast.loading({
     //   duration: 0,
     //   forbidClick: true,
     //   mask: true,
     //   message: "加载中"
     // });
-    if(!API_NO_TOKEN[config.url]) {
-      
-      const token = localStorage.getItem('token')
-      if (!token) {
+    if (!API_NO_TOKEN[config.url]) {
+      if (new Date().getTime() > TOKEN_EXP) {
         return Dialog.confirm({
-          title: "提示",
-          message: "登录状态失效，请重新登录",
-          showCancelButton: false
+          title: '提示',
+          message: '登录状态过期，请重新登录',
+          showCancelButton: false,
         }).then(() => {
-          router.push('/login');
+          localStorage.removeItem('token')
+          localStorage.removeItem('token_exp')
+          router.push('/login')
         })
       }
-      config.headers.common['Authorization'] = token
+
+      if (!TOKEN) {
+        return Dialog.confirm({
+          title: '提示',
+          message: '登录状态失效，请重新登录',
+          showCancelButton: false,
+        }).then(() => {
+          router.push('/login')
+        })
+      }
+      config.headers.common['Authorization'] = TOKEN
     }
-    return config;
+    return config
   },
   error => {
     Toast.fail()
@@ -48,11 +60,11 @@ axios.interceptors.response.use(
   response => {
     Toast.clear()
     //一切正常，返回数据或空对象
-    if (response.data.code === "success") {
-    return response
+    if (response.data.code === 'success') {
+      return response
     } else {
-      Notify(response.data.summary);
-      return;
+      Notify(response.data.summary)
+      return
     }
   },
   error => {

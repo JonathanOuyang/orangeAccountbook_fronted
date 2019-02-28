@@ -2,7 +2,7 @@
   <div id="view-calendar">
     <div class="calendar-header">
     </div>
-      <div class="calendar-wrap">
+    <div class="calendar-wrap">
         <v-calendar :attributes='attrs'
                     is-expanded
                     :theme-styles="calendarStyle"
@@ -10,13 +10,14 @@
                     title-position="left"
                     @dayclick="handleDay">
         </v-calendar>
-      </div>
+    </div>
     <!-- <router-link class="orange-button"
                  tag="div"
                  to="/addMoney">
       记一笔
     </router-link> -->
-    <money-list :list="moneys" :option="moneyListOption"></money-list>
+    <money-list :list="moneys"
+                :option="moneyListOption"></money-list>
   </div>
 </template>
 
@@ -44,7 +45,7 @@ export default {
     return {
       moneys: [],
       moneyListOption: {
-        date: 'HH:mm',
+        date: "HH:mm",
         note: true
       },
       dayHasMoneys: [],
@@ -69,18 +70,18 @@ export default {
         },
         weekdays: {
           padding: `6px 5px 0`,
-          fontSize: '12px'
+          fontSize: "12px"
         },
         // weeks: {
         //   height: toRem(daySize),
         // },
         dayContent: {
-          height: (daySize - 4) + 'px',
-          fontSize: '16px',
+          height: daySize - 4 + "px",
+          fontSize: "16px",
           color: primaryTextColor
         },
         dayCell: {
-          height: (daySize) + 'px',
+          height: daySize + "px",
           margin: "2px 0"
         }
       }
@@ -93,15 +94,15 @@ export default {
           key: "today",
           contentStyle: {
             color: primaryColor,
-            fontWeight: 'bolder'
+            fontWeight: "bolder"
           },
           dates: this.selectedDate.getDate() == TODAY.getDate() ? null : TODAY
         },
         {
           key: "selectedDay",
           highlight: {
-            width: (daySize - 4) + 'px',
-            lineHeight: (daySize - 4) + 'px',
+            width: daySize - 4 + "px",
+            lineHeight: daySize - 4 + "px",
             backgroundColor: lightPrimaryColor,
             borderRadius: "8px"
           },
@@ -112,7 +113,9 @@ export default {
           dot: {
             backgroundColor: primaryColor
           },
-          dates: this.dayHasMoneys.filter(elem => elem != this.$moment(this.selectedDate).format('YYYY-MM-DD'))
+          dates: this.dayHasMoneys.filter(
+            elem => elem != this.$moment(this.selectedDate).format("YYYY-MM-DD")
+          )
         },
         {
           key: "dayAfterToday",
@@ -130,32 +133,32 @@ export default {
     init() {
       const data = {
         year: TODAY.getFullYear(),
-        month: TODAY.getMonth()+1
-      }
+        month: TODAY.getMonth() + 1
+      };
       getCalendarInfo(data).then(res => {
-        this.dayHasMoneys = res.data.data.calendarInfo
-      })
-      this.getMoneyListByDay(TODAY);      
+        this.dayHasMoneys = res.data.data.calendarInfo;
+      });
+      this.getMoneyListByDay(TODAY);
     },
     handleDay(day) {
       this.selectedDate = day.date;
       this.getMoneyListByDay(day.date);
     },
     getMoneyListByDay(date) {
-      const moment = this.$moment(date)      
+      const moment = this.$moment(date);
       const data = {
         searchValue: {
-          moneyTimeStart: moment.startOf('day').valueOf(),
-          moneyTimeEnd: moment.endOf('day').valueOf()
+          moneyTimeStart: moment.startOf("day").valueOf(),
+          moneyTimeEnd: moment.endOf("day").valueOf()
         },
         sortOption: {
           moneyTime: -1
         }
-      }
+      };
       searchMoneyList(data).then(res => {
         const resData = res.data.data;
         this.moneys = resData.list;
-      })
+      });
     }
   }
 };
@@ -165,7 +168,6 @@ export default {
 @import "../assets/variable.less";
 
 #view-calendar {
-  padding: 0 20px;
 }
 
 .calendar-header {
@@ -173,7 +175,8 @@ export default {
 }
 
 .calendar-wrap {
-  .panel(0);
+  .panel();
+  margin: 0 20px 20px;
 }
 
 .calendar-moneyList {

@@ -91,8 +91,7 @@ export default {
   height: 100%;
 }
 .detail-wrap {
-  background-color: #fff;
-  border-radius: 4px;
+  .panel();
   padding: 16px 12px 8px;
 
   .detail-header,
