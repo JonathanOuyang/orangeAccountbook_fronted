@@ -29,6 +29,7 @@ import OIcon from "./components/o-icon";
 import moneyList from "./components/moneyList";
 import typeIcon from "./components/typeIcon";
 import { filterDate, filterDatetime, filterCurrency } from "./utils/filter";
+import Loading from "./components/loading/loading";
 import moment from 'moment';
 
 Vue.config.productionTip = false;
@@ -48,7 +49,8 @@ Vue.use(Tabbar)
   .use(Panel)
   .use(Popup)
   .use(Actionsheet)
-  .use(Dialog);
+  .use(Dialog)
+  .use(Loading);
 Vue.component("Icon", OIcon);
 Vue.component("typeIcon", typeIcon);
 Vue.component("moneyList", moneyList);

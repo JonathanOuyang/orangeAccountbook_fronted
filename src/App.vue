@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <keep-alive>
+    <keep-alive :max="1" :include="keepAlivePage">
       <router-view></router-view>
     </keep-alive>
   </div>
@@ -9,7 +9,9 @@
 <script>
 export default {
   data() {
-    return {};
+    return {
+      keepAlivePage: ['calendar']    
+    };
   }
 };
 </script>

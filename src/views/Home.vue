@@ -94,10 +94,11 @@ export default {
           moneyTimeEnd: this.$moment().format("YYYY-MM-DD HH:mm:ss")
         }
       };
-
+      this.$loading.show();
       searchMoneyList(searchData).then(res => {
         const resData = res.data.data;
         this.moneys = resData.list;
+        this.$loading.hide();
       });
 
       getMoneySum(sumData).then(res => {
@@ -162,8 +163,8 @@ export default {
 .home-button-group {
   display: flex;
   // justify-content: center;
-  margin: 0 5%;
-  width: 90%;
+  margin: 0 10%;
+  width: 80%;
   .home-button {
     margin: 6px;
     flex: 1;

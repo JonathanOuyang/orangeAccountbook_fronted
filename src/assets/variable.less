@@ -1,8 +1,8 @@
-@darkPrimaryColor: #ff3c50;
+@darkPrimaryColor: #a02530;
 @primaryColor: #f6717d;
-@lightPrimaryColor: #fe997b;
+@lightPrimaryColor: #F57884;
 @textPrimaryColor: #fafafa;
-@accentColor: #ffe1e6;
+@accentColor: #656FEF;
 @primaryTextColor: #505050;
 @secondaryTextColor: #767676;
 @dividerColor: #eee;
@@ -61,6 +61,17 @@
   background: #fff;  
   border: 1px solid @primaryColor;
   color: @primaryColor;
+}
+
+.van-button--default {
+  background: @accentColor;
+  color: @textPrimaryColor;
+  border: none;
+}
+.van-button--default.van-button--plain {
+  background: #fff;  
+  border: 1px solid @accentColor;
+  color: @accentColor;
 }
 
 //账单类型图标

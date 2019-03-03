@@ -14,6 +14,9 @@
       </div>
       <van-button size="large"
                   @click="handleConfirm">登录</van-button>
+      <van-button size="large"
+                  plain
+                  to="/register">注册</van-button>
     </div>
     <div class="footer">橙子账本</div>
   </div>
@@ -51,11 +54,16 @@ export default {
             message: res.data.summary,
             background: this.$color["success"]
           });
-          localStorage.setItem('token', res.data.token);
-          localStorage.setItem('token_exp', this.$moment().add(2, 'days').valueOf());
-          setTimeout(()=> {
-            this.$router.push('/home');
-          }, 800)
+          localStorage.setItem("token", res.data.token);
+          localStorage.setItem(
+            "token_exp",
+            this.$moment()
+              .add(2, "days")
+              .valueOf()
+          );
+          setTimeout(() => {
+            this.$router.push("/home");
+          }, 800);
         } else {
           this.$notify({
             message: res.data.summary,
@@ -74,7 +82,7 @@ export default {
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
-  padding: 40px 30px;
+  padding: 40px 30px 10px;
   height: 100%;
   background: @linearColor;
 
@@ -89,14 +97,22 @@ export default {
   }
 
   .form-wrap {
+    flex: 1;
     margin: 50px 0 30px;
   }
 
   .main {
+    display: flex;
+    flex-direction: column;
     flex: 1;
+
+    .van-button--default {
+      margin-bottom: 6px;
+    }
   }
 
   .footer {
+    padding: 20px 0;
     font-size: 24px;
   }
 }

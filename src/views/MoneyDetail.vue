@@ -26,7 +26,7 @@
         <div class="detail-item_info">{{money.note || '无'}}</div>
       </div>
       <div class="detail-cell">
-        <van-button :to="`/addMoney/${moneyId}`">编辑</van-button>
+        <van-button type="primary" plain :to="`/addMoney/${moneyId}`">编辑</van-button>
         <van-button type="danger" 
                     @click="handleDelete">删除</van-button>
       </div>
