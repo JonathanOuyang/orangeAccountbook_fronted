@@ -66,10 +66,10 @@ export default {
       })
         .then(() => {
           deleteMoney({ moneyId: this.moneyId }).then(res => {
-            this.$notify({
-              message: res.data.summary,
-              background: this.$color["success"]
-            });
+            // this.$notify({
+            //   message: res.data.summary,
+            //   background: this.$color["success"]
+            // });
             this.$router.go(-1);
           });
         })

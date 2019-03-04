@@ -68,7 +68,7 @@
                            type="datetime" />
     </van-popup>
     <van-popup v-model="isShowAccount"
-    position="bottom">
+               position="bottom">
       <van-radio-group v-model="selectedAccount">
         <van-cell-group>
           <van-cell v-for="item in accountList"
@@ -156,7 +156,7 @@ export default {
       getAccountList().then(res => {
         this.accountList = res.data.data.list.map(item => ({
           name: item,
-          color: '#f6717d'
+          color: "#f6717d"
         }));
         this.selectedAccount = this.accountList[0].name;
       });
@@ -263,19 +263,22 @@ export default {
         return;
       }
       if (this.moneyId) {
-        updateMoney({ ...data, moneyId: this.moneyId }).then(res => {
-          Notify({
-            message: res.data.summary,
-            background: this.$color["success"]
-          });
+        updateMoney(
+          { ...data, moneyId: this.moneyId },
+          { successDialog: true }
+        ).then(res => {
+          // Notify({
+          //   message: res.data.summary,
+          //   background: this.$color["success"]
+          // });
           this.$router.go(-1);
         });
       } else {
-        addMoney(data).then(res => {
-          Notify({
-            message: res.data.summary,
-            background: this.$color["success"]
-          });
+        addMoney(data, { successDialog: true }).then(res => {
+          // Notify({
+          //   message: res.data.summary,
+          //   background: this.$color["success"]
+          // });
           this.$router.go(-1);
         });
       }
@@ -285,10 +288,9 @@ export default {
     },
     handleSelectAccount(data) {
       this.selectedAccount = data;
-      setTimeout(()=> {
-      this.isShowAccount = false;
-
-      }, 200)
+      setTimeout(() => {
+        this.isShowAccount = false;
+      }, 200);
     },
     handleSave() {
       this.saveMoney();

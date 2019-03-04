@@ -40,11 +40,11 @@ function getToken() {
 axios.defaults.baseURL = BASE_URL
 axios.interceptors.request.use(
   config => {
-    config.showLoading && Vue.$loading.show();
+    config.showLoading && Vue.$loading.show()
     return config
   },
   error => {
-    config.showLoading && Vue.$loading.hide();
+    Vue.$loading.hide()
     return Promise.reject(error)
   }
 )
@@ -52,8 +52,14 @@ axios.interceptors.request.use(
 axios.interceptors.response.use(
   response => {
     //一切正常，返回数据或空对象
-    Vue.$loading.hide();
+    Vue.$loading.hide()
+
     if (response.data.code === 'success') {
+      response.config && response.config.showSuccess === true &&
+        Notify({
+          message: response.data.summary,
+          background: '#47bb51',
+        })
       return response
     } else {
       Notify(response.data.summary)
@@ -61,7 +67,7 @@ axios.interceptors.response.use(
     }
   },
   error => {
-    Vue.$loading.hide();
+    Vue.$loading.hide()
     //未登录
     // 请求已发出，但服务器响应的状态码不在 2xx 范围内，有错误信息则弹出错误信息
     // console.log("response-error-data", error.response.data);
@@ -94,13 +100,15 @@ export default {
    * @param {Object} [params] 请求时携带的参数
    */
   post: (url, params, options = {}) => {
-      options.setToken === undefined && (options.setToken = true)
-      options.loading === undefined && (options.loading = true)
+    options.setToken === undefined && (options.setToken = true)
+    options.loadingToast === undefined && (options.loadingToast = true)
+    options.successDialog === undefined && (options.successDialog = false)
     return new Promise((resolve, reject) => {
       axios
         .post(url, params, {
           headers: { Authorization: options.setToken ? getToken() : '' },
-          showLoading: options.loading
+          showLoading: options.loadingToast,
+          showSuccess: options.successDialog,
         })
         .then(
           response => {
