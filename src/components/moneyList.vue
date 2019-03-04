@@ -34,8 +34,8 @@
       </div>
     </div>
     <div class="noMoneys-wrap"
-         v-else>
-      <div class="noMoneys-tip">这天没有账单哦</div>
+         v-else-if="!list.length && !isLoading">
+      <div class="noMoneys-tip">{{noDataText}}</div>
     </div>
     <loading :show="isLoading" type="RotateSquare2" opacity="1"></loading>
   </div>
@@ -65,6 +65,10 @@ export default {
     isLoading: {
       type: Boolean,
       default: false
+    },
+    noDataText: {
+      type: String,
+      default: '这天没有账单哦'
     }
   },
   methods: {

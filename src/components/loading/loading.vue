@@ -48,6 +48,7 @@ export default {
   left: 0;
   padding-bottom: 10%;
   background: #fff;
+  opacity: 0.9;
   height: 100%;
   width: 100%;
   z-index: 100;

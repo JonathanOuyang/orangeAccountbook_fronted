@@ -8,6 +8,7 @@
                     :theme-styles="calendarStyle"
                     nav-visibility="hidden"
                     title-position="left"
+                    @update:fromPage="changePage"
                     @dayclick="handleDay">
         </v-calendar>
     </div>
@@ -61,7 +62,7 @@ export default {
           borderRadius: "10px"
         },
         header: {
-          padding: "6px 18px 10px 18px"
+          padding: "2px 18px 6px 18px"
         },
         headerTitle: {
           fontSize: `18px`
@@ -103,8 +104,8 @@ export default {
         {
           key: "selectedDay",
           highlight: {
-            width: daySize - 4 + "px",
-            lineHeight: daySize - 4 + "px",
+            width: daySize - 6 + "px",
+            height: daySize - 6 + "px",
             backgroundColor: lightPrimaryColor,
             borderRadius: "8px"
           },
@@ -129,26 +130,27 @@ export default {
     }
   },
   created() {
-    this.init();
+    this.$loading.show();
+    this.initCalendarPage(TODAY.getFullYear(), TODAY.getMonth() + 1, TODAY.getDate());
   },
   methods: {
-    init() {
-      const data = {
-        year: TODAY.getFullYear(),
-        month: TODAY.getMonth() + 1
-      };
-      getCalendarInfo(data).then(res => {
+    // 更新当前日历页和对应的账单列表
+    initCalendarPage(year, month, date = 1) {
+      getCalendarInfo({year, month}, {loadingToast: false}).then(res => {
         this.dayHasMoneys = res.data.data.calendarInfo;
       });
-      this.getMoneyListByDay(TODAY);
+      this.getMoneyListByDay(year, month, date);
     },
+
+    // 点击日期
     handleDay(day) {
       this.selectedDate = day.date;
-      this.isListLoading = true;
       this.getMoneyListByDay(day.date);
     },
-    getMoneyListByDay(date) {
-      const moment = this.$moment(date);
+    
+    // 更新账单列表
+    getMoneyListByDay(year, month, date) {
+      const moment = this.$moment(`${year}-${month}-${date}`,'YYYY-M-D');
       const data = {
         searchValue: {
           moneyTimeStart: moment.startOf("day").valueOf(),
@@ -158,12 +160,19 @@ export default {
           moneyTime: -1
         }
       };
-
+      this.isListLoading = true
+      this.moneys = [];
       searchMoneyList(data,{loadingToast: false}).then(res => {
         this.isListLoading && (this.isListLoading = false);
         const resData = res.data.data;
         this.moneys = resData.list;
       });
+    },
+
+    // 切换日历页
+    changePage(page) {
+      this.selectedDate = new Date(page.year, page.month-1, 1)
+      this.initCalendarPage(page.year, page.month)
     }
   }
 };
@@ -184,7 +193,7 @@ export default {
 
 .calendar-wrap {
   .panel();
-  margin: 0 20px 20px;
+  margin: 0 14px 20px;
 }
 
 .calendar-moneyList {
