@@ -5,12 +5,15 @@
         <div class="home-title">
           <div class="text-book">
             {{bookName}}<Icon name="genghuan"
-                  :size="22"
                   style="margin-left: 0.1rem"></Icon>
           </div>
           <div class="text-extra">
             您已连续记账{{moneyDay}}天
           </div>
+        </div>
+        <div class="button-search">
+          <Icon name="sousuo1" 
+          style="color: #f6717d; font-size: 20px;"></Icon>
         </div>
       </div>
       <div class="home-panel">
@@ -117,7 +120,12 @@ export default {
   color: @primaryTextColor;
 }
 .home-header-banner {
+  display: flex;
   .header-background(-40px, 120px);
+
+  .home-title {
+    flex: 1; 
+  }
   
   .text-book {
     font-size: 24px;
@@ -125,6 +133,17 @@ export default {
   .text-extra {
     font-size: 14px;
     margin-top: 4px;
+  }
+
+  .button-search {
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+    width: 50px;
+    height: 34px;
+    border-radius: 17px 0 0 17px;
+    background-color: rgba(255, 255, 255, 0.5);
   }
 }
 

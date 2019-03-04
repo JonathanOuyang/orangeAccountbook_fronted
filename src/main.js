@@ -21,7 +21,9 @@ import {
   Notify,
   Panel,
   Actionsheet,
-  Dialog
+  Dialog,
+  RadioGroup, 
+  Radio
 } from "vant";
 import VCalendar from "v-calendar";
 import "v-calendar/lib/v-calendar.min.css";
@@ -49,8 +51,10 @@ Vue.use(Tabbar)
   .use(Panel)
   .use(Popup)
   .use(Actionsheet)
-  .use(Dialog)
-  .use(Loading);
+  .use(Loading)
+  .use(RadioGroup)
+  .use(Radio)
+  .use(Dialog);
 Vue.component("Icon", OIcon);
 Vue.component("typeIcon", typeIcon);
 Vue.component("moneyList", moneyList);

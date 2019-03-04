@@ -4,12 +4,13 @@
       <van-tabs color="#f6717d"
                 :line-width="tabWidth"
                 v-model="type">
-        <van-tab title="收入"></van-tab>
         <van-tab title="支出"></van-tab>
+        <van-tab title="收入"></van-tab>
       </van-tabs>
     </div>
     <div class="addMoney-val">
-      <div class="addMoney-val-account" @click="isShowAccount = true">
+      <div class="addMoney-val-account"
+           @click="isShowAccount = true">
         <div class="account-name">{{selectedAccount.name}}</div>
       </div>
       <div class="addMoney-val-money"
@@ -17,22 +18,22 @@
     </div>
     <div class="addMoney-main">
       <van-swipe :autoplay="0"
-               indicator-color="#f6717d"
-               :loop="false">
+                 indicator-color="#f6717d"
+                 :loop="false">
         <van-swipe-item v-for="(page, pageIdx) in [outCategoryList,inCategoryList][type]"
-                      :key="pageIdx">
+                        :key="pageIdx">
           <div class="addMoney-type">
             <type-icon class="addMoney-type-item"
-                      checker
-                      v-for="(category) in page"
-                      :key="category._id"
-                      :_id="category._id"
-                      :type="0"
-                      :icon="category.icon"
-                      :title="category.name"
-                      title-position="bottom"
-                      :selected="selectedCategory == category._id"
-                      @select="handleSelectCategory"></type-icon>
+                       checker
+                       v-for="(category) in page"
+                       :key="category._id"
+                       :_id="category._id"
+                       :type="0"
+                       :icon="category.icon"
+                       :title="category.name"
+                       title-position="bottom"
+                       :selected="selectedCategory == category._id"
+                       @select="handleSelectCategory"></type-icon>
           </div>
         </van-swipe-item>
       </van-swipe>
@@ -42,17 +43,17 @@
                   :value="$moment(date).format('YYYY-MM-DD HH:mm')"
                   @click="isShowDate = !isShowDate" />
         <van-field v-model="note"
-                  placeholder="输入备注" />
+                   placeholder="输入备注" />
       </van-cell-group>
     </div>
     <div class="addMoney-footer">
-        <van-button type="primary" 
-                    size="large" 
-                    plain
-                    @click="handleCreateMore">再记一笔</van-button>
-        <van-button type="primary" 
-                    size="large"
-                    @click="handleSave">保存</van-button>
+      <van-button type="primary"
+                  size="large"
+                  plain
+                  @click="handleCreateMore">再记一笔</van-button>
+      <van-button type="primary"
+                  size="large"
+                  @click="handleSave">保存</van-button>
     </div>
     <van-number-keyboard :show="isShowNumKey"
                          extra-key="."
@@ -66,12 +67,21 @@
       <van-datetime-picker v-model="date"
                            type="datetime" />
     </van-popup>
-    <van-actionsheet
-      v-model="isShowAccount"
-      :actions="accountList"
-      @select="handleSelectAccount"
-      cancel-text="取消"
-    />
+    <van-popup v-model="isShowAccount"
+    position="bottom">
+      <van-radio-group v-model="selectedAccount">
+        <van-cell-group>
+          <van-cell v-for="item in accountList"
+                    :key="item.name._id"
+                    :title="item.name.name"
+                    :label="item.name.summary"
+                    clickable
+                    @click="handleSelectAccount(item.name)">
+            <van-radio :name="item.name" />
+          </van-cell>
+        </van-cell-group>
+      </van-radio-group>
+    </van-popup>
   </div>
 </template>
 
@@ -103,7 +113,7 @@ export default {
       outCategoryList: [],
       accountList: [],
       selectedCategory: 0,
-      selectedAccount: {},
+      selectedAccount: "",
       tabWidth: CLIENT_WIDTH / 2,
       isShowNumKey: false,
       isShowDate: false,
@@ -144,8 +154,11 @@ export default {
         if (!this.moneyId) this.selectFirstCategory();
       });
       getAccountList().then(res => {
-        this.accountList = res.data.data.list;
-        this.selectedAccount = this.accountList[0];
+        this.accountList = res.data.data.list.map(item => ({
+          name: item,
+          color: '#f6717d'
+        }));
+        this.selectedAccount = this.accountList[0].name;
       });
       if (this.moneyId) {
         getMoneyDetail({ moneyId: this.moneyId }).then(res => {
@@ -156,7 +169,7 @@ export default {
           this.selectedCategory = res.data.data.category._id;
           this.selectedAccount = res.data.data.account;
 
-          const {intStack, floatStack} = this.numToStack(this.value)
+          const { intStack, floatStack } = this.numToStack(this.value);
           this.intStack = intStack;
           this.floatStack = floatStack;
         });
@@ -225,13 +238,13 @@ export default {
       const nums = typeof num == "number" ? num.toString : num;
       const intFloat = nums.split(".");
       let intStack = [],
-            floatStack = [];
+        floatStack = [];
 
-      intStack = intFloat[0].split('');
+      intStack = intFloat[0].split("");
       if (intFloat.length > 1) {
-        floatStack = intFloat[1].split('');
+        floatStack = intFloat[1].split("");
       }
-      return {intStack,floatStack}
+      return { intStack, floatStack };
     },
     saveMoney() {
       const data = {
@@ -272,14 +285,17 @@ export default {
     },
     handleSelectAccount(data) {
       this.selectedAccount = data;
+      setTimeout(()=> {
       this.isShowAccount = false;
+
+      }, 200)
     },
     handleSave() {
       this.saveMoney();
       this.$router.push(-1);
     },
     handleCreateMore() {
-      // this.saveMoney();
+      this.saveMoney();
       this.$router.push("/addMoney");
     }
   }
