@@ -37,11 +37,16 @@
          v-else>
       <div class="noMoneys-tip">这天没有账单哦</div>
     </div>
+    <loading :show="isLoading" type="RotateSquare2" opacity="1"></loading>
   </div>
 </template>
 
 <script type="text/javascript">
+import loading from '../components/loading/loading.vue'
 export default {
+  components: {
+    loading
+  },
   data() {
     return {};
   },
@@ -56,6 +61,10 @@ export default {
         date: "YYYY-MM-DD HH:mm",
         note: true
       })
+    },
+    isLoading: {
+      type: Boolean,
+      default: false
     }
   },
   methods: {
@@ -75,6 +84,10 @@ export default {
 
 <style lang="less">
 @import "../assets/variable.less";
+.wrap-moneyList {
+  position: relative;
+  flex: 1;
+}
 .header-moneyList {
   margin: 4px 0;
   display: flex;

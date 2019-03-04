@@ -17,7 +17,8 @@
       记一笔
     </router-link> -->
     <money-list :list="moneys"
-                :option="moneyListOption"></money-list>
+                :option="moneyListOption"
+                :isLoading="isListLoading"></money-list>
   </div>
 </template>
 
@@ -48,6 +49,7 @@ export default {
         date: "HH:mm",
         note: true
       },
+      isListLoading: false,
       dayHasMoneys: [],
       noMoneys: true,
       selectedDate: TODAY,
@@ -142,6 +144,7 @@ export default {
     },
     handleDay(day) {
       this.selectedDate = day.date;
+      this.isListLoading = true;
       this.getMoneyListByDay(day.date);
     },
     getMoneyListByDay(date) {
@@ -155,7 +158,9 @@ export default {
           moneyTime: -1
         }
       };
-      searchMoneyList(data).then(res => {
+
+      searchMoneyList(data,{loadingToast: false}).then(res => {
+        this.isListLoading && (this.isListLoading = false);
         const resData = res.data.data;
         this.moneys = resData.list;
       });
@@ -168,6 +173,9 @@ export default {
 @import "../assets/variable.less";
 
 #view-calendar {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
 }
 
 .calendar-header {
