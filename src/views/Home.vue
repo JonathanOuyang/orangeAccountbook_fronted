@@ -72,9 +72,6 @@ export default {
   },
   methods: {
     init() {
-      this.getHomeData();
-    },
-    getHomeData() {
       const searchData = {
         searchValue: {
           moneyTimeStart: this.$moment()
@@ -97,11 +94,9 @@ export default {
           moneyTimeEnd: this.$moment().format("YYYY-MM-DD HH:mm:ss")
         }
       };
-      this.$loading.show();
       searchMoneyList(searchData).then(res => {
         const resData = res.data.data;
         this.moneys = resData.list;
-        this.$loading.hide();
       });
 
       getMoneySum(sumData).then(res => {
