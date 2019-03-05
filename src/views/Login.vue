@@ -48,7 +48,7 @@ export default {
         });
         return;
       }
-      login(data,{setToken: false}).then(res => {
+      login(data,{setToken: false, loadingToast: false}).then(res => {
         if (res.data.code === "success") {
           this.$notify({
             message: res.data.summary,

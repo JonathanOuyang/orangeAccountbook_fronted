@@ -55,7 +55,7 @@ export default new Router({
       component: () => import("./views/Chart.vue")
     },
     {
-      path: "/addMoney/:moneyId?",
+      path: "/addMoney",
       name: "addMoney",
       component: () => import("./views/AddMoney.vue")
     },

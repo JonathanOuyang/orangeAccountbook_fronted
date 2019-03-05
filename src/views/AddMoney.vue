@@ -124,7 +124,7 @@ export default {
     };
   },
   created() {
-    this.moneyId = this.$route.params.moneyId || "";
+    this.moneyId = this.$route.query.moneyId || "";
     this.init();
     this.getValue();
   },

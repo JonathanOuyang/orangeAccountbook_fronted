@@ -131,12 +131,16 @@ export default {
   },
   created() {
     this.$loading.show();
-    this.initCalendarPage(TODAY.getFullYear(), TODAY.getMonth() + 1, TODAY.getDate());
+    this.initCalendarPage(
+      TODAY.getFullYear(),
+      TODAY.getMonth() + 1,
+      TODAY.getDate()
+    );
   },
   methods: {
     // 更新当前日历页和对应的账单列表
     initCalendarPage(year, month, date = 1) {
-      getCalendarInfo({year, month}, {loadingToast: false}).then(res => {
+      getCalendarInfo({ year, month }, { loadingToast: false }).then(res => {
         this.dayHasMoneys = res.data.data.calendarInfo;
       });
       this.getMoneyListByDay(year, month, date);
@@ -145,24 +149,31 @@ export default {
     // 点击日期
     handleDay(day) {
       this.selectedDate = day.date;
-      this.getMoneyListByDay(day.date);
+      this.getMoneyListByDay(
+        day.year,
+        day.month,
+        day.day
+      );
     },
-    
+
     // 更新账单列表
     getMoneyListByDay(year, month, date) {
-      const moment = this.$moment(`${year}-${month}-${date}`,'YYYY-M-D');
+      const moment = this.$moment(`${year}-${month}-${date}`, "YYYY-M-D");
       const data = {
         searchValue: {
-          moneyTimeStart: moment.startOf("day").valueOf(),
-          moneyTimeEnd: moment.endOf("day").valueOf()
+          moneyTimeStart: moment.startOf("day").format("YYYY-MM-DD"),
+          moneyTimeEnd: moment
+            .startOf("day")
+            .add(1, "days")
+            .format("YYYY-MM-DD")
         },
         sortOption: {
           moneyTime: -1
         }
       };
-      this.isListLoading = true
+      this.isListLoading = true;
       this.moneys = [];
-      searchMoneyList(data,{loadingToast: false}).then(res => {
+      searchMoneyList(data, { loadingToast: false }).then(res => {
         this.isListLoading && (this.isListLoading = false);
         const resData = res.data.data;
         this.moneys = resData.list;
@@ -171,8 +182,8 @@ export default {
 
     // 切换日历页
     changePage(page) {
-      this.selectedDate = new Date(page.year, page.month-1, 1)
-      this.initCalendarPage(page.year, page.month)
+      this.selectedDate = new Date(page.year, page.month - 1, 1);
+      this.initCalendarPage(page.year, page.month);
     }
   }
 };

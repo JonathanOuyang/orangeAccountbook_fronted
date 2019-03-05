@@ -86,38 +86,42 @@ export default {
       axios
         .get(url, params)
         .then(response => {
-          resolve(response)
+          resolve(response);
         })
         .catch(err => {
-          reject(err)
-        })
-    })
+          reject(err);
+        });
+    });
   },
 
   /**
    * post方法，对应post请求
    * @param {String} [url] 请求的url地址
    * @param {Object} [params] 请求时携带的参数
+   * @param {Object} [options] 请求配置
+   *    @param {Boolean} [setToken] 是否需要携带token
+   *    @param {Boolean} [loadingToast] 是否显示加载动画
+   *    @param {Boolean} [successDialog] 是否在返回成功响应后显示提示
    */
   post: (url, params, options = {}) => {
-    options.setToken === undefined && (options.setToken = true)
-    options.loadingToast === undefined && (options.loadingToast = true)
-    options.successDialog === undefined && (options.successDialog = false)
+    options.setToken === undefined && (options.setToken = true);
+    options.loadingToast === undefined && (options.loadingToast = true);
+    options.successDialog === undefined && (options.successDialog = false);
     return new Promise((resolve, reject) => {
       axios
         .post(url, params, {
-          headers: { Authorization: options.setToken ? getToken() : '' },
+          headers: { Authorization: options.setToken ? getToken() : "" },
           showLoading: options.loadingToast,
-          showSuccess: options.successDialog,
+          showSuccess: options.successDialog
         })
         .then(
           response => {
-            resolve(response)
+            resolve(response);
           },
           err => {
-            reject(err)
+            reject(err);
           }
-        )
-    })
-  },
-}
+        );
+    });
+  }
+};
