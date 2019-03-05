@@ -10,12 +10,16 @@
  * @example <money-list :data="moneys"></money-list>
  */
 <template>
-    <div class="typeIcon" :class="titlePositionMap[titlePosition]" @click="handleClick">
-        <div class="typeIcon-icon" :class="{'unSelected':checker&&!selected}">
-            <Icon :name="icon"></Icon>
-        </div>
-        <div class="typeIcon-title" v-if="title">{{title}}</div>
+  <div class="typeIcon"
+       :class="titlePositionMap[titlePosition]"
+       @click="handleClick">
+    <div class="typeIcon-icon"
+         :class="[{'unSelected':checker&&!selected}, type? 'in': 'out']">
+      <Icon :name="icon"></Icon>
     </div>
+    <div class="typeIcon-title"
+         v-if="title">{{title}}</div>
+  </div>
 </template>
 
 <script type="text/javascript">
@@ -56,7 +60,7 @@ export default {
   },
   methods: {
     handleClick() {
-      this.$emit("select", this._id)
+      this.$emit("select", this._id);
     }
   }
 };
@@ -72,7 +76,6 @@ export default {
     width: 34px;
     height: 34px;
     border-radius: 50%;
-    background: @primaryColor;
     color: @textPrimaryColor;
     text-align: center;
     font-size: 20px;
@@ -83,6 +86,12 @@ export default {
     &.unSelected {
       background: #cccccc;
       color: @textPrimaryColor;
+    }
+    &.out {
+      background: @accentColor;
+    }
+    &.in {
+      background: @primaryColor;
     }
   }
 }

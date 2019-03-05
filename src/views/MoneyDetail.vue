@@ -54,9 +54,9 @@ export default {
   methods: {
     getMoneyDetail() {
       getMoneyDetail({ moneyId: this.moneyId }).then(res => {
-        this.money = res.data.data.detail;
-        this.category = res.data.data.category;
-        this.account = res.data.data.account;
+        this.money = res.data.detail;
+        this.category = res.data.category;
+        this.account = res.data.account;
       });
     },
     handleDelete() {

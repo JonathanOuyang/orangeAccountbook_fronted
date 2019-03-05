@@ -76,7 +76,7 @@ export default {
       }
       register(data).then(res => {
         this.$notify({
-          message: res.data.summary,
+          message: res.summary,
           background: this.$color["success"]
         });
         setTimeout(() => {

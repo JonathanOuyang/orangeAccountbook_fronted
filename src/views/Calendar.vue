@@ -3,23 +3,48 @@
     <div class="calendar-header">
     </div>
     <div class="calendar-wrap">
-        <v-calendar :attributes='attrs'
-                    is-expanded
-                    :theme-styles="calendarStyle"
-                    nav-visibility="hidden"
-                    title-position="left"
-                    @update:fromPage="changePage"
-                    @dayclick="handleDay">
-        </v-calendar>
+      <v-calendar :attributes='attrs'
+                  is-expanded
+                  :theme-styles="calendarStyle"
+                  nav-visibility="hidden"
+                  title-position="left"
+                  @update:fromPage="changePage"
+                  @dayclick="handleDay">
+      </v-calendar>
     </div>
-    <!-- <router-link class="orange-button"
-                 tag="div"
-                 to="/addMoney">
-      记一笔
-    </router-link> -->
+    <div class="moneyList-header">
+      <div class="header-info">收入: {{incomeSum}} 支出: {{outcomeSum}}</div>
+      <div class="header-tool">
+        <van-button size="mini"
+                    type="primary"
+                    @click="changeSort"
+                    plain>
+          {{sortTypes[sort].name}}
+        </van-button>
+      </div>
+    </div>
     <money-list :list="moneys"
-                :option="moneyListOption"
+                date-format="HH:mm"
                 :isLoading="isListLoading"></money-list>
+    <!-- <router-link class="button-float button-addMoney"
+                 tag="div"
+                 :to="`/addMoney?date=${selectedDate.getTime()}`">
+      记一笔
+    </router-link>
+    <div class="button-float button-manage">
+      <Icon name="liebiao"></Icon>
+    </div> -->
+    <van-button size="small"
+                type="primary"
+                round
+                :to="`/addMoney?date=${selectedDate.getTime()}`"
+                class="button-float button-addMoney">记一笔</van-button>
+    <van-button size="small"
+                type="primary"
+                round
+                class="button-float button-manage">
+      <Icon name="liebiao"></Icon>
+    </van-button>
   </div>
 </template>
 
@@ -40,20 +65,24 @@ const linearColor = `linear-gradient(to right, ${lightPrimaryColor}, ${primaryCo
 const daySize = 38;
 
 const toRem = size => size / 20 + "rem";
+const SORT_TYPES = [
+  { key: "moneyTime", name: "按时间" },
+  { key: "value", name: "按金额" }
+];
 
 export default {
   name: "calendar",
   data() {
     return {
       moneys: [],
-      moneyListOption: {
-        date: "HH:mm",
-        note: true
-      },
+      incomeSum: 0,
+      outcomeSum: 0,
       isListLoading: false,
       dayHasMoneys: [],
       noMoneys: true,
       selectedDate: TODAY,
+      sortTypes: SORT_TYPES,
+      sort: 0,
       calendarStyle: {
         wrapper: {
           padding: "4px",
@@ -141,7 +170,7 @@ export default {
     // 更新当前日历页和对应的账单列表
     initCalendarPage(year, month, date = 1) {
       getCalendarInfo({ year, month }, { loadingToast: false }).then(res => {
-        this.dayHasMoneys = res.data.data.calendarInfo;
+        this.dayHasMoneys = res.data.calendarInfo;
       });
       this.getMoneyListByDay(year, month, date);
     },
@@ -149,15 +178,15 @@ export default {
     // 点击日期
     handleDay(day) {
       this.selectedDate = day.date;
-      this.getMoneyListByDay(
-        day.year,
-        day.month,
-        day.day
-      );
+      this.getMoneyListByDay(day.year, day.month, day.day);
     },
 
     // 更新账单列表
-    getMoneyListByDay(year, month, date) {
+    getMoneyListByDay(
+      year = this.selectedDate.getFullYear(),
+      month = this.selectedDate.getMonth() + 1,
+      date = this.selectedDate.getDate()
+    ) {
       const moment = this.$moment(`${year}-${month}-${date}`, "YYYY-M-D");
       const data = {
         searchValue: {
@@ -167,16 +196,16 @@ export default {
             .add(1, "days")
             .format("YYYY-MM-DD")
         },
-        sortOption: {
-          moneyTime: -1
-        }
+        sortOption: {}
       };
+      data.sortOption[this.sortTypes[this.sort].key] = -1;
       this.isListLoading = true;
       this.moneys = [];
       searchMoneyList(data, { loadingToast: false }).then(res => {
         this.isListLoading && (this.isListLoading = false);
-        const resData = res.data.data;
-        this.moneys = resData.list;
+        this.moneys = res.data.list;
+        this.incomeSum = res.data.incomeSum;
+        this.outcomeSum = res.data.outcomeSum;
       });
     },
 
@@ -184,6 +213,16 @@ export default {
     changePage(page) {
       this.selectedDate = new Date(page.year, page.month - 1, 1);
       this.initCalendarPage(page.year, page.month);
+    },
+
+    // 切换排序类型
+    changeSort() {
+      if (this.sort == this.sortTypes.length - 1) {
+        this.sort = 0;
+      } else {
+        this.sort++;
+      }
+      this.getMoneyListByDay();
     }
   }
 };
@@ -207,8 +246,29 @@ export default {
   margin: 0 14px 20px;
 }
 
-.calendar-moneyList {
-  padding: 8px 10px;
-  background: #fff;
+.moneyList-header {
+  margin: 4px 18px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: @secondaryTextColor;
+
+  .header-info {
+    display: inline-block;
+    line-height: 24px;
+  }
+}
+
+.button-float {
+  position: fixed;
+  bottom: 20px;
+
+  &.button-addMoney {
+    right: 20px;
+  }
+
+  &.button-manage {
+    left: 20px;
+  }
 }
 </style>

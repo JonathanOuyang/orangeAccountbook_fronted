@@ -49,12 +49,12 @@ export default {
         return;
       }
       login(data,{setToken: false, loadingToast: false}).then(res => {
-        if (res.data.code === "success") {
+        if (res.code === "success") {
           this.$notify({
             message: res.data.summary,
             background: this.$color["success"]
           });
-          localStorage.setItem("token", res.data.token);
+          localStorage.setItem("token", res.token);
           localStorage.setItem(
             "token_exp",
             this.$moment()
@@ -66,7 +66,7 @@ export default {
           }, 800);
         } else {
           this.$notify({
-            message: res.data.summary,
+            message: res.summary,
             background: this.$color["error"]
           });
         }

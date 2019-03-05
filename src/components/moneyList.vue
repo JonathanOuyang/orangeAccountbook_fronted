@@ -6,9 +6,6 @@
  */
 <template>
   <div class="wrap-moneyList">
-    <!-- <div class="header-moneyList">
-      <div class="text-date">{{list[0].moneyTime | date}}</div>
-    </div> -->
     <div class="list-money"
          v-if="list.length">
       <div class="item-money-wrap"
@@ -22,8 +19,8 @@
           <div class="wrap-text-left">
             <div class="text-category">{{money.category.name}}</div>
             <div class="text-secondary">
-              {{$moment(money.moneyTime).format(option.date)}}
-              {{option.note && money.note}}
+              {{$moment(money.moneyTime).format(dateFormat)}}
+              {{note && money.note}}
             </div>
           </div>
           <div class="wrap-text-right">
@@ -55,12 +52,13 @@ export default {
       type: Array,
       required: true
     },
-    option: {
-      type: Object,
-      default: () => ({
-        date: "YYYY-MM-DD HH:mm",
-        note: true
-      })
+    dateFormat: {
+      type: String,
+      default: "YYYY-MM-DD HH:mm"
+    },
+    note: {
+      type: Boolean,
+      default: true
     },
     isLoading: {
       type: Boolean,
@@ -91,13 +89,6 @@ export default {
 .wrap-moneyList {
   position: relative;
   flex: 1;
-}
-.header-moneyList {
-  margin: 4px 0;
-  display: flex;
-  justify-content: space-between;
-  font-size: 12px;
-  color: @secondaryTextColor;
 }
 .item-money-wrap {
   display: flex;

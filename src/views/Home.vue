@@ -95,12 +95,12 @@ export default {
         }
       };
       searchMoneyList(searchData).then(res => {
-        const resData = res.data.data;
+        const resData = res.data;
         this.moneys = resData.list;
       });
 
       getMoneySum(sumData).then(res => {
-        const sums = res.data.data;
+        const sums = res.data;
         this.income = sums.incomeSum;
         this.outcome = sums.outcomeSum;
       });

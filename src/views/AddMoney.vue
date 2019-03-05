@@ -125,6 +125,7 @@ export default {
   },
   created() {
     this.moneyId = this.$route.query.moneyId || "";
+    this.date = this.$route.query.date? new Date(Number(this.$route.query.date)) : TODAY;
     this.init();
     this.getValue();
   },
@@ -139,7 +140,7 @@ export default {
       getCategoryList().then(res => {
         const inCategorys = [];
         const outCategorys = [];
-        res.data.data.list.forEach(elem => {
+        res.data.list.forEach(elem => {
           if (elem.type == 0) {
             outCategorys.push(elem);
           } else if (elem.type == 1) {
@@ -154,7 +155,7 @@ export default {
         if (!this.moneyId) this.selectFirstCategory();
       });
       getAccountList().then(res => {
-        this.accountList = res.data.data.list.map(item => ({
+        this.accountList = res.data.list.map(item => ({
           name: item,
           color: "#f6717d"
         }));
@@ -162,12 +163,12 @@ export default {
       });
       if (this.moneyId) {
         getMoneyDetail({ moneyId: this.moneyId }).then(res => {
-          const money = res.data.data.detail;
+          const money = res.data.detail;
           this.value = money.value.toString();
           this.date = money.moneyTime;
           this.note = money.note;
-          this.selectedCategory = res.data.data.category._id;
-          this.selectedAccount = res.data.data.account;
+          this.selectedCategory = res.data.category._id;
+          this.selectedAccount = res.data.account;
 
           const { intStack, floatStack } = this.numToStack(this.value);
           this.intStack = intStack;

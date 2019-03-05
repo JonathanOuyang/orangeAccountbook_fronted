@@ -33,7 +33,7 @@ export default {
   methods: {
     init() {
       getAccountList().then(res => {
-        this.accountList = res.data.data.list;
+        this.accountList = res.data.list;
       })
     }
   }

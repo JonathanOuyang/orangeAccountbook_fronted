@@ -60,7 +60,7 @@ axios.interceptors.response.use(
           message: response.data.summary,
           background: '#47bb51',
         })
-      return response
+      return response.data
     } else {
       Notify(response.data.summary)
       return
