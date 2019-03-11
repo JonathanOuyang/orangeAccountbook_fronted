@@ -1,8 +1,15 @@
 <template>
   <div id="view-home">
-    <header>
-      <div class="home-header-banner">
-        <div class="home-title">
+    <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
+      <!-- <div slot="loading" class="loading-wrap">
+        <loading :show="isLoading" 
+                 type="DoubleBounce" 
+                 color="#fff"
+                 size="40px"
+                 opacity="0"></loading></div> -->
+      <header>
+        <div class="home-header-banner">  
+        <!-- <div class="home-title">
           <div class="text-book">
             {{bookName}}<Icon name="genghuan"
                   style="margin-left: 0.1rem"></Icon>
@@ -10,11 +17,14 @@
           <div class="text-extra">
             您已连续记账{{moneyDay}}天
           </div>
-        </div>
-        <div class="button-search">
+        </div> -->
+        <router-link 
+          tag="div"
+          class="button-search"
+          to="/searchMoney">
           <Icon name="sousuo1" 
           style="color: #f6717d; font-size: 20px;"></Icon>
-        </div>
+        </router-link>  
       </div>
       <div class="home-panel">
         <div class="home-panel-item">
@@ -49,22 +59,29 @@
       </div>
       <money-list :list="moneys"></money-list>
     </div>
+</van-pull-refresh>
   </div>
 </template>
 
 <script>
+import loading from '../components/loading/loading.vue'
+
 import { searchMoneyList, getMoneySum } from "../api/api.js";
-const PAGE_SIZE = 6;
+const PAGE_SIZE = 3;
 const SHOW_MONEYS_DAY = 3;
 export default {
   name: "home",
+  components: {
+    loading
+  },
   data() {
     return {
       bookName: "生活账本",
       moneyDay: 1,
       income: 0,
       outcome: 0,
-      moneys: []
+      moneys: [],
+      isLoading: false
     };
   },
   created() {
@@ -97,6 +114,7 @@ export default {
       searchMoneyList(searchData).then(res => {
         const resData = res.data;
         this.moneys = resData.list;
+        this.isLoading && (this.isLoading = false);
       });
 
       getMoneySum(sumData).then(res => {
@@ -104,6 +122,9 @@ export default {
         this.income = sums.incomeSum;
         this.outcome = sums.outcomeSum;
       });
+    },
+    onRefresh() {
+      this.init();
     }
   }
 };
@@ -113,10 +134,18 @@ export default {
 @import "../assets/variable.less";
 #view-home {
   color: @primaryTextColor;
+  height: 100%;
+  .van-pull-refresh, .van-pull-refresh__track {
+    height: 100%;
+  }
+  .van-pull-refresh__head {
+    background-color: @primaryColor;
+  }
 }
 .home-header-banner {
   display: flex;
-  .header-background(-40px, 120px);
+  justify-content: flex-end;
+  .header-background(-40px, 100px);
 
   .home-title {
     flex: 1; 

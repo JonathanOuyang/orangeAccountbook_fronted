@@ -83,15 +83,15 @@ export default {
       line-height: 34px;
       font-size: 24px;
     }
-    &.unSelected {
-      background: #cccccc;
-      color: @textPrimaryColor;
-    }
     &.out {
       background: @accentColor;
     }
     &.in {
       background: @primaryColor;
+    }
+    &.unSelected {
+      background: #cccccc;
+      color: @textPrimaryColor;
     }
   }
 }

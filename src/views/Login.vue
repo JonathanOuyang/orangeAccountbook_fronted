@@ -48,28 +48,15 @@ export default {
         });
         return;
       }
-      login(data,{setToken: false, loadingToast: false}).then(res => {
-        if (res.code === "success") {
-          this.$notify({
-            message: res.data.summary,
-            background: this.$color["success"]
-          });
-          localStorage.setItem("token", res.token);
-          localStorage.setItem(
-            "token_exp",
-            this.$moment()
-              .add(2, "days")
-              .valueOf()
-          );
-          setTimeout(() => {
-            this.$router.push("/home");
-          }, 800);
-        } else {
-          this.$notify({
-            message: res.summary,
-            background: this.$color["error"]
-          });
-        }
+      login(data, {
+        setToken: false,
+        loadingToast: false,
+        successDialog: true
+      }).then(res => {
+        localStorage.setItem("token", res.token);
+        setTimeout(() => {
+          this.$router.push("/home");
+        }, 800);
       });
     }
   }

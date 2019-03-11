@@ -60,6 +60,11 @@ export default new Router({
       component: () => import("./views/AddMoney.vue")
     },
     {
+      path: "/searchMoney",
+      name: "searchMoney",
+      component: () => import("./views/SearchMoney.vue")
+    },
+    {
       path: "/moneyDetail/:id",
       name: "moneyDetail",
       component: () => import("./views/MoneyDetail.vue")

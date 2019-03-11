@@ -26,12 +26,16 @@ import {
   Radio,
   Checkbox,
   CheckboxGroup,
-} from 'vant'
+  PullRefresh,
+  Search,
+  List
+} from "vant";
 import VCalendar from 'v-calendar'
 import 'v-calendar/lib/v-calendar.min.css'
 import OIcon from './components/o-icon'
 import moneyList from './components/moneyList'
-import typeIcon from './components/typeIcon'
+import typeIcon from "./components/typeIcon";
+import accountCard from "./components/accountCard";
 import { filterDate, filterDatetime, filterCurrency } from './utils/filter'
 import Loading from './components/loading/loading'
 import moment from 'moment'
@@ -59,9 +63,13 @@ Vue.use(Tabbar)
   .use(Dialog)
   .use(Checkbox)
   .use(CheckboxGroup)
+  .use(List)
+  .use(Search)
+  .use(PullRefresh);
 Vue.component('Icon', OIcon)
 Vue.component('typeIcon', typeIcon)
-Vue.component('moneyList', moneyList)
+Vue.component("moneyList", moneyList);
+Vue.component('accountCard', accountCard)
 
 // Use v-calendar, v-date-picker & v-popover components
 Vue.use(VCalendar, {

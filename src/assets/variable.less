@@ -10,14 +10,14 @@
 @linearColor: linear-gradient(to right, @lightPrimaryColor, @primaryColor);
 
 @rem: 20rem;
-@shadow: rgba(0, 0, 0, 0.2) 0px 10px 10px -5px;
+@shadow: rgba(0, 0, 0, 0.2) 0px 6px 16px -4px;
 
 //页头卡片
 .panel() {
   // margin: 0 auto 20px;
   background: #ffffff;
   border-radius: 4px;
-  box-shadow: rgba(0, 0, 0, 0.2) 0px 10px 10px -5px;
+  box-shadow: @shadow;
   opacity: 0.99;
 }
 
@@ -29,13 +29,7 @@
   padding: 12px 50% 0 50%;
   transform: translateX(-25%);
   border-radius: 0 0 50% 50%;
-  background: linear-gradient(
-    to right,
-    @lightPrimaryColor,
-    @lightPrimaryColor 25%,
-    @primaryColor 75%,
-    @primaryColor
-  );
+  background: @primaryColor;
   color: @textPrimaryColor;
   box-shadow: #e4e4e4 0px 10px 10px -5px;
 }

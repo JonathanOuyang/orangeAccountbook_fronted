@@ -6,6 +6,12 @@
                 v-model="type">
         <van-tab title="支出"></van-tab>
         <van-tab title="收入"></van-tab>
+        <van-tab title="支出"></van-tab>
+        <van-tab title="收入"></van-tab>
+        <van-tab title="支出"></van-tab>
+        <van-tab title="收入"></van-tab>
+        <van-tab title="支出"></van-tab>
+        <van-tab title="收入"></van-tab>
       </van-tabs>
     </div>
     <div class="addMoney-val">
@@ -28,7 +34,7 @@
                        v-for="(category) in page"
                        :key="category._id"
                        :_id="category._id"
-                       :type="0"
+                       :type="Number(category.type)"
                        :icon="category.icon"
                        :title="category.name"
                        title-position="bottom"
@@ -125,7 +131,9 @@ export default {
   },
   created() {
     this.moneyId = this.$route.query.moneyId || "";
-    this.date = this.$route.query.date? new Date(Number(this.$route.query.date)) : TODAY;
+    this.date = this.$route.query.date
+      ? new Date(Number(this.$route.query.date))
+      : TODAY;
     this.init();
     this.getValue();
   },
@@ -253,7 +261,7 @@ export default {
         value: this.value,
         categoryId: this.selectedCategory,
         accountId: this.selectedAccount._id,
-        moneyTime: new Date(this.date).getTime(),
+        moneyTime: this.$moment(this.date).format("YYYY-MM-DD HH:mm:ss"),
         note: this.note
       };
       if (this.value == "0") {
@@ -263,24 +271,17 @@ export default {
         });
         return;
       }
+      const option =
+        this.moneyId || this.$route.query.date
+          ? { successDialog: true }
+          : { successDialog: true, goBack: true };
       if (this.moneyId) {
-        updateMoney(
-          { ...data, moneyId: this.moneyId },
-          { successDialog: true }
-        ).then(res => {
-          // Notify({
-          //   message: res.data.summary,
-          //   background: this.$color["success"]
-          // });
-          this.$router.go(-1);
+        updateMoney({ ...data, moneyId: this.moneyId }, option).then(res => {
+          this.$router.go(-2);
         });
       } else {
-        addMoney(data, { successDialog: true }).then(res => {
-          // Notify({
-          //   message: res.data.summary,
-          //   background: this.$color["success"]
-          // });
-          this.$router.go(-1);
+        addMoney(data, option).then(res => {
+          this.$router.go(-2);
         });
       }
     },
@@ -300,6 +301,9 @@ export default {
     handleCreateMore() {
       this.saveMoney();
       this.$router.push("/addMoney");
+    },
+    goBack() {
+      console.log("this.$router.go: ", this.$router.go);
     }
   }
 };

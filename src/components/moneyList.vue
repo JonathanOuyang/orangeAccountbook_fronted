@@ -34,7 +34,7 @@
          v-else-if="!list.length && !isLoading">
       <div class="noMoneys-tip">{{noDataText}}</div>
     </div>
-    <loading :show="isLoading" type="RotateSquare2" opacity="1"></loading>
+    <loading :show="isLoading" type="RotateSquare2" opacity="9"></loading>
   </div>
 </template>
 
@@ -66,7 +66,7 @@ export default {
     },
     noDataText: {
       type: String,
-      default: '这天没有账单哦'
+      default: '没有账单哦'
     }
   },
   methods: {
@@ -88,13 +88,16 @@ export default {
 @import "../assets/variable.less";
 .wrap-moneyList {
   position: relative;
+  margin-top: ;
   flex: 1;
+  min-height: 243px;
 }
 .item-money-wrap {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
   padding: 0 24px;
+  background-color: #fff;
   &:after {
     content: "";
     width: 88%;
@@ -106,7 +109,6 @@ export default {
   }
 }
 .list-money {
-  margin: 4px 0 14px;
   .item-money {
     display: flex;
     align-items: center;

@@ -49,6 +49,7 @@ export default {
 @import "../assets/variable.less";
 #view-index {
   margin-bottom: 90px;
+  height: 100%;
 }
 .van-tabbar {
   box-shadow: rgba(0, 0, 0, 0.1) 0 -10px 20px -2px;

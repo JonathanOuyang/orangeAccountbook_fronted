@@ -1,80 +1,67 @@
-import axios from 'axios'
-import { Toast, Notify, Dialog } from 'vant'
-import Vue from 'vue'
-import router from '../router'
-import qs from 'qs'
+import axios from "axios";
+import { Toast, Notify, Dialog } from "vant";
+import Vue from "vue";
+import router from "../router";
+import qs from "qs";
 
-const BASE_URL = 'http://localhost:3000'
+const HOST_NAME = window.location.hostname;
+const BASE_URL = `http://${HOST_NAME}:3000`;
 
 function getToken() {
-  const TOKEN = localStorage.getItem('token')
-  const TOKEN_EXP = localStorage.getItem('token_exp')
-
-  // if (!API_NO_TOKEN[config.url]) {
-  if (new Date().getTime() > TOKEN_EXP) {
-    return Dialog.confirm({
-      title: '提示',
-      message: '登录状态过期，请重新登录',
-      showCancelButton: false,
-    }).then(() => {
-      localStorage.removeItem('token')
-      localStorage.removeItem('token_exp')
-      router.push('/login')
-    })
-  }
-
+  const TOKEN = localStorage.getItem("token");
   if (!TOKEN) {
     return Dialog.confirm({
-      title: '提示',
-      message: '登录状态失效，请重新登录',
-      showCancelButton: false,
+      title: "提示",
+      message: "登录状态丢失，请重新登录",
+      showCancelButton: false
     }).then(() => {
-      router.push('/login')
-    })
+      router.push("/login");
+    });
   }
 
-  return TOKEN
+  return TOKEN;
 }
 
 // 192.168.191.1
-axios.defaults.baseURL = BASE_URL
+axios.defaults.baseURL = BASE_URL;
 axios.interceptors.request.use(
   config => {
-    config.showLoading && Vue.$loading.show()
-    return config
+    config.showLoading && Vue.$loading.show();
+    return config;
   },
   error => {
-    Vue.$loading.hide()
-    return Promise.reject(error)
+    Vue.$loading.hide();
+    return Promise.reject(error);
   }
-)
+);
 
 axios.interceptors.response.use(
   response => {
     //一切正常，返回数据或空对象
-    Vue.$loading.hide()
+    Vue.$loading.hide();
 
-    if (response.data.code === 'success') {
-      response.config && response.config.showSuccess === true &&
+    if (response.data.code === "success") {
+      response.config &&
+        response.config.showSuccess === true &&
         Notify({
           message: response.data.summary,
-          background: '#47bb51',
-        })
-      return response.data
+          background: "#47bb51"
+        });
+      return response.data;
     } else {
-      Notify(response.data.summary)
-      return
+      Notify(response.data.summary);
+      return;
     }
   },
   error => {
-    Vue.$loading.hide()
+    Vue.$loading.hide();
     //未登录
     // 请求已发出，但服务器响应的状态码不在 2xx 范围内，有错误信息则弹出错误信息
     // console.log("response-error-data", error.response.data);
     //什么数据都没有，直接出错了
     // console.log("Error", error.message);
   }
-)
+);
 export default {
   /**
    * get方法，对应get请求
@@ -107,21 +94,27 @@ export default {
     options.setToken === undefined && (options.setToken = true);
     options.loadingToast === undefined && (options.loadingToast = true);
     options.successDialog === undefined && (options.successDialog = false);
+    options.goBack === undefined && (options.goBack = false);
     return new Promise((resolve, reject) => {
-      axios
-        .post(url, params, {
-          headers: { Authorization: options.setToken ? getToken() : "" },
-          showLoading: options.loadingToast,
-          showSuccess: options.successDialog
-        })
-        .then(
-          response => {
-            resolve(response);
-          },
-          err => {
-            reject(err);
-          }
-        );
+      setTimeout(() => {
+        axios
+          .post(url, params, {
+            headers: {
+              Authorization: options.setToken ? getToken() : ""
+            },
+            showLoading: options.loadingToast,
+            showSuccess: options.successDialog
+          })
+          .then(
+            response => {
+              resolve(response);
+              options.goBack && router.go(-1)
+            },
+            err => {
+              reject(err);
+            }
+          );
+      }, 800);
     });
   }
 };
