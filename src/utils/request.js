@@ -39,8 +39,8 @@ axios.interceptors.response.use(
   response => {
     //一切正常，返回数据或空对象
     Vue.$loading.hide();
-
-    if (response.data.code === "success") {
+    const CODE = response.data.code;
+    if (CODE === "success") {
       response.config &&
         response.config.showSuccess === true &&
         Notify({
@@ -48,6 +48,14 @@ axios.interceptors.response.use(
           background: "#47bb51"
         });
       return response.data;
+    } else if(CODE === "token_wrong") {
+      return Dialog.confirm({
+        title: "提示",
+        message: "登录状态失效，请重新登录",
+        showCancelButton: false
+      }).then(() => {
+        router.push("/login");
+      });
     } else {
       Notify(response.data.summary);
       return;
