@@ -1,6 +1,7 @@
 <template>
   <div id="view-chart">
-    <date-selector></date-selector>
+    <date-selector 
+      @change="dateChange"></date-selector>
     <pie :data="data"></pie>
   </div>
 </template>
@@ -27,10 +28,13 @@ export default {
 
   methods: {
     init() {
+      this.initCategorySum(this.$moment())
+    },
+    initCategorySum(moment){
       const data = {
         searchValue: {
-          moneyTimeStart: this.$moment().startOf('month'),
-          moneyTimeEnd: this.$moment().add(1, 'month').startOf('month')
+          moneyTimeStart: moment.startOf('month'),
+          moneyTimeEnd: moment.add(1, 'month').startOf('month')
         },
         groupOptions: {
           categoryId: 1
@@ -42,6 +46,10 @@ export default {
           value: item.value
         }))
       })
+    },
+    dateChange(moment){
+      // console.log('moment: ', moment);
+      this.initCategorySum(moment);
     }
   }
 };

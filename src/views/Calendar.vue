@@ -32,7 +32,7 @@
   v-model="isListLoading"
   :error="isListError"
   :finished="isListFinished"
-  :finished-text="moneys.length?'已经到底啦':''"
+  :finished-text="moneys.length>6?'已经到底啦':''"
   error-text="请求失败，点击重新加载"
   @load="handleListLoad"
   :offset="30"

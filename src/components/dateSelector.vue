@@ -31,12 +31,12 @@ export default {
     handlePrev(){
       this.moment = this.moment.subtract(1, 'month')
       this.momentString = this.moment.format('YYYY-MM')
-      this.$emit('changePrev', this.moment)
+      this.$emit('change', this.moment)
     },
     handleNext(){
       this.moment = this.moment.add(1, 'month')
       this.momentString = this.moment.format('YYYY-MM')
-      this.$emit('changeNext', this.moment)
+      this.$emit('change', this.moment)
     }
   }
 };

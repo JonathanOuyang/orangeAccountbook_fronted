@@ -54,7 +54,7 @@ body,
 #app {
   font-family: "å¾®è½¯é›…é»‘";
   color: @primaryTextColor;
-  background: #fcfdff;
+  background: #fff;
   overflow-x: hidden;
 }
 </style>

@@ -66,7 +66,7 @@ export default {
           {
             name: "支出",
             type: "pie",
-            radius: "55%",
+            radius: "68%",
             center: ["50%", "60%"],
             data: this.data,
             itemStyle: {
@@ -75,11 +75,13 @@ export default {
                 shadowOffsetX: 0,
                 shadowColor: "rgba(0, 0, 0, 0.5)"
               }
+            },
+            label: {
+              fontSize: 14
             }
           }
         ]
       };
-      console.log('document.getElementById(this.elId): ', document.getElementById(this.elId));
       this.chartObj.setOption(option);
     }
   }
@@ -90,6 +92,6 @@ export default {
 @import "../../assets/variable.less";
 .chart-pie {
   width: 100%;
-  height: 300px;
+  height: 250px;
 }
 </style>
