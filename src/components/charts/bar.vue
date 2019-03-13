@@ -6,9 +6,16 @@
 </template>
 
 <script>
+ import echarts from 'echarts/lib/echarts'
+ // 引入雷达图组件
+ import 'echarts/lib/chart/bar'
+ // 引入提示框和图例组件
+ import 'echarts/lib/component/tooltip'
+ import 'echarts/lib/component/legend'
+
 export default {
   props: {
-    name: {
+    data: {
       type: Array,
       required: true
     }
@@ -26,5 +33,5 @@ export default {
 </script>
 
 <style lang='less' scoped>
-@import "../assets/variable.less";
+@import "../../assets/variable.less";
 </style>
