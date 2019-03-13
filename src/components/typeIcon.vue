@@ -15,7 +15,7 @@
        @click="handleClick">
     <div class="typeIcon-icon"
          :class="[{'unSelected':checker&&!selected}, type? 'in': 'out']">
-      <Icon :name="icon"></Icon>
+      <Icon :name="icon" :size="20"></Icon>
     </div>
     <div class="typeIcon-title"
          v-if="title">{{title}}</div>

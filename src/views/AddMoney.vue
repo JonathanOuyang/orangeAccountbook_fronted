@@ -6,12 +6,6 @@
                 v-model="type">
         <van-tab title="支出"></van-tab>
         <van-tab title="收入"></van-tab>
-        <van-tab title="支出"></van-tab>
-        <van-tab title="收入"></van-tab>
-        <van-tab title="支出"></van-tab>
-        <van-tab title="收入"></van-tab>
-        <van-tab title="支出"></van-tab>
-        <van-tab title="收入"></van-tab>
       </van-tabs>
     </div>
     <div class="addMoney-val">
@@ -56,6 +50,7 @@
       <van-button type="primary"
                   size="large"
                   plain
+                  v-if="!moneyId"
                   @click="handleCreateMore">再记一笔</van-button>
       <van-button type="primary"
                   size="large"

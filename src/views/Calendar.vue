@@ -20,6 +20,10 @@
                     type="primary"
                     @click="changeSort"
                     plain>
+          <Icon 
+            name="icon-"
+            :size="12"
+            ></Icon>          
           按{{sortTypes[sort].name}}
         </van-button>
       </div>
@@ -177,18 +181,18 @@ export default {
   },
   created() {
     this.$loading.show();
-    this.initCalendarPage(TODAY);
+    this.initCalendarPage(TODAY.getFullYear(), TODAY.getMonth());
   },
   methods: {
     // 更新当前日历页和对应的账单列表
-    initCalendarPage(date) {
+    initCalendarPage(year, month) {
       getCalendarInfo(
-        { year: date.getFullYear(), month: date.getMonth() + 1 },
+        { year, month },
         { loadingToast: false }
       ).then(res => {
         this.dayHasMoneys = res.data.calendarInfo;
       });
-      this.initMoneyListByDay(date);
+      this.initMoneyListByDay(new Date(year, month-1, 1));
     },
 
     // 点击日期

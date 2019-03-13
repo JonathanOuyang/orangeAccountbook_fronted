@@ -1,5 +1,9 @@
 <template>
-  	<i class="iconfont" :class="'icon-'+name"></i>
+  	<i 
+      class="iconfont" 
+      :class="'icon-'+name"
+      :style="{fontSize: size+'px'}"
+      ></i>
 </template>
 
 <script type="text/javascript">
@@ -10,6 +14,10 @@ export default {
     },
     link: {
       type: String
+    },
+    size: {
+      type: Number,
+      default: 16
     }
   }
 };
