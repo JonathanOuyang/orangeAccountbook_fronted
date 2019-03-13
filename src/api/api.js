@@ -12,9 +12,6 @@ export const addMoney = (data, options) => request.post("moneys/addMoney", data,
 export const searchMoneyList = (data, options) =>
   request.post(`moneys/searchMoneyList`, data, options);
 
-/* 查询账单总额 */
-export const getMoneySum = (data, options) => request.post(`moneys/getMoneySum`, data, options);
-
 /* 获取指定账单信息 */
 export const getMoneyDetail = (data, options) =>
   request.post("moneys/getMoneyDetail", data, options);
@@ -35,3 +32,6 @@ export const getCategoryList = (data, options) =>
 /* 获取账户 */
 export const getAccountList = (data, options) =>
   request.post("accounts/getAccountList", data, options);
+
+/* 获得账单收入和支出总额 */
+export const getMoneySum = (data, options) => request.post("statistics/getMoneySum", data, options);

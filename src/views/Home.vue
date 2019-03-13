@@ -117,11 +117,11 @@ export default {
         this.isLoading && (this.isLoading = false);
       });
 
-      getMoneySum(sumData).then(res => {
-        const sums = res.data;
-        this.income = sums.incomeSum;
-        this.outcome = sums.outcomeSum;
-      });
+      // getMoneySum(sumData).then(res => {
+      //   const sums = res.data;
+      //   this.income = sums.incomeSum;
+      //   this.outcome = sums.outcomeSum;
+      // });
     },
     onRefresh() {
       this.init();

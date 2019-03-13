@@ -30,7 +30,7 @@ export default new Router({
         {
           path: "/personal",
           name: "personal",
-          component: () => import("./views/Chart.vue")
+          component: () => import("./views/Personal.vue")
         }
       ]
     },
@@ -52,7 +52,7 @@ export default new Router({
     {
       path: "/chart",
       name: "chart",
-      component: () => import("./views/Chart.vue")
+      component: () => import("./views/Chart/Index.vue")
     },
     {
       path: "/addMoney",

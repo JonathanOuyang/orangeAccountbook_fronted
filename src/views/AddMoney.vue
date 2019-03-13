@@ -2,7 +2,6 @@
   <div id="view-addMoney">
     <div class="addMoney-header">
       <van-tabs color="#f6717d"
-                :line-width="tabWidth"
                 v-model="type">
         <van-tab title="支出"></van-tab>
         <van-tab title="收入"></van-tab>

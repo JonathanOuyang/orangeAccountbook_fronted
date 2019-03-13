@@ -1,15 +1,15 @@
 <template>
   <div id="view-chart">
-    <pie :data="data"></pie>
+    <!-- <pie :data="data"></pie> -->
   </div>
 </template>
 
 <script>
-import pie from '../components/charts/pie'
+// import pie from '../components/charts/pie'
 export default {
 	name: "chart",
 	components: {
-		pie
+		// pie
 	},
 	data () {
     return {
@@ -30,5 +30,5 @@ export default {
 </script>
 
 <style lang="less">
-@import "../assets/variable.less";
+@import "../../assets/variable.less";
 </style>

@@ -36,6 +36,7 @@ import OIcon from './components/o-icon'
 import moneyList from './components/moneyList'
 import typeIcon from "./components/typeIcon";
 import accountCard from "./components/accountCard";
+import dateSelector from "./components/dateSelector";
 import { filterDate, filterDatetime, filterCurrency } from './utils/filter'
 import Loading from './components/loading/loading'
 import moment from 'moment'
@@ -70,6 +71,7 @@ Vue.component('Icon', OIcon)
 Vue.component('typeIcon', typeIcon)
 Vue.component("moneyList", moneyList);
 Vue.component('accountCard', accountCard)
+Vue.component('dateSelector', dateSelector)
 
 // Use v-calendar, v-date-picker & v-popover components
 Vue.use(VCalendar, {

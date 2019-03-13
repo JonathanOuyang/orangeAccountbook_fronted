@@ -1,7 +1,7 @@
 <!--  -->
 <template>
   <div :id="elId"
-       class="chart-pie"> </div>
+       class="chart-pie"></div>
 </template>
 
 <script>
@@ -19,37 +19,68 @@ export default {
   props: {
     data: {
       type: Array,
+      default: [
+        { value: 235, name: "视频广告" },
+        { value: 274, name: "联盟广告" },
+        { value: 310, name: "邮件营销" },
+        { value: 335, name: "直接访问" },
+        { value: 400, name: "搜索引擎" }
+      ]
       // required: true
     }
   },
   data() {
     return {
-      elId: ""
+      elId: "",
+      chartObj: {}
     };
   },
   created() {
     this.elId = uuid(); //获取随机id
   },
   mounted() {
-    this.render();
+    this.$nextTick(() => {
+      this.chartObj = echarts.init(document.getElementById(this.elId));
+      this.render();
+    })
   },
-
   computed: {},
+
+  watch: {
+    data: {
+      deep: true,
+      handler: function() {
+        this.render();
+      }
+    }
+  },
 
   methods: {
     render() {
       const option = {
+        tooltip: {
+          trigger: "item",
+          formatter: "{b}{a} <br/> ￥{c} <br/> ({d}%)"
+        },
         series: [
           {
-            name: "访问来源",
+            name: "支出",
             type: "pie",
             radius: "55%",
-            data: this.data
+            center: ["50%", "60%"],
+            data: this.data,
+            itemStyle: {
+              emphasis: {
+                shadowBlur: 10,
+                shadowOffsetX: 0,
+                shadowColor: "rgba(0, 0, 0, 0.5)"
+              }
+            }
           }
         ]
       };
-      const chartObj = echarts.init(document.getElementById(this.elId));
-      chartObj.setOption(option);
+      console.log('document.getElementById(this.elId): ', document.getElementById(this.elId));
+      this.chartObj.setOption(option);
     }
   }
 };
