@@ -23,20 +23,20 @@ export default {
   },
   data() {
     return {
-      moment: this.$moment(),
+      moment: new Date().getTime(),
       momentString: this.$moment().format('YYYY-MM')
     }
   },
   methods: {
     handlePrev(){
-      this.moment = this.moment.subtract(1, 'month')
-      this.momentString = this.moment.format('YYYY-MM')
-      this.$emit('change', this.moment)
+      this.moment = this.$moment(this.moment).subtract(1, 'month').valueOf()
+      this.momentString = this.$moment(this.moment).format('YYYY-MM')
+      this.$emit('change', this.$moment(this.moment))
     },
     handleNext(){
-      this.moment = this.moment.add(1, 'month')
-      this.momentString = this.moment.format('YYYY-MM')
-      this.$emit('change', this.moment)
+      this.moment = this.$moment(this.moment).add(1, 'month').valueOf()
+      this.momentString = this.$moment(this.moment).format('YYYY-MM')
+      this.$emit('change', this.$moment(this.moment))
     }
   }
 };
