@@ -6,7 +6,6 @@
 
 <script>
 import echarts from "echarts/lib/echarts";
-// 引入雷达图组件
 import "echarts/lib/chart/pie";
 // 引入提示框和图例组件
 import "echarts/lib/component/tooltip";
@@ -27,12 +26,17 @@ export default {
         { value: 400, name: "搜索引擎" }
       ]
       // required: true
+    },
+    selectedIndex: {
+      type: Number,
+      default: -1
     }
   },
   data() {
     return {
       elId: "",
-      chartObj: {}
+      chartObj: {},
+      activeIndex: -1
     };
   },
   created() {
@@ -42,7 +46,8 @@ export default {
     this.$nextTick(() => {
       this.chartObj = echarts.init(document.getElementById(this.elId));
       this.render();
-    })
+    });
+    this.activeIndex = this.selectedIndex;
   },
   computed: {},
 
@@ -52,23 +57,48 @@ export default {
       handler: function() {
         this.render();
       }
+    },
+    selectedIndex(newVal) {
+      this.activeIndex = newVal;
+    },
+    activeIndex(newVal, oldVal) {
+      this.chartObj.dispatchAction({
+        type: "highlight",
+        seriesName: "categoryPie",
+        // 可选，数据的 index
+        dataIndex: newVal
+      });
+      this.chartObj.dispatchAction({
+        type: "downplay",
+        seriesName: "categoryPie",
+        // 可选，数据的 index
+        dataIndex: oldVal
+      });
+      // this.chartObj.dispatchAction({
+      //   type: "hideTip"
+      // });
+      this.chartObj.dispatchAction({
+        type: "showTip",
+        dataIndex: newVal
+      });
     }
   },
 
   methods: {
     render() {
       const option = {
-        tooltip: {
-          trigger: "item",
-          formatter: "{b}{a} <br/> ￥{c} <br/> ({d}%)"
-        },
+        // tooltip: {
+        //   trigger: "item",
+        //   formatter: "{b} <br/> ￥{c} <br/> ({d}%)"
+        // },
         series: [
           {
-            name: "支出",
+            name: "categoryPie",
             type: "pie",
             radius: "68%",
             center: ["50%", "60%"],
             data: this.data,
+            silent: true,
             itemStyle: {
               emphasis: {
                 shadowBlur: 10,
@@ -77,12 +107,18 @@ export default {
               }
             },
             label: {
-              fontSize: 14
+              fontSize: 13
             }
           }
         ]
       };
       this.chartObj.setOption(option);
+
+      const vm = this;
+      this.chartObj.on('click', function (params) {
+        vm.activeIndex = params.dataIndex
+        vm.$emit("selectPie", params.dataIndex)
+      });
     }
   }
 };

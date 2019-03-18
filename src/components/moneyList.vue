@@ -88,7 +88,7 @@ export default {
 @import "../assets/variable.less";
 .wrap-moneyList {
   position: relative;
-  margin-top: ;
+  // margin-top: ;
   flex: 1;
   min-height: 243px;
 }
@@ -105,7 +105,7 @@ export default {
     background: @dividerColor;
   }
   &:active {
-    background-color: rgba(0, 0, 0, 0.1);
+    background-color: rgba(0, 0, 0, 0.06);
   }
 }
 .list-money {

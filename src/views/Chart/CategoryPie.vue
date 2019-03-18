@@ -1,8 +1,39 @@
 <template>
-  <div id="view-chart">
+  <div id="view-chartPie">
     <date-selector 
-      @change="dateChange"></date-selector>
-    <pie :data="data"></pie>
+      selectYear
+      @change="changeDate"></date-selector>
+    <div class="chartPie-toolBar">
+      <van-button
+        v-for="(item, index) in typeList"
+        :key="index"
+        size="small"
+        :type="selectedType === index? 'primary' : 'default'"
+        @click="changeType(index)"
+        style="marginRight: 2px"
+        plain>
+        {{item}}
+      </van-button>
+    </div>
+    <pie 
+      :data="data"
+      :selectedIndex="selectedIndex"
+      @selectPie="selectCard"/>
+    <div class="list-categoryCard">
+      <div class="item-categoryCard"
+        v-for="(item, index) in data"
+        :key="item._id">
+        <category-card
+         :data="item"
+         :selected="selectedIndex === index"
+         :selecteKey="index"
+         @select="selectCard"
+         @disselect="selectedIndex = -1">
+          <div class="info-value">¥{{item.value}}</div>
+          <div class="info-count">共{{item.count}}笔</div>
+        </category-card>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -10,13 +41,17 @@
 import pie from "../../components/charts/pie";
 import { getMoneySum } from "../../api/api.js";
 export default {
-  name: "chart",
+  name: "category-pie",
   components: {
     pie
   },
   data() {
     return {
-      data: []
+      data: [],
+      selectedIndex: -1,
+      selectedType: 0,
+      selectedMoment: this.$moment(),
+      typeList: ['支出', '收入']
     };
   },
 
@@ -31,25 +66,36 @@ export default {
       this.initCategorySum(this.$moment())
     },
     initCategorySum(moment){
+      const moneyTimeStart = moment.startOf('month').valueOf();
       const data = {
         searchValue: {
-          moneyTimeStart: moment.startOf('month'),
-          moneyTimeEnd: moment.add(1, 'month').startOf('month')
+          type: this.selectedType,
+          moneyTimeStart: moneyTimeStart,
+          moneyTimeEnd: this.$moment(moneyTimeStart).add(1, 'month').valueOf()
         },
-        groupOptions: {
-          categoryId: 1
-        }
+        groupType: 1
       }
       getMoneySum(data).then(res=>{
         this.data = res.data.result.map(item => ({
+          _id: item._id.categoryId,
           name: res.data.categorys[item._id.categoryId].name,
-          value: item.value
+          icon: res.data.categorys[item._id.categoryId].icon,
+          type: res.data.categorys[item._id.categoryId].type,
+          value: item.value,
+          count: item.count
         }))
       })
     },
-    dateChange(moment){
-      // console.log('moment: ', moment);
+    changeDate(moment){
       this.initCategorySum(moment);
+      this.selectedMoment = moment;
+    },
+    changeType(index) {
+      this.selectedType = index;
+      this.initCategorySum(this.selectedMoment);
+    },
+    selectCard(key) {
+      this.selectedIndex = key;
     }
   }
 };
@@ -57,4 +103,24 @@ export default {
 
 <style lang="less">
 @import "../../assets/variable.less";
+.chartPie-toolBar {
+  padding: 6px 12px 0;
+}
+.list-categoryCard {
+  margin: 20px 12px;
+  .item-categoryCard {
+    padding: 4px 0;
+
+    .info-value {
+      text-align: right;
+      font-size: 15px;
+      color: @primaryTextColor;
+    }
+    .info-count {
+      text-align: right;
+      font-size: 12px;
+      color: @secondaryTextColor;
+    }
+  }
+}
 </style>

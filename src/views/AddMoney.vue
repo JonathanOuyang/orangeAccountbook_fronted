@@ -197,8 +197,6 @@ export default {
       if (this.value.length < MAX_MONEY || this.value == "0") {
         if (key == ".") this.isInputInt = false;
         else {
-          console.log(2);
-
           if (this.isInputInt) {
             this.intStack.push(key);
           } else {

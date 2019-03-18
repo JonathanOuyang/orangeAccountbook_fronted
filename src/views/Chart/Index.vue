@@ -2,6 +2,7 @@
   <div id="view-chart">
     <van-tabs v-model="activeTab"
               color="#f6717d">
+              <!-- @change="changeTab"> -->
       <van-tab title="分类占比">
         <category-pie />
       </van-tab>
@@ -9,6 +10,7 @@
         <date-bar />
       </van-tab>
     </van-tabs>
+    <!-- <router-view/> -->
   </div>
 </template>
 
@@ -29,7 +31,12 @@ export default {
 
   computed: {},
 
-  methods: {}
+  methods: {
+    changeTab(index) {
+      const PAGES = ['/chart/categoryPie', '/chart/dateBar']
+      this.$router.push(PAGES[index])
+    }
+  }
 };
 </script>
 

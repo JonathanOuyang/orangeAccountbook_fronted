@@ -48,7 +48,7 @@ axios.interceptors.response.use(
           background: "#47bb51"
         });
       return response.data;
-    } else if(CODE === "token_wrong") {
+    } else if (CODE === "token_wrong") {
       return Dialog.confirm({
         title: "提示",
         message: "登录状态失效，请重新登录",
@@ -104,25 +104,23 @@ export default {
     options.successDialog === undefined && (options.successDialog = false);
     options.goBack === undefined && (options.goBack = false);
     return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        axios
-          .post(url, params, {
-            headers: {
-              Authorization: options.setToken ? getToken() : ""
-            },
-            showLoading: options.loadingToast,
-            showSuccess: options.successDialog
-          })
-          .then(
-            response => {
-              resolve(response);
-              options.goBack && router.go(-1)
-            },
-            err => {
-              reject(err);
-            }
-          );
-      }, 800);
+      axios
+        .post(url, params, {
+          headers: {
+            Authorization: options.setToken ? getToken() : ""
+          },
+          showLoading: options.loadingToast,
+          showSuccess: options.successDialog
+        })
+        .then(
+          response => {
+            resolve(response);
+            options.goBack && router.go(-1);
+          },
+          err => {
+            reject(err);
+          }
+        );
     });
   }
 };

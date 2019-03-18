@@ -8,7 +8,7 @@
                  size="40px"
                  opacity="0"></loading></div> -->
       <header>
-        <div class="home-header-banner">  
+        <div class="home-header-banner"> 
         <!-- <div class="home-title">
           <div class="text-book">
             {{bookName}}<Icon name="genghuan"
@@ -103,12 +103,11 @@ export default {
         pageSize: PAGE_SIZE
       };
 
+      const moneyTimeStart = this.$moment().startOf('month');
       const sumData = {
         searchValue: {
-          moneyTimeStart: this.$moment()
-            .startOf("month")
-            .format("YYYY-MM-DD HH:mm:ss"),
-          moneyTimeEnd: this.$moment().format("YYYY-MM-DD HH:mm:ss")
+          moneyTimeStart: moneyTimeStart.format('YYYY-MM-DD'),
+          moneyTimeEnd: moneyTimeStart.add(1, 'month').format('YYYY-MM-DD')
         }
       };
       searchMoneyList(searchData).then(res => {
@@ -117,11 +116,11 @@ export default {
         this.isLoading && (this.isLoading = false);
       });
 
-      // getMoneySum(sumData).then(res => {
-      //   const sums = res.data;
-      //   this.income = sums.incomeSum;
-      //   this.outcome = sums.outcomeSum;
-      // });
+      getMoneySum(sumData).then(res => {
+        const sums = res.data.result;
+        this.income = sums[0].value;
+        this.outcome = sums[1].value;
+      });
     },
     onRefresh() {
       this.init();

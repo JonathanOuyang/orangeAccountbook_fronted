@@ -5,8 +5,8 @@
     <div class="main">
       <div class="form-wrap">
         <van-cell-group>
-          <van-field v-model="name"
-                     label="昵称" />
+          <!-- <van-field v-model="name"
+                     label="昵称" /> -->
           <van-field v-model="email"
                      label="邮箱" />
           <van-field v-model="password"
@@ -19,6 +19,9 @@
       </div>
       <van-button size="large"
                   @click="handleConfirm">注册</van-button>
+      <van-button size="large"
+                  plain
+                  to="/login">已有账号？前往登录</van-button>
     </div>
     <div class="footer">橙子账本</div>
   </div>
@@ -74,7 +77,7 @@ export default {
         });
         return;
       }
-      register(data).then(res => {
+      register(data, { setToken: false }).then(res => {
         this.$notify({
           message: res.summary,
           background: this.$color["success"]
@@ -114,6 +117,9 @@ export default {
 
   .main {
     flex: 1;
+    .van-button--default {
+      margin-bottom: 6px;
+    }
   }
 
   .footer {

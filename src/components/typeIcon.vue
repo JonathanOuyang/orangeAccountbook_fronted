@@ -60,7 +60,7 @@ export default {
   },
   methods: {
     handleClick() {
-      this.$emit("select", this._id);
+      // this.$emit("select", this._id);
     }
   }
 };
@@ -98,6 +98,7 @@ export default {
 .typeIcon-title-right {
   .typeIcon-title {
     margin-left: 8px;
+    font-size: 18px;
   }
 }
 .typeIcon-title-bottom {

@@ -29,19 +29,19 @@
       </div>
     </div>
     <van-list
-  v-model="isListLoading"
-  :error="isListError"
-  :finished="isListFinished"
-  :finished-text="moneys.length>6?'已经到底啦':''"
-  error-text="请求失败，点击重新加载"
-  @load="handleListLoad"
-  :offset="30"
->
-    <money-list :list="moneys"
-                date-format="HH:mm"
-                :isEditing="isListEditing"
-                :isLoading="isListIniting"
-                no-data-text="这天没有账单哦"></money-list>
+      v-model="isListLoading"
+      :error="isListError"
+      :finished="isListFinished"
+      :finished-text="moneys.length>6?'已经到底啦':''"
+      error-text="请求失败，点击重新加载"
+      @load="handleListLoad"
+      :offset="30"
+    >
+      <money-list :list="moneys"
+                  date-format="HH:mm"
+                  :isEditing="isListEditing"
+                  :isLoading="isListIniting"
+                  no-data-text="这天没有账单哦"></money-list>
     </van-list>
     <!-- 
     <div class="button-float button-manage">
@@ -181,18 +181,15 @@ export default {
   },
   created() {
     this.$loading.show();
-    this.initCalendarPage(TODAY.getFullYear(), TODAY.getMonth());
+    this.initCalendarPage(TODAY.getFullYear(), TODAY.getMonth() + 1);
   },
   methods: {
     // 更新当前日历页和对应的账单列表
-    initCalendarPage(year, month) {
-      getCalendarInfo(
-        { year, month },
-        { loadingToast: false }
-      ).then(res => {
+    initCalendarPage(year, month, date = 1) {
+      getCalendarInfo({ year, month }, { loadingToast: false }).then(res => {
         this.dayHasMoneys = res.data.calendarInfo;
       });
-      this.initMoneyListByDay(new Date(year, month-1, 1));
+      this.initMoneyListByDay(new Date(year, month - 1, date));
     },
 
     // 点击日期
@@ -258,7 +255,11 @@ export default {
 
     onRefresh() {
       const date = this.selectedDate;
-      this.initCalendarPage(date);
+      this.initCalendarPage(
+        date.getFullYear(),
+        date.getMonth() + 1,
+        date.getDate()
+      );
     },
 
     handleListLoad() {

@@ -14,12 +14,15 @@
 </template>
 
 <script>
+const PAGES = ["accounts", "home", "personal"]
 export default {
   data() {
     return {
-      pages: ["calendar", "accounts", "home", "chart", "personal"],
-      tabbarActive: 1
+      tabbarActive: 0
     };
+  },
+  created() {
+    this.setTabbarActive()
   },
   computed: {
     tabbar() {
@@ -41,7 +44,12 @@ export default {
       ];
       return list;
     }
-  }
+  },
+  methods: {
+    setTabbarActive() {
+      this.tabbarActive = PAGES.indexOf(this.$route.name)
+    }
+  },
 };
 </script>
 
