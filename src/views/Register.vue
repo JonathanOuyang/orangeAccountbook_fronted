@@ -45,17 +45,17 @@ export default {
   methods: {
     handleConfirm() {
       const data = {
-        name: this.name,
+        // name: this.name,
         email: this.email,
         password: this.password
       };
-      if (!this.name) {
-        this.$notify({
-          message: "请输入昵称",
-          background: this.$color["error"]
-        });
-        return;
-      }
+      // if (!this.name) {
+      //   this.$notify({
+      //     message: "请输入昵称",
+      //     background: this.$color["error"]
+      //   });
+      //   return;
+      // }
       if (!EMAIL_RE.test(this.email)) {
         this.$notify({
           message: "请输入正确格式的邮箱地址",

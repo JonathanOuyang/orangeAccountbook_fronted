@@ -9,7 +9,6 @@
 
 <script>
 import echarts from "echarts/lib/echarts";
-// 引入雷达图组件
 import "echarts/lib/chart/bar";
 // 引入提示框和图例组件
 import "echarts/lib/component/tooltip";

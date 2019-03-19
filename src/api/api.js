@@ -7,6 +7,15 @@ export const register = (data, options) =>
 export const login = (data, options) =>
   request.post("users/login", data, options);
 
+export const getUserInfo = (data, options) =>
+  request.post("users/getUserInfo", data, options);
+
+export const updateBudget = (data, options) =>
+  request.post("users/updateBudget", data, options);
+
+export const getBudget = (data, options) =>
+  request.post("users/getBudget", data, options);
+
 /* 添加账单 */
 export const addMoney = (data, options) =>
   request.post("moneys/addMoney", data, options);

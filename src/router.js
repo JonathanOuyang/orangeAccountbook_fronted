@@ -25,16 +25,37 @@ export default new Router({
           component: () => import("./views/Account/Index.vue")
         },
         {
-          path: "/books",
-          name: "books",
-          component: () => import("./views/Books.vue")
+          path: "/calendar",
+          name: "calendar",
+          meta: { title: "所有账单-橙子记账" },
+          component: () => import("./views/Calendar.vue")
         },
         {
-          path: "/personal",
-          name: "personal",
-          meta: { title: "个人中心-橙子记账" },
-          component: () => import("./views/Personal.vue")
+          path: "/chart",
+          name: "chart",
+          meta: { title: "财务报表-橙子记账" },
+          component: () => import("./views/Chart/Index.vue"),
+          // redirect: "/chart/categoryPie",
+          children: [
+            {
+              path: "categoryPie",
+              name: "category-pie",
+              meta: { title: "财务报表-橙子记账" },
+              component: () => import("./views/Chart/CategoryPie.vue")
+            },
+            {
+              path: "dateBar",
+              name: "date-bar",
+              meta: { title: "财务报表-橙子记账" },
+              component: () => import("./views/Chart/DateBar.vue")
+            }
+          ]
         }
+        // {
+        //   path: "/books",
+        //   name: "books",
+        //   component: () => import("./views/Books.vue")
+        // },
       ]
     },
     {
@@ -50,31 +71,16 @@ export default new Router({
       component: () => import("./views/Login.vue")
     },
     {
-      path: "/calendar",
-      name: "calendar",
-      meta: { title: "所有账单-橙子记账" },
-      component: () => import("./views/Calendar.vue")
+      path: "/personal",
+      name: "personal",
+      meta: { title: "个人中心-橙子记账" },
+      component: () => import("./views/Personal/Index.vue")
     },
     {
-      path: "/chart",
-      name: "chart",
-      meta: { title: "财务报表-橙子记账" },
-      component: () => import("./views/Chart/Index.vue"),
-      // redirect: "/chart/categoryPie",
-      children: [
-        {
-          path: "categoryPie",
-          name: "category-pie",
-          meta: { title: "财务报表-橙子记账" },
-          component: () => import("./views/Chart/CategoryPie.vue")
-        },
-        {
-          path: "dateBar",
-          name: "date-bar",
-          meta: { title: "财务报表-橙子记账" },
-          component: () => import("./views/Chart/DateBar.vue")
-        }
-      ]
+      path: "/budget",
+      name: "personal-budget",
+      meta: { title: "个人中心-橙子记账" },
+      component: () => import("./views/Personal/Budget.vue")
     },
     {
       path: "/addMoney",

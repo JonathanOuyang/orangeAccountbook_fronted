@@ -1,16 +1,16 @@
 @darkPrimaryColor: #a02530;
 @primaryColor: #f6717d;
-@lightPrimaryColor: #FB959F;
+@lightPrimaryColor: #fb959f;
 @textPrimaryColor: #fafafa;
-@accentColor: #76D462;
+@accentColor: #76d462;
 @primaryTextColor: #505050;
 @secondaryTextColor: #767676;
 @dividerColor: #eee;
-@grey: #fafafa;
+@grey: #fcfcfc;
 @linearColor: linear-gradient(to right, @lightPrimaryColor, @primaryColor);
 
 @rem: 20rem;
-@shadow: rgba(0, 0, 0, 0.2) 0px 6px 16px -4px;
+@shadow: rgba(0, 0, 0, 0.2) 0px 6px 20px -4px;
 @shadow1: rgba(0, 0, 0, 0.1) 0px 0px 12px -2px;
 
 //页头卡片
@@ -28,7 +28,7 @@
   width: 200%;
   height: @height;
   padding: 12px 50% 0 50%;
-  transform: translateX(-25%);
+  transform: translateX(-27.7%);
   border-radius: 0 0 50% 50%;
   background: @primaryColor;
   color: @textPrimaryColor;
@@ -36,11 +36,13 @@
 }
 
 .orange-button {
+  // display: flex;
   height: 44px;
   line-height: 42px;
   border-radius: 2px;
   background: @linearColor;
   font-size: 16px;
+  font-weight: lighter;
   color: @textPrimaryColor;
   text-align: center;
   .button-icon {
@@ -53,12 +55,27 @@
   border: none;
 }
 .van-button--primary.van-button--plain {
-  background: #fff;  
+  background: #fff;
   border: 1px solid @primaryColor;
   color: @primaryColor;
 }
 .van-button--small {
   min-width: auto;
+}
+
+.form-view {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-color: @grey;
+
+  .main {
+    flex: 1;
+  }
+  .footer {
+    padding: 10px 12px;
+    background-color: @grey;
+  }
 }
 
 // .van-button--default {
@@ -67,7 +84,7 @@
 //   border: none;
 // }
 // .van-button--default.van-button--plain {
-//   background: #fff;  
+//   background: #fff;
 //   border: 1px solid @accentColor;
 //   color: @accentColor;
 // }

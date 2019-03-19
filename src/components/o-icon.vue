@@ -26,6 +26,6 @@ export default {
 <style lang="less">
 @import "../assets/icon/iconfont.css";
 .iconfont {
-  line-height: 1.4em;
+  // line-height: 1.4em;
 }
 </style>

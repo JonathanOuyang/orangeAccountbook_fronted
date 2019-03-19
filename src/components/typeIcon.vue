@@ -60,7 +60,7 @@ export default {
   },
   methods: {
     handleClick() {
-      // this.$emit("select", this._id);
+      this.$emit("select", this._id);
     }
   }
 };

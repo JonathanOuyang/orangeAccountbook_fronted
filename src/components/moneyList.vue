@@ -1,7 +1,7 @@
 /**
  * moneyList
  * @desc 账单列表
- * @param {Array} [data] 账单数据
+ * @param {Array} [list] 账单数据
  * @example <money-list :data="moneys"></money-list>
  */
 <template>
