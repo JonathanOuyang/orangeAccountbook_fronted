@@ -43,6 +43,10 @@ export const getCalendarInfo = (data, options) =>
 export const getCategoryList = (data, options) =>
   request.post("categorys/getCategoryList", data, options);
 
+/* 获取分类 */
+export const updateCategory = (data, options) =>
+  request.post("categorys/updateCategory", data, options);
+
 /* 获取账户 */
 export const getAccountList = (data, options) =>
   request.post("accounts/getAccountList", data, options);

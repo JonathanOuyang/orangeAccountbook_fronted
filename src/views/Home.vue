@@ -235,8 +235,8 @@ export default {
 .panel-budget {
   display: flex;
   align-items: center;
-  margin: 10px 40px 0;
-  padding: 15px 30px;
+  margin: 20px 40px 0;
+  padding: 10px 30px;
   .panel();
 
   .budget-text {

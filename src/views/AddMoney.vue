@@ -21,8 +21,8 @@
                  :loop="false">
         <van-swipe-item v-for="(page, pageIdx) in [outCategoryList,inCategoryList][type]"
                         :key="pageIdx">
-          <div class="addMoney-type">
-            <type-icon class="addMoney-type-item"
+          <div class="addMoney-category">
+            <type-icon class="addMoney-category-item"
                        checker
                        v-for="(category) in page"
                        :key="category._id"
@@ -32,7 +32,14 @@
                        :title="category.name"
                        title-position="bottom"
                        :selected="selectedCategory == category._id"
-                       @select="handleSelectCategory"></type-icon>
+                       @select="handleSelectCategory" />
+            <type-icon 
+              class="addMoney-category_setting"
+              icon="shezhixuanzhong"
+              title-position="bottom"
+              title="自定义"
+              v-if="pageIdx === 2"
+              @select="$router.push('/categoryManage')" />
           </div>
         </van-swipe-item>
       </van-swipe>
@@ -143,11 +150,13 @@ export default {
         const inCategorys = [];
         const outCategorys = [];
         res.data.list.forEach(elem => {
-          if (elem.type == 0) {
-            outCategorys.push(elem);
-          } else if (elem.type == 1) {
-            inCategorys.push(elem);
-          }
+          // if (elem.status === 1) {
+            if (elem.type == 0) {
+              outCategorys.push(elem);
+            } else if (elem.type == 1) {
+              inCategorys.push(elem);
+            }
+          // }
         });
         this.inCategoryList = this.groupToPage(inCategorys, CATEGORY_PAGE_SIZE);
         this.outCategoryList = this.groupToPage(
@@ -361,15 +370,21 @@ export default {
 }
 
 .van-swipe {
-  .addMoney-type {
+  .addMoney-category {
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;
     height: 160px;
     padding: 14px 18px 12px;
-    &-item {
+    &-item,
+    &_setting {
       width: 20%;
       margin: 4px 0;
+    }
+    &_setting .typeIcon-icon {
+      border: 1px solid #cccccc;
+      background-color: #fff;
+      color: #cccccc;
     }
   }
 }

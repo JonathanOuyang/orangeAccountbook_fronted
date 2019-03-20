@@ -79,8 +79,14 @@ export default new Router({
     {
       path: "/budget",
       name: "personal-budget",
-      meta: { title: "个人中心-橙子记账" },
+      meta: { title: "预算设置-橙子记账" },
       component: () => import("./views/Personal/Budget.vue")
+    },
+    {
+      path: "/categoryManage",
+      name: "category-manage",
+      meta: { title: "分类管理-橙子记账" },
+      component: () => import("./views/Personal/CategoryManage.vue")
     },
     {
       path: "/addMoney",

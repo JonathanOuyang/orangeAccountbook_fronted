@@ -1,5 +1,5 @@
 <template>
-  <div id="view-personal">
+  <div id="view-budget">
     <div class="main">
       <van-cell-group>
         <money-field
@@ -55,7 +55,7 @@ export default {
 
 <style lang="less">
 @import "../../assets/variable.less";
-#view-personal {
+#view-budget {
   .form-view();
   .van-cell-group {
     background-color: @grey;

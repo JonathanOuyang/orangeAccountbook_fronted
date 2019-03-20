@@ -68,6 +68,7 @@ export default {
           this.$emit("select", this.selecteKey)
         }
       }
+      this.$emit("click", this.data)      
     }
   }
 };
