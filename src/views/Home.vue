@@ -53,12 +53,24 @@
             class="button-icon"></icon>
       添加账单
     </router-link>
-    <div class="panel-budget">
-      <div class="budget-text">
+    <div 
+      class="panel-budget" 
+      @click="$router.push('/budget')">
+      <div 
+        class="budget-text"
+        v-if="budgetValue != 0">
         <div class="budget-title">本月预算剩余</div>
         <div class="budget-value">{{budgetValue - outcome}}</div>
       </div>
-      <liquidfill :data="(budgetValue-outcome)/budgetValue" />
+      <liquidfill
+        v-if="budgetValue != 0"
+        :data="(budgetValue-outcome)/budgetValue">
+      </liquidfill>
+      <div 
+        class="budget-noValue"
+        v-if="budgetValue == 0">
+        <div class="budget-title">点击设置预算</div>
+      </div>
     </div>
     <div class="moneyList">
       <div class="title-moneyList">
@@ -127,8 +139,14 @@ export default {
 
       getMoneySum(sumData).then(res => {
         const sums = res.data.result;
-        this.income = sums[0].value;
-        this.outcome = sums[1].value;
+        sums.forEach(item => {
+          if (item._id.type === 0) {
+            this.outcome = item.value;
+          }
+          if (item._id.type === 1) {
+            this.income = item.value;
+          }
+        });
       });
 
       getUserInfo().then(res => {
@@ -235,6 +253,7 @@ export default {
 .panel-budget {
   display: flex;
   align-items: center;
+  justify-content: center;
   margin: 20px 40px 0;
   padding: 10px 30px;
   .panel();
@@ -248,6 +267,13 @@ export default {
     .budget-value {
       font-size: 30px;
     }
+  }
+
+  .budget-noValue {
+    flex: 1;
+    text-align: center;
+    padding: 10px 0;    
+    font-size: 16px;
   }
 }
 

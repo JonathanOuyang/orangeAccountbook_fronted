@@ -22,7 +22,6 @@ function getToken() {
   return TOKEN;
 }
 
-// 192.168.191.1
 axios.defaults.baseURL = BASE_URL;
 axios.interceptors.request.use(
   config => {

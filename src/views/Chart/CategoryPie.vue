@@ -15,11 +15,14 @@
         {{item}}
       </van-button>
     </div>
-    <pie 
+    <pie
+      v-if="data.length"
       :data="data"
       :selectedIndex="selectedIndex"
       @selectPie="selectCard"/>
-    <div class="list-categoryCard">
+    <div 
+      class="list-categoryCard"
+      v-if="data.length">
       <div class="item-categoryCard"
         v-for="(item, index) in data"
         :key="item._id">
@@ -33,6 +36,11 @@
           <div class="info-count">共{{item.count}}笔</div>
         </category-card>
       </div>
+    </div>
+    <div
+      v-if="!data.length"
+      class="noData-tip">
+      暂无数据
     </div>
   </div>
 </template>
@@ -123,4 +131,11 @@ export default {
     }
   }
 }
+
+  .noData-tip {
+    text-align: center;
+    padding: 50px 0;
+    font-size: 14px;
+    color: @secondaryTextColor;
+  }
 </style>

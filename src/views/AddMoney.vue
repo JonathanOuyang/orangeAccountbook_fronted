@@ -38,7 +38,7 @@
               icon="shezhixuanzhong"
               title-position="bottom"
               title="自定义"
-              v-if="pageIdx === 2"
+              v-if="pageIdx === [outCategoryList,inCategoryList][type].length - 1"
               @select="$router.push('/categoryManage')" />
           </div>
         </van-swipe-item>
@@ -71,7 +71,9 @@
                          close-button-text="确认" />
     <van-popup v-model="isShowDate"
                position="bottom">
-      <van-datetime-picker v-model="date"
+      <van-datetime-picker v-model="modalDate"
+                           @confirm="confirmDate"
+                           @cancel="cancelDate"
                            type="datetime" />
     </van-popup>
     <van-popup v-model="isShowAccount"
@@ -126,6 +128,7 @@ export default {
       isShowDate: false,
       isShowAccount: false,
       date: TODAY,
+      modalDate: TODAY,
       today: TODAY,
       moneyId: ""
     };
@@ -135,6 +138,7 @@ export default {
     this.date = this.$route.query.date
       ? new Date(Number(this.$route.query.date))
       : TODAY;
+    this.modalDate = this.date;
     this.init();
     this.getValue();
   },
@@ -150,13 +154,13 @@ export default {
         const inCategorys = [];
         const outCategorys = [];
         res.data.list.forEach(elem => {
-          // if (elem.status === 1) {
+          if (elem.status === 1) {
             if (elem.type == 0) {
               outCategorys.push(elem);
             } else if (elem.type == 1) {
               inCategorys.push(elem);
             }
-          // }
+          }
         });
         this.inCategoryList = this.groupToPage(inCategorys, CATEGORY_PAGE_SIZE);
         this.outCategoryList = this.groupToPage(
@@ -272,17 +276,14 @@ export default {
         });
         return;
       }
-      const option =
-        this.moneyId || this.$route.query.date
-          ? { successDialog: true }
-          : { successDialog: true, goBack: true };
+      const option = { successDialog: true, goBack: true };
       if (this.moneyId) {
         updateMoney({ ...data, moneyId: this.moneyId }, option).then(res => {
-          this.$router.go(-2);
+          // this.$router.go(-2);
         });
       } else {
         addMoney(data, option).then(res => {
-          this.$router.go(-2);
+          // this.$router.go(-2);
         });
       }
     },
@@ -295,9 +296,17 @@ export default {
         this.isShowAccount = false;
       }, 200);
     },
+    confirmDate() {
+      this.date = this.modalDate;
+      this.isShowDate = false
+    },
+    cancelDate() {
+      this.modalDate = this.date;
+      this.isShowDate = false
+    },
     handleSave() {
       this.saveMoney();
-      this.$router.push(-1);
+      // this.$router.push(-1);
     },
     handleCreateMore() {
       this.saveMoney();

@@ -4,7 +4,7 @@
       <van-cell-group>
         <money-field
             v-model="value"
-            label="账户余额"
+            label="预算金额"
             placeholder="请输入余额"
           />
         <van-cell 
