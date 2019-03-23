@@ -95,12 +95,12 @@ export default {
 .item-money-wrap {
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
+  align-items: stretch;
   padding: 0 24px;
   background-color: #fff;
   &:after {
     content: "";
-    width: 88%;
+    margin-left: 40px;  
     height: 1px;
     background: @dividerColor;
   }

@@ -6,12 +6,12 @@
       >
       <van-button
         v-for="(item, index) in typeList"
-        :key="index"
+        :key="item.key"
         size="small"
-        :type="selectedType === index? 'primary' : 'default'"
+        :type="selectedType === item.key? 'primary' : 'default'"
         @click="changeType(index)"
         style="marginRight: 2px">
-        {{item}}
+        {{item.value}}
       </van-button>
     </div>
     <div class="date-selector_main">
@@ -34,6 +34,10 @@
 </template>
 
 <script type="text/javascript">
+const FORMAT_TYPES = {
+  month: "YYYY-MM",
+  year: "YYYY"
+};
 export default {
   props: {
     selectYear: {
@@ -45,28 +49,36 @@ export default {
     return {
       moment: new Date().getTime(),
       momentString: this.$moment().format("YYYY-MM"),
-      selectedType: 0,
-      typeList: ['月', '年']
+      selectedType: 'month',
+      typeList: [
+        {
+          key: 'month',
+        value: '月'
+        }, {
+          key: 'year',
+        value: '年'
+        }]
     };
   },
   methods: {
     handlePrev() {
       this.moment = this.$moment(this.moment)
-        .subtract(1, "month")
+        .subtract(1, this.selectedType)
         .valueOf();
-      this.momentString = this.$moment(this.moment).format("YYYY-MM");
-      this.$emit("change", this.$moment(this.moment));
+      this.momentString = this.$moment(this.moment).format(FORMAT_TYPES[this.selectedType]);
+      this.$emit("changeDate", this.$moment(this.moment));
     },
     handleNext() {
       this.moment = this.$moment(this.moment)
-        .add(1, "month")
+        .add(1, this.selectedType)
         .valueOf();
-      this.momentString = this.$moment(this.moment).format("YYYY-MM");
-      this.$emit("change", this.$moment(this.moment));
+      this.momentString = this.$moment(this.moment).format(FORMAT_TYPES[this.selectedType]);
+      this.$emit("changeDate", this.$moment(this.moment));
     },
     changeType(index) {
-      this.selectedType = index;
-      this.initCategorySum(this.selectedMoment);
+      this.selectedType = this.typeList[index].key;
+      this.momentString = this.$moment(this.moment).format(FORMAT_TYPES[this.selectedType]);
+      this.$emit("changeType", this.typeList[index])
     },
   }
 };

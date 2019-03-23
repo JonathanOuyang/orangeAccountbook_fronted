@@ -2,7 +2,8 @@
   <div id="view-chartPie">
     <date-selector 
       selectYear
-      @change="changeDate"></date-selector>
+      @changeDate="changeDate"
+      @changeType="changeDateType"></date-selector>
     <div class="chartPie-toolBar">
       <van-button
         v-for="(item, index) in typeList"
@@ -58,8 +59,9 @@ export default {
       data: [],
       selectedIndex: -1,
       selectedType: 0,
+      selectedDateType: "month",
       selectedMoment: this.$moment(),
-      typeList: ['支出', '收入']
+      typeList: ["支出", "收入"]
     };
   },
 
@@ -71,19 +73,25 @@ export default {
 
   methods: {
     init() {
-      this.initCategorySum(this.$moment())
+      this.initData(
+        this.$moment(),
+        this.selectedDateType,
+        this.selectedType
+      );
     },
-    initCategorySum(moment){
-      const moneyTimeStart = moment.startOf('month').valueOf();
+    initData(moment, dateType, type) {
+      const moneyTimeStart = moment.startOf(dateType).format();
       const data = {
         searchValue: {
-          type: this.selectedType,
+          type: type,
           moneyTimeStart: moneyTimeStart,
-          moneyTimeEnd: this.$moment(moneyTimeStart).add(1, 'month').valueOf()
+          moneyTimeEnd: this.$moment(moneyTimeStart)
+            .add(1, dateType)
+            .format()
         },
         groupType: 1
-      }
-      getMoneySum(data).then(res=>{
+      };
+      getMoneySum(data).then(res => {
         this.data = res.data.result.map(item => ({
           _id: item._id.categoryId,
           name: res.data.categorys[item._id.categoryId].name,
@@ -91,16 +99,24 @@ export default {
           type: res.data.categorys[item._id.categoryId].type,
           value: item.value,
           count: item.count
-        }))
-      })
+        }));
+      });
     },
-    changeDate(moment){
-      this.initCategorySum(moment);
+    changeDate(moment) {
+      this.initData(moment, this.selectedDateType, this.selectedType);
       this.selectedMoment = moment;
+    },
+    changeDateType(type) {
+      this.selectedDateType = type.key;
+      this.initData(this.selectedMoment, type.key, this.selectedType);
     },
     changeType(index) {
       this.selectedType = index;
-      this.initCategorySum(this.selectedMoment);
+      this.initData(
+        this.selectedMoment,
+        this.selectedDateType,
+        index
+      );
     },
     selectCard(key) {
       this.selectedIndex = key;
@@ -132,10 +148,10 @@ export default {
   }
 }
 
-  .noData-tip {
-    text-align: center;
-    padding: 50px 0;
-    font-size: 14px;
-    color: @secondaryTextColor;
-  }
+.noData-tip {
+  text-align: center;
+  padding: 50px 0;
+  font-size: 14px;
+  color: @secondaryTextColor;
+}
 </style>

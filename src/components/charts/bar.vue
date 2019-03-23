@@ -75,8 +75,9 @@ export default {
             axisLabel: {
               color: '#767676',
               fontSize: 11,
+              interval: 2,
               formatter: function (value, index) {
-                return vm.$moment(value).format('MM-DD')
+                return value
               }
             }
           },
@@ -102,7 +103,7 @@ export default {
                 show: true,
                 formatter: function(params) {
                   const name = params.seriesData[0]? params.seriesData[0].name : vm.data[vm.data.length-1].name
-                  return `${vm.$moment(name).format('M月D日')}\n¥${params.value}`;
+                  return `${name}\n¥${params.value}`;
                 },
                 backgroundColor: "#a02530"
               },

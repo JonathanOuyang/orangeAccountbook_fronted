@@ -2,7 +2,8 @@
   <div id="view-chartBar">
     <date-selector 
       selectYear
-      @change="changeDate"></date-selector>
+      @changeDate="changeDate"
+      @changeType="changeDateType"></date-selector>
     <div class="chartBar-toolBar">
       <van-button
         v-for="(item, index) in typeList"
@@ -27,7 +28,7 @@
         class="date-item"
         v-for="item in data"
         :key="item.name">
-        <div class="item-title">{{$moment(item.name).format('M月D日')}}</div>
+        <div class="item-title">{{item.name}}</div>
         <div class="item-value">¥{{item.value}}</div>
         <div class="item-count">{{item.count}}笔</div>
       </div>
@@ -38,6 +39,19 @@
 <script>
 import bar from "../../components/charts/bar";
 import { getMoneySum } from "../../api/api.js";
+
+const DATE_TYPES = {
+  month: {
+    groupKey: 2,
+    format: 'M月D日',
+    item: 'day'
+  },
+  year: {
+    groupKey: 3,
+    format: 'YYYY年M月',
+    item: 'month'    
+  }
+}
 export default {
   name: "date-bar",
   components: {
@@ -53,6 +67,7 @@ export default {
         { value: 400, name: "搜索引擎" }
       ],
       selectedMoment: this.$moment(),
+      selectedDateType: 'month',
       selectedType: 0,
       typeList: ["支出", "收入"]
     };
@@ -67,26 +82,26 @@ export default {
   methods: {
     init() {
       const params = [];
-      this.initDateBar(this.$moment());
+      this.initData(this.$moment(), this.selectedDateType, this.selectedType);
     },
-    initDateBar(moment) {
-      const moneyTimeStart = moment.startOf("month").valueOf();
+    initData(moment, dateType, type) {
+      const moneyTimeStart = moment.startOf(dateType).format();
       const data = {
         searchValue: {
-          type: this.selectedType,
-          moneyTimeStart: this.$moment(moneyTimeStart).format("YYYY-MM-DD"),
+          type: type,
+          moneyTimeStart: moneyTimeStart,
           moneyTimeEnd: this.$moment(moneyTimeStart)
-            .add(1, "month")
-            .format("YYYY-MM-DD")
+            .add(1, dateType)
+            .format()
         },
-        groupType: 2
+        groupType: DATE_TYPES[this.selectedDateType].groupKey
       };
       this.data = this.getXAxis(moment);
       getMoneySum(data).then(res => {
         this.data = this.getXAxis(moment).map(day => {
-          const item = res.data.result.find(item => item._id.day === day);
+          const item = res.data.result.find(item => item._id[DATE_TYPES[this.selectedDateType].item] === day);
           return {
-            name: this.$moment(day).format("YYYY-MM-DD"),
+            name: this.$moment(day).format(DATE_TYPES[this.selectedDateType].format),
             value: item ? item.value : 0,
             count: item ? item.count : 0
           };
@@ -95,23 +110,37 @@ export default {
     },
     changeType(index) {
       this.selectedType = index;
-      this.initDateBar(this.selectedMoment);
+      this.initData(this.selectedMoment, this.selectedDateType, index);
     },
     changeDate(moment) {
-      this.initDateBar(moment);
       this.selectedMoment = moment;
+      this.initData(moment, this.selectedDateType, this.selectedType);
+    },
+
+    changeDateType(type) {
+      this.selectedDateType = type.key;
+      this.initData(this.selectedMoment, type.key, this.selectedType);
     },
     getXAxis(moment) {
       let xAxis = [];
-      let currentMoment = moment.startOf('month');
-      let currentDate = currentMoment.date();
-      while (currentDate <= moment.endOf('month').date()) {
-        currentMoment.date(currentDate)
-        xAxis.push(currentMoment.format("YYYY-MM-DD"));
-        currentDate++;
+      if (this.selectedDateType == 'month') {
+        let currentMoment = moment.startOf(this.selectedDateType);
+        let currentDate = currentMoment.date();
+        while (currentDate <= moment.endOf(this.selectedDateType).date()) {
+          currentMoment.date(currentDate);
+          xAxis.push(currentMoment.format("YYYY-MM-DD"));
+          currentDate++;
+        }
+      } else if (this.selectedDateType == 'year') {
+        let currentMoment = moment.startOf(this.selectedDateType);
+        let currentDate = currentMoment.month();
+        while (currentDate <= moment.endOf(this.selectedDateType).month()) {
+          currentMoment.month(currentDate);
+          xAxis.push(currentMoment.format("YYYY-MM"));
+          currentDate++;
+        }
       }
       return xAxis;
-      
     }
   }
 };
@@ -122,7 +151,8 @@ export default {
 .chartBar-toolBar {
   padding: 6px 12px 0;
 }
-.date-item, .date-header {
+.date-item,
+.date-header {
   display: flex;
   align-items: center;
   margin: 0 10px;
@@ -153,6 +183,6 @@ export default {
   }
 }
 .date-header {
-  font-weight: bold;  
+  font-weight: bold;
 }
 </style>

@@ -59,12 +59,12 @@
       <div 
         class="budget-text"
         v-if="budgetValue != 0">
-        <div class="budget-title">本月预算剩余</div>
-        <div class="budget-value">{{budgetValue - outcome}}</div>
+        <div class="budget-title">{{lessBudgetValue > 0? '本月预算剩余' : '本月预算超支'}}</div>
+        <div class="budget-value">{{lessBudgetValue > 0? lessBudgetValue : -lessBudgetValue}}</div>
       </div>
       <liquidfill
         v-if="budgetValue != 0"
-        :data="(budgetValue-outcome)/budgetValue">
+        :data="0">
       </liquidfill>
       <div 
         class="budget-noValue"
@@ -104,6 +104,11 @@ export default {
       moneys: [],
       isLoading: false
     };
+  },
+  computed: {
+    lessBudgetValue() {
+      return this.budgetValue - this.outcome
+    }
   },
   created() {
     this.init();
