@@ -13,11 +13,11 @@
            :key="money._id"
            @click="handleTapMoney(money._id)">
         <div class="item-money">
-          <type-Icon :icon="money.category.icon"
+          <type-Icon :icon="money.categoryId.icon"
                      :type="money.type"
                      @select="handleTapType"></type-Icon>
           <div class="wrap-text-left">
-            <div class="text-category">{{money.category.name}}</div>
+            <div class="text-category">{{money.categoryId.name}}</div>
             <div class="text-secondary">
               {{$moment(money.moneyTime).format(dateFormat)}}
               {{note && money.note}}
@@ -25,7 +25,7 @@
           </div>
           <div class="wrap-text-right">
             <div class="text-value">{{money.value | currency}}</div>
-            <div class="text-account">{{money.account.name}}</div>
+            <div class="text-account">{{money.accountId.name}}</div>
           </div>
         </div>
       </div>

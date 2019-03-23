@@ -2,7 +2,7 @@
   <div id="view-moneyDetail">
     <div class="detail-wrap">
       <div class="detail-header">
-        <type-Icon :icon="category.icon" :type="money.type" :title="category.name"></type-Icon>
+        <type-Icon :icon="money.categoryId.icon" :type="money.type" :title="money.categoryId.name"></type-Icon>
         <div class="detail-value">￥{{money.value}}</div>
       </div>
       <div class="detail-cell">
@@ -15,7 +15,7 @@
       </div> -->
       <div class="detail-cell">
         <div class="detail-item_title">账户</div>
-        <div class="detail-item_info">{{account.name}}</div>
+        <div class="detail-item_info">{{money.accountId.name}}</div>
       </div>
       <div class="detail-cell">
         <div class="detail-item_title">时间</div>
@@ -42,8 +42,6 @@ export default {
     return {
       moneyId: "",
       money: {},
-      category: {},
-      account: {},
       type: ["支出", "收入", "转账"]
     };
   },
@@ -55,8 +53,6 @@ export default {
     getMoneyDetail() {
       getMoneyDetail({ moneyId: this.moneyId }).then(res => {
         this.money = res.data.detail;
-        this.category = res.data.category;
-        this.account = res.data.account;
       });
     },
     handleDelete() {
