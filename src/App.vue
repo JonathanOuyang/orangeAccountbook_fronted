@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     
-    <transition name='fade'>
+    <transition :name="transitionName">
       <!-- <keep-alive :max="1" :include="keepAlivePage"> -->
       <router-view></router-view>
     <!-- </keep-alive> -->
@@ -13,8 +13,20 @@
 export default {
   data() {
     return {
-      keepAlivePage: []    
+      keepAlivePage: [],
+      transitionName: ''
     };
+  },
+  watch: {//使用watch 监听$router的变化
+    $route(to, from) {
+      //如果to索引大于from索引,判断为前进状态,反之则为后退状态
+      if(to.meta.index > from.meta.index){
+	    //设置动画名称
+        this.transitionName = 'slide-left';
+      }else{
+        this.transitionName = 'slide-right';
+      }
+    }
   }
 };
 </script>
@@ -60,30 +72,30 @@ body,
   background: #fff;
   overflow-x: hidden;
 }
-  //fade(过渡)
-    .fade-enter-active, .fade-leave-active {
-      transition: opacity .5s;
-    }
-    .fade-enter, .fade-leave-to  {
-      opacity: 0;
-    }
-
-    //bounce(动画)
-    .bounce-enter-active {
-      animation: bounce-in .5s;
-    }
-    .bounce-leave-active {
-      animation: bounce-in .5s reverse;
-    }
-    @keyframes bounce-in {
-      0% {
-        transform: scale(0);
-      }
-      50% {
-        transform: scale(1.5);
-      }
-      100% {
-        transform: scale(1);
-      }
-    }
+.slide-right-enter-active,
+.slide-right-leave-active,
+.slide-left-enter-active,
+.slide-left-leave-active {
+  will-change: transform;
+  transition: all 300ms;
+  height: 100%;
+  backface-visibility: hidden;
+  perspective: 1000;
+}
+.slide-right-enter {
+  opacity: 0;
+  // transform: translate3d(-100%, 0, 0);
+}
+.slide-right-leave-active {
+  opacity: 0;
+  // transform: translate3d(100%, 0, 0);
+}
+.slide-left-enter {
+  opacity: 0;
+  // transform: translate3d(100%, 0, 0);
+}
+.slide-left-leave-active {
+  opacity: 0;
+  // transform: translate3d(-100%, 0, 0);
+}
 </style>

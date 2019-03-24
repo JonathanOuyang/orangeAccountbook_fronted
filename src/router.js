@@ -15,25 +15,25 @@ export default new Router({
         {
           path: "/home",
           name: "home",
-          meta: { title: "首页-橙子记账" },
+          meta: { title: "首页-橙子记账", index: 0 },
           component: () => import("./views/Home.vue")
         },
         {
           path: "/accounts",
           name: "accounts",
-          meta: { title: "账户-橙子记账" },
+          meta: { title: "账户-橙子记账", index: 0 },
           component: () => import("./views/Account/Index.vue")
         },
         {
           path: "/calendar",
           name: "calendar",
-          meta: { title: "所有账单-橙子记账" },
+          meta: { title: "所有账单-橙子记账", index: 0 },
           component: () => import("./views/Calendar.vue")
         },
         {
           path: "/chart",
           name: "chart",
-          meta: { title: "财务报表-橙子记账" },
+          meta: { title: "财务报表-橙子记账", index: 0 },
           component: () => import("./views/Chart/Index.vue"),
           // redirect: "/chart/categoryPie",
           children: [
@@ -73,25 +73,25 @@ export default new Router({
     {
       path: "/personal",
       name: "personal",
-      meta: { title: "个人中心-橙子记账" },
+      meta: { title: "个人中心-橙子记账", index: -1 },
       component: () => import("./views/Personal/Index.vue")
     },
     {
       path: "/budget",
       name: "personal-budget",
-      meta: { title: "预算设置-橙子记账" },
+      meta: { title: "预算设置-橙子记账", index: 1 },
       component: () => import("./views/Personal/Budget.vue")
     },
     {
       path: "/categoryManage",
       name: "category-manage",
-      meta: { title: "分类管理-橙子记账" },
+      meta: { title: "分类管理-橙子记账", index: 2 },
       component: () => import("./views/Personal/CategoryManage.vue")
     },
     {
       path: "/addMoney",
       name: "addMoney",
-      meta: { title: "添加账单-橙子记账" },
+      meta: { title: "添加账单-橙子记账", index: 1 },
       beforeEnter: (to, from, next) => {
         document.title = to.query.moneyId
           ? "编辑账单-橙子记账"
