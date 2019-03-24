@@ -78,15 +78,15 @@
     </van-popup>
     <van-popup v-model="isShowAccount"
                position="bottom">
-      <van-radio-group v-model="selectedAccount">
+      <van-radio-group v-model="selectedAccount._id">
         <van-cell-group>
           <van-cell v-for="item in accountList"
-                    :key="item.name._id"
-                    :title="item.name.name"
-                    :label="item.name.summary"
+                    :key="item._id"
+                    :title="item.name"
+                    :label="item.summary"
                     clickable
                     @click="handleSelectAccount(item.name)">
-            <van-radio :name="item.name" />
+            <van-radio :name="item._id" />
           </van-cell>
         </van-cell-group>
       </van-radio-group>
@@ -170,11 +170,8 @@ export default {
         if (!this.moneyId) this.selectFirstCategory();
       });
       getAccountList().then(res => {
-        this.accountList = res.data.list.map(item => ({
-          name: item,
-          color: "#f6717d"
-        }));
-        this.selectedAccount = this.accountList[0].name;
+        this.accountList = res.data.list;
+        this.selectedAccount = this.accountList[0]._id;
       });
       if (this.moneyId) {
         getMoneyDetail({ moneyId: this.moneyId }).then(res => {
@@ -182,8 +179,8 @@ export default {
           this.value = money.value.toString();
           this.date = money.moneyTime;
           this.note = money.note;
-          this.selectedCategory = res.data.category._id;
-          this.selectedAccount = res.data.account;
+          this.selectedCategory = res.data.detail.categoryId._id;
+          this.selectedAccount = res.data.detail.accountId;
 
           const { intStack, floatStack } = this.numToStack(this.value);
           this.intStack = intStack;

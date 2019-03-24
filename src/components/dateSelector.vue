@@ -48,7 +48,6 @@ export default {
   data() {
     return {
       moment: new Date().getTime(),
-      momentString: this.$moment().format("YYYY-MM"),
       selectedType: 'month',
       typeList: [
         {
@@ -60,24 +59,27 @@ export default {
         }]
     };
   },
+  computed: {
+    momentString() {
+      return this.$moment(this.moment).format(FORMAT_TYPES[this.selectedType]);
+    }
+  },
   methods: {
     handlePrev() {
       this.moment = this.$moment(this.moment)
         .subtract(1, this.selectedType)
         .valueOf();
-      this.momentString = this.$moment(this.moment).format(FORMAT_TYPES[this.selectedType]);
       this.$emit("changeDate", this.$moment(this.moment));
     },
     handleNext() {
       this.moment = this.$moment(this.moment)
         .add(1, this.selectedType)
         .valueOf();
-      this.momentString = this.$moment(this.moment).format(FORMAT_TYPES[this.selectedType]);
       this.$emit("changeDate", this.$moment(this.moment));
     },
     changeType(index) {
+      this.moment = this.$moment()      
       this.selectedType = this.typeList[index].key;
-      this.momentString = this.$moment(this.moment).format(FORMAT_TYPES[this.selectedType]);
       this.$emit("changeType", this.typeList[index])
     },
   }

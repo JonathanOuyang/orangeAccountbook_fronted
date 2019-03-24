@@ -64,7 +64,7 @@
       </div>
       <liquidfill
         v-if="budgetValue != 0"
-        :data="0">
+        :data="lessBudgetValue > 0? lessBudgetValue/budgetValue : 0">
       </liquidfill>
       <div 
         class="budget-noValue"

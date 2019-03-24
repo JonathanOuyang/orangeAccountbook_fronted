@@ -119,6 +119,7 @@ export default {
 
     changeDateType(type) {
       this.selectedDateType = type.key;
+      this.selectedMoment = this.$moment();      
       this.initData(this.selectedMoment, type.key, this.selectedType);
     },
     getXAxis(moment) {
