@@ -179,18 +179,8 @@ export default {
       ];
     }
   },
-  created() {
-    this.initCalendarPage(TODAY.getFullYear(), TODAY.getMonth() + 1);
-  },
+  created() {},
   methods: {
-    // 更新当前日历页和对应的账单列表
-    initCalendarPage(year, month, date = 1) {
-      // getCalendarInfo({ year, month }, { loadingToast: false }).then(res => {
-      //   this.dayHasMoneys = res.data.calendarInfo;
-      // });
-      this.initMoneyListByDay(new Date(year, month - 1, date));
-    },
-
     // 点击日期
     handleDay(day) {
       this.selectedDate = day.date;
@@ -198,7 +188,7 @@ export default {
     },
 
     // 更新账单列表
-    initMoneyListByDay(date = this.selectedDate) {
+    initMoneyListByDay(date = this.selectedDate) {      
       const moment = this.$moment(date);
       const data = {
         searchValue: {

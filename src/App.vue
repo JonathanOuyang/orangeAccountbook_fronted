@@ -1,8 +1,11 @@
 <template>
   <div id="app">
-    <keep-alive :max="1" :include="keepAlivePage">
+    
+    <transition name='fade'>
+      <!-- <keep-alive :max="1" :include="keepAlivePage"> -->
       <router-view></router-view>
-    </keep-alive>
+    <!-- </keep-alive> -->
+    </transition>
   </div>
 </template>
 
@@ -10,7 +13,7 @@
 export default {
   data() {
     return {
-      keepAlivePage: ['calendar']    
+      keepAlivePage: []    
     };
   }
 };
@@ -57,4 +60,30 @@ body,
   background: #fff;
   overflow-x: hidden;
 }
+  //fade(过渡)
+    .fade-enter-active, .fade-leave-active {
+      transition: opacity .5s;
+    }
+    .fade-enter, .fade-leave-to  {
+      opacity: 0;
+    }
+
+    //bounce(动画)
+    .bounce-enter-active {
+      animation: bounce-in .5s;
+    }
+    .bounce-leave-active {
+      animation: bounce-in .5s reverse;
+    }
+    @keyframes bounce-in {
+      0% {
+        transform: scale(0);
+      }
+      50% {
+        transform: scale(1.5);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
 </style>

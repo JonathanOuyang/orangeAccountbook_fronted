@@ -2,7 +2,7 @@
   <div id="view-personal">
 		<div class="personal-group">
 			<van-cell-group>
-				<van-cell title="通用设置" is-link to="index" />
+				<!-- <van-cell title="通用设置" is-link to="index" /> -->
 				<van-cell title="预算" is-link to="/budget" />
 				<van-cell title="分类自定义" is-link to="/categoryManage" />
 			</van-cell-group>
