@@ -78,14 +78,14 @@
     </van-popup>
     <van-popup v-model="isShowAccount"
                position="bottom">
-      <van-radio-group v-model="selectedAccount._id">
+      <van-radio-group v-model="selectedAccountId">
         <van-cell-group>
           <van-cell v-for="item in accountList"
                     :key="item._id"
                     :title="item.name"
                     :label="item.summary"
                     clickable
-                    @click="handleSelectAccount(item.name)">
+                    @click="handleSelectAccount(item._id)">
             <van-radio :name="item._id" />
           </van-cell>
         </van-cell-group>
@@ -122,7 +122,7 @@ export default {
       outCategoryList: [],
       accountList: [],
       selectedCategory: 0,
-      selectedAccount: "",
+      selectedAccountId: "",
       tabWidth: CLIENT_WIDTH / 2,
       isShowNumKey: false,
       isShowDate: false,
@@ -147,7 +147,11 @@ export default {
       this.selectFirstCategory();
     }
   },
-  computed: {},
+  computed: {
+    selectedAccount() {
+      return this.accountList.find(item => item._id == this.selectedAccountId)
+    }
+  },
   methods: {
     init() {
       getCategoryList().then(res => {
@@ -171,7 +175,7 @@ export default {
       });
       getAccountList().then(res => {
         this.accountList = res.data.list;
-        this.selectedAccount = this.accountList[0]._id;
+        this.selectedAccountId = this.accountList[0]._id;
       });
       if (this.moneyId) {
         getMoneyDetail({ moneyId: this.moneyId }).then(res => {
@@ -180,7 +184,7 @@ export default {
           this.date = money.moneyTime;
           this.note = money.note;
           this.selectedCategory = res.data.detail.categoryId._id;
-          this.selectedAccount = res.data.detail.accountId;
+          this.selectedAccountId = res.data.detail.accountId._id;
 
           const { intStack, floatStack } = this.numToStack(this.value);
           this.intStack = intStack;
@@ -262,7 +266,7 @@ export default {
         type: this.type,
         value: this.value,
         categoryId: this.selectedCategory,
-        accountId: this.selectedAccount._id,
+        accountId: this.selectedAccountId,
         moneyTime: this.$moment(this.date).format("YYYY-MM-DD HH:mm:ss"),
         note: this.note
       };
@@ -288,7 +292,7 @@ export default {
       this.selectedCategory = id;
     },
     handleSelectAccount(data) {
-      this.selectedAccount = data;
+      this.selectedAccountId = data;
       setTimeout(() => {
         this.isShowAccount = false;
       }, 200);
