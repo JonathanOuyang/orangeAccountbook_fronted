@@ -29,9 +29,10 @@
                        :_id="category._id"
                        :type="Number(category.type)"
                        :icon="category.icon"
-                       :title="category.name"
+                       :title="subCategorys[category._id]? selectedSubCategoryMap[category._id].name : category.name"
                        title-position="bottom"
-                       :selected="selectedCategory == category._id"
+                       :hasSub="Boolean(subCategorys[category._id])"
+                       :selected="selectedCategory._id == category._id"
                        @select="handleSelectCategory" />
             <type-icon 
               class="addMoney-category_setting"
@@ -84,9 +85,29 @@
                     :key="item._id"
                     :title="item.name"
                     :label="item.summary"
+                    size="large"
                     clickable
                     @click="handleSelectAccount(item._id)">
-            <van-radio :name="item._id" />
+            <van-radio 
+              :name="item._id" 
+              checked-color="#f6717d"/>
+          </van-cell>
+        </van-cell-group>
+      </van-radio-group>
+    </van-popup>
+    <van-popup v-model="isShowSubCategory"
+               position="bottom">
+      <van-radio-group v-model="selectedSubCategoryMap[selectedCategory._id]._id">
+        <van-cell-group>
+          <van-cell v-for="item in subCategorys[this.selectedCategory._id]"
+                    :key="item._id"
+                    :title="item.name"
+                    size="large"
+                    clickable
+                    @click="handleSelectSubCategory(item._id)">
+            <van-radio 
+              :name="item._id" 
+              checked-color="#f6717d"/>
           </van-cell>
         </van-cell-group>
       </van-radio-group>
@@ -120,13 +141,19 @@ export default {
       note: "",
       inCategoryList: [],
       outCategoryList: [],
+      subCategorys: {},
       accountList: [],
-      selectedCategory: 0,
+      selectedCategory: {
+        _id: "",
+        name: ""
+      },
+      selectedSubCategoryMap: {},
       selectedAccountId: "",
       tabWidth: CLIENT_WIDTH / 2,
       isShowNumKey: false,
       isShowDate: false,
       isShowAccount: false,
+      isShowSubCategory: false,
       date: TODAY,
       modalDate: TODAY,
       today: TODAY,
@@ -149,23 +176,42 @@ export default {
   },
   computed: {
     selectedAccount() {
-      return this.accountList.find(item => item._id == this.selectedAccountId)
+      return this.accountList.find(item => item._id == this.selectedAccountId);
+    },
+    selectedSubCategory() {
+      return this.subCategorys[this.selectedCategory._id]
+        ? this.subCategorys[this.selectedCategory._id].find(
+            item =>
+              item._id ==
+              this.selectedSubCategoryMap[this.selectedCategory._id]._id
+          )
+        : this.selectedCategory;
     }
   },
   methods: {
     init() {
-      getCategoryList().then(res => {
+      getCategoryList({ status: 1 }).then(res => {
         const inCategorys = [];
         const outCategorys = [];
+
+        this.subCategorys = res.data.subCategorys;
         res.data.list.forEach(elem => {
-          if (elem.status === 1) {
-            if (elem.type == 0) {
-              outCategorys.push(elem);
-            } else if (elem.type == 1) {
-              inCategorys.push(elem);
-            }
+          if (elem.type == 0) {
+            outCategorys.push(elem);
+          } else if (elem.type == 1) {
+            inCategorys.push(elem);
           }
+          if (this.subCategorys[elem._id]) {
+            this.subCategorys[elem._id].forEach(sub => {
+              sub.name = `${elem.name}-${sub.name}`;
+            });
+            this.subCategorys[elem._id].unshift(elem);
+            this.selectedSubCategoryMap[elem._id] = elem;
+            return;
+          }
+          this.selectedSubCategoryMap[elem._id] = { _id: "" };
         });
+              console.log('1: ', this.selectedSubCategoryMap['5c95ef436c04a22dace2ef23']);
         this.inCategoryList = this.groupToPage(inCategorys, CATEGORY_PAGE_SIZE);
         this.outCategoryList = this.groupToPage(
           outCategorys,
@@ -183,8 +229,18 @@ export default {
           this.value = money.value.toString();
           this.date = money.moneyTime;
           this.note = money.note;
-          this.selectedCategory = res.data.detail.categoryId._id;
-          this.selectedAccountId = res.data.detail.accountId._id;
+          if (res.data.parentCategory) {
+            this.selectedCategory._id = res.data.parentCategory._id;
+            this.selectedCategory.name = res.data.parentCategory.name;
+            this.selectedSubCategoryMap[res.data.parentCategory._id] =
+            
+              money.categoryId;
+              console.log('2: ', this.selectedSubCategoryMap['5c95ef436c04a22dace2ef23']);
+          } else {
+            this.selectedCategory._id = money.categoryId._id;
+            this.selectedCategory.name = money.categoryId.name;
+          }
+          this.selectedAccountId = money.accountId._id;
 
           const { intStack, floatStack } = this.numToStack(this.value);
           this.intStack = intStack;
@@ -202,9 +258,12 @@ export default {
       return result;
     },
     selectFirstCategory() {
-      this.selectedCategory = [this.outCategoryList, this.inCategoryList][
+      this.selectedCategory._id = [this.outCategoryList, this.inCategoryList][
         this.type
       ][0][0]._id;
+      this.selectedCategory.name = [this.outCategoryList, this.inCategoryList][
+        this.type
+      ][0][0].name;
     },
 
     handleInputNumber(key) {
@@ -265,7 +324,7 @@ export default {
       const data = {
         type: this.type,
         value: this.value,
-        categoryId: this.selectedCategory,
+        categoryId: this.selectedSubCategoryMap[this.selectedCategory._id]._id,
         accountId: this.selectedAccountId,
         moneyTime: this.$moment(this.date).format("YYYY-MM-DD HH:mm:ss"),
         note: this.note
@@ -288,8 +347,11 @@ export default {
         });
       }
     },
-    handleSelectCategory(id) {
-      this.selectedCategory = id;
+    handleSelectCategory(data) {
+      this.selectedCategory = data;
+      if (this.subCategorys[data._id]) {
+        this.isShowSubCategory = true;
+      }
     },
     handleSelectAccount(data) {
       this.selectedAccountId = data;
@@ -297,13 +359,22 @@ export default {
         this.isShowAccount = false;
       }, 200);
     },
+    handleSelectSubCategory(id) {
+      const data = this.subCategorys[this.selectedCategory._id].find(
+        item => item._id == id
+      );
+      this.selectedSubCategoryMap[this.selectedCategory._id] = data;
+      setTimeout(() => {
+        this.isShowSubCategory = false;
+      }, 200);
+    },
     confirmDate() {
       this.date = this.modalDate;
-      this.isShowDate = false
+      this.isShowDate = false;
     },
     cancelDate() {
       this.modalDate = this.date;
-      this.isShowDate = false
+      this.isShowDate = false;
     },
     handleSave() {
       this.saveMoney();
@@ -328,6 +399,16 @@ export default {
   height: 100%;
   color: @primaryTextColor;
   background-color: #fff;
+
+  .van-popup {
+    bottom: 18px;
+    width: 90%;
+    border-radius: 6px;
+
+    .van-cell {
+      line-height: 36px;
+    }
+  }
 }
 .addMoney-header {
   border-bottom: 1px solid @dividerColor;
@@ -385,7 +466,7 @@ export default {
     flex-wrap: wrap;
     justify-content: flex-start;
     height: 160px;
-    padding: 14px 18px 12px;
+    padding: 14px 4px 12px;
     &-item,
     &_setting {
       width: 20%;

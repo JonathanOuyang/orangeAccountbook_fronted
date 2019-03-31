@@ -1,5 +1,6 @@
 <template>
     <div id="view-index">
+      
       <router-view></router-view>
       <van-tabbar 
         v-model="tabbarActive"

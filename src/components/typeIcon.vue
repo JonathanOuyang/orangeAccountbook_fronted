@@ -16,6 +16,11 @@
     <div class="typeIcon-icon"
          :class="[{'unSelected':checker&&!selected}, type? 'in': 'out']">
       <Icon :name="icon" :size="20"></Icon>
+      <div 
+        class="typeIcon-hasSub"
+        v-if="hasSub">
+        <Icon name="gengduo" :size="12"></Icon>         
+      </div>
     </div>
     <div class="typeIcon-title"
          v-if="title">{{title}}</div>
@@ -48,6 +53,10 @@ export default {
     selected: {
       type: Boolean,
       default: false
+    },
+    hasSub: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -60,7 +69,10 @@ export default {
   },
   methods: {
     handleClick() {
-      this.$emit("select", this._id);
+      this.$emit("select", {
+        _id: this._id,
+        name: this.title
+      });
     }
   }
 };
@@ -71,7 +83,8 @@ export default {
 .typeIcon {
   display: flex;
   align-items: center;
-  .typeIcon-icon {
+  &-icon {
+    position: relative;
     display: inline-block;
     width: 34px;
     height: 34px;
@@ -94,6 +107,24 @@ export default {
       color: @textPrimaryColor;
     }
   }
+  &-hasSub {
+    position: absolute;
+    bottom: -1px;
+    right: -4px;
+    background: @secondaryTextColor;
+    color: @textPrimaryColor;
+    border-radius: 50%;
+    border: 1px solid #fff;
+    width: 12px;
+    height: 12px;
+    .iconfont {
+      position: absolute;
+      line-height: 10px;
+      font-size: 12px;
+      left: 0;
+      top: 2px;
+    }
+  }
 }
 .typeIcon-title-right {
   .typeIcon-title {
@@ -105,7 +136,7 @@ export default {
   flex-direction: column;
   .typeIcon-title {
     margin-top: 2px;
-    font-size: 14px;
+    font-size: 13px;
   }
 }
 </style>
