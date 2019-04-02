@@ -87,6 +87,7 @@ export default {
   overflow: hidden;
 
   height: 48px;
+  transition: 0.2s all ease-out;
 
   &_title {
     flex: 1;

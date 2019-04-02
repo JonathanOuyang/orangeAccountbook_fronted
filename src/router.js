@@ -123,6 +123,12 @@ export default new Router({
       name: "accountDetail",
       meta: { title: "账户详情-橙子记账" },
       component: () => import("./views/Account/Detail.vue")
+    },
+    {
+      path: "/categoryMoneys",
+      name: "categoryMoneys",
+      meta: { title: "账单-橙子记账", index: 0 },
+      component: () => import("./views/CategoryMoneys.vue")
     }
   ]
 });

@@ -84,9 +84,13 @@
                     :key="item._id"
                     :title="item.name"
                     :label="item.summary"
+                    size="large"
                     clickable
                     @click="handleSelectAccount(item._id)">
-            <van-radio :name="item._id" />
+            <van-radio 
+              :name="item._id" 
+              checked-color="#f6717d"
+            />
           </van-cell>
         </van-cell-group>
       </van-radio-group>
@@ -100,7 +104,9 @@ import {
   updateMoney,
   getCategoryList,
   getAccountList,
-  getMoneyDetail
+  getMoneyDetail,
+  getMoneySum,
+  getBudget
 } from "../api/api.js";
 import { Notify } from "vant";
 const CATEGORY_PAGE_SIZE = 10; // 每页分类数
@@ -130,7 +136,9 @@ export default {
       date: TODAY,
       modalDate: TODAY,
       today: TODAY,
-      moneyId: ""
+      moneyId: "",
+      outcome: 0,
+      budget: 0
     };
   },
   created() {
@@ -149,7 +157,7 @@ export default {
   },
   computed: {
     selectedAccount() {
-      return this.accountList.find(item => item._id == this.selectedAccountId)
+      return this.accountList.find(item => item._id == this.selectedAccountId);
     }
   },
   methods: {
@@ -191,6 +199,25 @@ export default {
           this.floatStack = floatStack;
         });
       }
+      const moneyTimeStart = this.$moment().startOf("month");
+      const sumData = {
+        searchValue: {
+          moneyTimeStart: moneyTimeStart.format("YYYY-MM-DD"),
+          moneyTimeEnd: moneyTimeStart.add(1, "month").format("YYYY-MM-DD")
+        }
+      };
+      getMoneySum(sumData).then(res => {
+        const sums = res.data.result;
+        sums.find(item => {
+          if (item._id.type === 0) {
+            this.outcome = item.value;
+            return;
+          }
+        });
+      });
+      getBudget().then(res => {
+        this.budget = res.data.value;
+      });
     },
     groupToPage(list, pageSize) {
       let result = [];
@@ -278,12 +305,15 @@ export default {
         return;
       }
       const option = { successDialog: true, goBack: true };
+      this.checkBudget();
+      const type = this.type;
       if (this.moneyId) {
         updateMoney({ ...data, moneyId: this.moneyId }, option).then(res => {
           // this.$router.go(-2);
         });
       } else {
         addMoney(data, option).then(res => {
+          this.type = type
           // this.$router.go(-2);
         });
       }
@@ -299,11 +329,11 @@ export default {
     },
     confirmDate() {
       this.date = this.modalDate;
-      this.isShowDate = false
+      this.isShowDate = false;
     },
     cancelDate() {
       this.modalDate = this.date;
-      this.isShowDate = false
+      this.isShowDate = false;
     },
     handleSave() {
       this.saveMoney();
@@ -312,6 +342,19 @@ export default {
     handleCreateMore() {
       this.saveMoney();
       this.$router.push("/addMoney");
+    },
+    async checkBudget(fn) {
+      if (
+        this.type === 0 &&
+        this.outcome < this.budget &&
+        this.outcome + Number(this.value) > this.budget
+      ) {
+        this.type = 0;
+        await this.$dialog.alert({
+          title: "预算超额提醒",
+          message: "您的本月预算已超额，请注意控制支出"
+        });
+      }
     },
     goBack() {
       console.log("this.$router.go: ", this.$router.go);
@@ -328,6 +371,15 @@ export default {
   height: 100%;
   color: @primaryTextColor;
   background-color: #fff;
+  .van-popup {
+    margin-bottom: 12px;
+    width: 90%;
+    border-radius: 6px;
+    .van-cell--large {
+      padding-top: 20px;
+      padding-bottom: 20px;
+    }
+  }
 }
 .addMoney-header {
   border-bottom: 1px solid @dividerColor;

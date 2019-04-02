@@ -36,6 +36,12 @@
           <div class="info-value">¥{{item.value}}</div>
           <div class="info-count">共{{item.count}}笔</div>
         </category-card>
+        <div 
+          class="item-categoryCard-link"
+          :class="{active: selectedIndex === index}"
+          @click="$router.push(`/categoryMoneys?categoryId=${item._id}&${timeQuery}`)">
+          <Icon name="gengduo1"/>
+        </div>
       </div>
     </div>
     <div
@@ -69,7 +75,15 @@ export default {
     this.init();
   },
 
-  computed: {},
+  computed: {
+    timeQuery() {
+      if (this.selectedDateType == 'month') {
+        return 'month='+this.selectedMoment.format('YYYY-MM')
+      } else if (this.selectedDateType == 'year') {
+        return 'year='+this.selectedMoment.format('YYYY')
+      }
+    }
+  },
 
   methods: {
     init() {
@@ -134,7 +148,32 @@ export default {
 .list-categoryCard {
   margin: 20px 12px;
   .item-categoryCard {
+    display: flex;
+    align-items: center;
     padding: 4px 0;
+    .card-category {
+      flex: 1;
+    }
+
+    .item-categoryCard-link {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 0;
+      height: 36px;
+      border-radius: 50%;
+      background: @primaryColor;
+      box-shadow: @shadow;
+      color: #fff;
+      opacity: 0;
+      transition: 0.2s all ease-out;
+      &.active {
+      margin: 0 6px 0 10px;
+      width: 36px;
+        opacity: 1;
+      }
+    }
+
 
     .info-value {
       text-align: right;

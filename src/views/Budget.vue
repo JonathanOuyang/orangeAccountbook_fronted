@@ -1,16 +1,31 @@
 <template>
   <div id="view-budget">
     <div class="main">
+      <div class="cell-group-header">
+          分类预算
+        </div
       <van-cell-group>
         <money-field
             v-model="value"
-            label="总预算金额"
+            label="预算金额"
             placeholder="请输入余额"
           />
         <van-cell
           title="预算周期" 
           :value="periodList[period]"/>
       </van-cell-group>
+      <div class="wrap-category">
+        <div class="cell-group-header">
+          分类预算
+        </div>
+        <div class="item-categoryCard"
+        v-for="item in categoryList"
+        :key="item._id">
+          <category-card
+          :data="item">
+          </category-card>
+        </div>
+      </div>
     </div>
     <div class="footer">
       <van-button size="large"
@@ -33,6 +48,7 @@ export default {
         "1": "每月",
         "2": "每年"
       },
+      categoryList: []
     };
   },
   created() {
@@ -40,9 +56,15 @@ export default {
   },
   methods: {
     init() {
+      this.initCategoryList();
       getBudget().then(res => {
         this.value = res.data.value;
         this.period = res.data.period;
+      });
+    },
+    initCategoryList() {
+      getCategoryList({status: 1, type: 0}).then(res => {
+        this.categoryList = res.data.list
       });
     },
     handleConfirm() {
@@ -63,6 +85,30 @@ export default {
   .van-cell-group {
     background-color: @grey;
     margin-top: 10px;
+  }
+  .wrap-category {
+    box-sizing: border-box;
+    margin: 10px 0;
+    padding: 10px 12px;
+    width: 100%;
+    background-color: #fff;
+  }
+  .cell-group-header {
+    display: flex;
+    align-items: center;
+    line-height: 30px;
+    font-size: 16px;
+    color: @primaryTextColor;
+    &::before {
+      content: '';
+      margin-right: 8px;
+      height: 20px;
+      width: 4px;
+      background: #f6717d;
+    }
+  }
+  .item-categoryCard {
+    margin: 6px 0;
   }
 }
 </style>
