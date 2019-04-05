@@ -91,6 +91,7 @@ Vue.prototype.$color = {
   error: '#ec3b3f',
 }
 Vue.prototype.$moment = moment
+Vue.prototype.$filterCurrency = filterCurrency;
 
 Notify.setDefaultOptions({ duration: 1000 })
 

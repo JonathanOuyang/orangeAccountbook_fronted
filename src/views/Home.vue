@@ -60,7 +60,7 @@
         class="budget-text"
         v-if="budgetValue != 0">
         <div class="budget-title">{{lessBudgetValue > 0? '本月预算剩余' : '本月预算超支'}}</div>
-        <div class="budget-value">{{lessBudgetValue > 0? lessBudgetValue : -lessBudgetValue}}</div>
+        <div class="budget-value">{{lessBudgetValue > 0? lessBudgetValue : -lessBudgetValue | currency}}</div>
       </div>
       <liquidfill
         v-if="budgetValue != 0"
@@ -70,6 +70,18 @@
         class="budget-noValue"
         v-if="budgetValue == 0">
         <div class="budget-title">点击设置预算</div>
+      </div>
+    </div>
+    <div class="panel-info">
+      <div class="header-info">
+        <div class="header-info_title">财务信息</div>
+      </div>
+      <div 
+        class="item-info"
+        v-for="item in infoKeyList"
+        :key="item">
+        <div class="item-info_title" v-html="infoValuesMap[item].title"></div>
+        <div class="item-info_value">{{infoValuesMap[item].value}}</div>
       </div>
     </div>
     <div class="moneyList">
@@ -88,6 +100,54 @@ import liquidfill from "../components/charts/liquidfill.vue";
 import { searchMoneyList, getMoneySum, getUserInfo } from "../api/api.js";
 const PAGE_SIZE = 3;
 const SHOW_MONEYS_DAY = 3;
+const INFO_VALUES_MAP = {
+        yesterdayIncome: {
+          title: "昨日收入",
+          value: 0
+        },
+        yesterdayOutcomeCount: {
+          title: "昨日支出笔数",
+          value: 0,
+          isCount: true
+        },
+        yesterdayOutcome: {
+          title: "昨日支出",
+          value: 0
+        },
+        yesterdayLessBudget: {
+          title: "昨日剩余预算",
+          value: 0
+        },
+        todayIncome: {
+          title: "今日收入",
+          value: 0
+        },
+        todayOutcomeCount: {
+          title: "今日支出笔数",
+          value: 0,
+          isCount: true
+        },
+        todayOutcome: {
+          title: "今日支出",
+          value: 0
+        },
+        todayLessBudget: {
+          title: "今日剩余预算",
+          value: 0
+        },
+        monthIncomeAvg: {
+          title: "本月日均收入",
+          value: 0
+        },
+        monthOutcomeAvg: {
+          title: "本月日均支出",
+          value: 0
+        },
+        monthLessBudgetAvg: {
+          title: "本月日均剩余预算",
+          value: 0
+        }
+      }
 export default {
   name: "home",
   components: {
@@ -102,12 +162,27 @@ export default {
       outcome: 0,
       budgetValue: 0,
       moneys: [],
-      isLoading: false
+      isLoading: false,
+      infoValuesMap: INFO_VALUES_MAP,
+      infoKeyList: [
+        "yesterdayOutcomeCount",
+        "yesterdayOutcome",
+        "yesterdayLessBudget",
+        "todayOutcomeCount",
+        "todayOutcome",
+        "todayLessBudget",
+        "monthIncomeAvg",
+        "monthOutcomeAvg",
+        "monthLessBudgetAvg"
+      ]
     };
   },
   computed: {
     lessBudgetValue() {
-      return this.budgetValue - this.outcome
+      return this.budgetValue - this.outcome;
+    },
+    dayAvgBudget() {
+      return this.budgetValue / this.$moment().daysInMonth();
     }
   },
   created() {
@@ -136,6 +211,8 @@ export default {
           moneyTimeEnd: moneyTimeStart.add(1, "month").format("YYYY-MM-DD")
         }
       };
+
+      let infoValuesMap = INFO_VALUES_MAP;
       searchMoneyList(searchData).then(res => {
         const resData = res.data;
         this.moneys = resData.list;
@@ -147,12 +224,86 @@ export default {
         sums.forEach(item => {
           if (item._id.type === 0) {
             this.outcome = item.value;
+            infoValuesMap.monthOutcomeAvg.value = this.$filterCurrency(
+              item.value / this.$moment().daysInMonth()
+            );
           }
           if (item._id.type === 1) {
             this.income = item.value;
+            infoValuesMap.monthIncomeAvg.value = this.$filterCurrency(
+              item.value / this.$moment().daysInMonth()
+            );
+            infoValuesMap.monthLessBudgetAvg.value = this.$filterCurrency(
+              item.value / this.$moment().daysInMonth()
+            );
           }
         });
       });
+
+      const infoData = {
+        searchValue: {
+          moneyTimeEnd: this.$moment()
+            .endOf("day")
+            .format(),
+          moneyTimeStart: this.$moment()
+            .subtract(1, "day")
+            .startOf("day")
+            .format()
+        },
+        groupType: 2
+      };
+
+      getMoneySum(infoData).then(res => {
+        const sums = res.data.result;
+        sums.forEach(item => {
+          const group = item._id;
+          if (
+            group.day ===
+            this.$moment()
+              .endOf("day")
+              .format("YYYY-MM-DD")
+          ) {
+            if (group.type === 1) {
+              infoValuesMap.todayIncome.value = this.$filterCurrency(
+                item.value
+              );
+            } else if (group.type === 0) {
+              infoValuesMap.todayOutcomeCount.value = item.count;
+              infoValuesMap.todayOutcome.value = this.$filterCurrency(
+                item.value
+              );
+              infoValuesMap.todayLessBudget.value = this.$filterCurrency(
+                (this.dayAvgBudget - item.value) 
+              );
+              // this.dayAvgBudget < item.value &&
+              //   (infoValuesMap.todayLessBudget.title = "今日超出预算");
+            }
+          } else if (
+            group.day ===
+            this.$moment()
+              .subtract(1, "day")
+              .startOf("day")
+              .format("YYYY-MM-DD")
+          ) {
+            if (group.type === 1) {
+              infoValuesMap.yesterdayIncome.value = this.$filterCurrency(
+                item.value
+              );
+            } else if (group.type === 0) {
+              infoValuesMap.yesterdayOutcomeCount.value = item.count;
+              infoValuesMap.yesterdayOutcome.value = this.$filterCurrency(
+                item.value
+              );
+              infoValuesMap.yesterdayLessBudget.value = this.$filterCurrency(
+                (this.dayAvgBudget - item.value) 
+              );
+              // this.dayAvgBudget < item.value &&
+              //   (infoValuesMap.yesterdayLessBudget.title = "昨日超出预算");
+            }
+          }
+        });
+      });
+        this.infoValuesMap = infoValuesMap;
 
       getUserInfo().then(res => {
         this.budgetValue = res.data.budgetValue;
@@ -223,16 +374,16 @@ export default {
   width: 80%;
   display: flex;
   margin: 0 10% 20px;
-  padding: 16px 0;
+  padding: 12px 0;
   .panel();
   .home-panel-item {
     flex: 1;
     text-align: center;
     .info-title {
-      font-size: 16px;
+      font-size: 14px;
     }
     .info-value {
-      font-size: 24px;
+      font-size: 20px;
       margin-left: -4px;
     }
   }
@@ -267,21 +418,66 @@ export default {
     flex: 1;
 
     .budget-title {
-      font-size: 16px;
+      font-size: 14px;
     }
     .budget-value {
-      font-size: 30px;
+      font-size: 24px;
     }
   }
 
   .budget-noValue {
     flex: 1;
     text-align: center;
-    padding: 10px 0;    
+    padding: 10px 0;
     font-size: 16px;
   }
 }
 
+.panel-info {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 20px 25px 0;
+  .panel();
+
+  .header-info {
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    width: 100%;
+    height: 36px;
+    border-bottom: 1px solid @dividerColor;
+
+    &_title {
+      flex: 1;
+      font-size: 14px;
+    }
+  }
+
+  .item-info {
+    padding: 2px 0;
+    width: 100/3%;
+    text-align: center;
+    box-sizing: border-box;
+    border-right: 1px solid @dividerColor;
+    border-bottom: 1px solid @dividerColor;
+    &:nth-child(3n) {
+      border-left: 0;
+    }
+    &_title,
+    &_value {
+      display: inline-block;
+      width: 100%;
+    }
+    &_title {
+      line-height: 18px;
+      font-size: 12px;
+    }
+    &_value {
+      line-height: 30px;
+      font-size: 14px;
+    }
+  }
+}
 .moneyList {
   margin-top: 22px;
   .title-moneyList {

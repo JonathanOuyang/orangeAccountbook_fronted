@@ -40,19 +40,19 @@ export default {
       isListError: false,
       page: 1,
       moment: this.$moment(),
-      dateType: ''
+      dateType: ""
     };
   },
 
   created() {
     this.categoryId = this.$route.query.categoryId;
     if (this.$route.query.month) {
-      this.dateType = {key: 'month', format: 'YYYY年M月'}
+      this.dateType = { key: "month", format: "YYYY年M月" };
     } else if (this.$route.query.year) {
-      this.dateType = {key: 'year', format: 'YYYY年'}
+      this.dateType = { key: "year", format: "YYYY年" };
     }
-      this.moment = this.$moment(this.$route.query[this.dateType.key])
-    this.handleListLoad()
+    this.moment = this.$moment(this.$route.query[this.dateType.key]);
+    this.handleListLoad();
     getCategoryList({ categoryId: this.categoryId }).then(res => {
       this.detail = res.data.detail;
     });
@@ -61,7 +61,7 @@ export default {
   methods: {
     handleListLoad() {
       // debugger
-      
+
       const moment = this.$moment();
       const data = {
         searchValue: {
@@ -86,7 +86,7 @@ export default {
           if (res.data.currPage === res.data.maxPage) {
             this.isListFinished = true;
           }
-      this.page += 1;
+          this.page += 1;
         })
         .catch(err => {
           this.isListLoading = false;

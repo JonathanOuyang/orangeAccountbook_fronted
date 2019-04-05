@@ -109,7 +109,7 @@ import {
   getBudget
 } from "../api/api.js";
 import { Notify } from "vant";
-const CATEGORY_PAGE_SIZE = 10; // 每页分类数
+const CATEGORY_PAGE_SIZE = 15; // 每页分类数
 const MAX_MONEY = 9; // 金额位数
 const CLIENT_WIDTH = document.body.clientWidth;
 const TODAY = new Date();
@@ -436,8 +436,8 @@ export default {
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;
-    height: 160px;
     padding: 14px 18px 12px;
+    height: 220px;
     &-item,
     &_setting {
       width: 20%;
