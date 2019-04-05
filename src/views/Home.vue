@@ -95,59 +95,60 @@
 </template>
 
 <script>
+import axios from "axios";
 import loading from "../components/loading/loading.vue";
 import liquidfill from "../components/charts/liquidfill.vue";
 import { searchMoneyList, getMoneySum, getUserInfo } from "../api/api.js";
 const PAGE_SIZE = 3;
 const SHOW_MONEYS_DAY = 3;
 const INFO_VALUES_MAP = {
-        yesterdayIncome: {
-          title: "昨日收入",
-          value: 0
-        },
-        yesterdayOutcomeCount: {
-          title: "昨日支出笔数",
-          value: 0,
-          isCount: true
-        },
-        yesterdayOutcome: {
-          title: "昨日支出",
-          value: 0
-        },
-        yesterdayLessBudget: {
-          title: "昨日剩余预算",
-          value: 0
-        },
-        todayIncome: {
-          title: "今日收入",
-          value: 0
-        },
-        todayOutcomeCount: {
-          title: "今日支出笔数",
-          value: 0,
-          isCount: true
-        },
-        todayOutcome: {
-          title: "今日支出",
-          value: 0
-        },
-        todayLessBudget: {
-          title: "今日剩余预算",
-          value: 0
-        },
-        monthIncomeAvg: {
-          title: "本月日均收入",
-          value: 0
-        },
-        monthOutcomeAvg: {
-          title: "本月日均支出",
-          value: 0
-        },
-        monthLessBudgetAvg: {
-          title: "本月日均剩余预算",
-          value: 0
-        }
-      }
+  yesterdayIncome: {
+    title: "昨日收入",
+    value: 0
+  },
+  yesterdayOutcomeCount: {
+    title: "昨日支出笔数",
+    value: 0,
+    isCount: true
+  },
+  yesterdayOutcome: {
+    title: "昨日支出",
+    value: 0
+  },
+  yesterdayLessBudget: {
+    title: "昨日剩余预算",
+    value: 0
+  },
+  todayIncome: {
+    title: "今日收入",
+    value: 0
+  },
+  todayOutcomeCount: {
+    title: "今日支出笔数",
+    value: 0,
+    isCount: true
+  },
+  todayOutcome: {
+    title: "今日支出",
+    value: 0
+  },
+  todayLessBudget: {
+    title: "今日剩余预算",
+    value: 0
+  },
+  monthIncomeAvg: {
+    title: "本月日均收入",
+    value: 0
+  },
+  monthOutcomeAvg: {
+    title: "本月日均支出",
+    value: 0
+  },
+  monthLessBudgetAvg: {
+    title: "本月日均剩余预算",
+    value: 0
+  }
+};
 export default {
   name: "home",
   components: {
@@ -219,27 +220,6 @@ export default {
         this.isLoading && (this.isLoading = false);
       });
 
-      getMoneySum(sumData).then(res => {
-        const sums = res.data.result;
-        sums.forEach(item => {
-          if (item._id.type === 0) {
-            this.outcome = item.value;
-            infoValuesMap.monthOutcomeAvg.value = this.$filterCurrency(
-              item.value / this.$moment().daysInMonth()
-            );
-          }
-          if (item._id.type === 1) {
-            this.income = item.value;
-            infoValuesMap.monthIncomeAvg.value = this.$filterCurrency(
-              item.value / this.$moment().daysInMonth()
-            );
-            infoValuesMap.monthLessBudgetAvg.value = this.$filterCurrency(
-              item.value / this.$moment().daysInMonth()
-            );
-          }
-        });
-      });
-
       const infoData = {
         searchValue: {
           moneyTimeEnd: this.$moment()
@@ -252,62 +232,80 @@ export default {
         },
         groupType: 2
       };
+      axios
+        .all([getUserInfo(), getMoneySum(sumData), getMoneySum(infoData)])
+        .then(
+          axios.spread((userInfoRes, sumRes, infoRes) => {
+            this.budgetValue = userInfoRes.data.budgetValue;            
+            sumRes.data.result.forEach(item => {
+              if (item._id.type === 0) {
+                this.outcome = item.value;
+                infoValuesMap.monthOutcomeAvg.value = this.$filterCurrency(
+                  item.value / this.$moment().daysInMonth()
+                );
+                infoValuesMap.monthLessBudgetAvg.value = this.$filterCurrency(
+                  (this.budgetValue - item.value) / this.$moment().daysInMonth()
+                );
+              }
+              if (item._id.type === 1) {
+                this.income = item.value;
+                infoValuesMap.monthIncomeAvg.value = this.$filterCurrency(
+                  item.value / this.$moment().daysInMonth()
+                );
+              }
+            });
 
-      getMoneySum(infoData).then(res => {
-        const sums = res.data.result;
-        sums.forEach(item => {
-          const group = item._id;
-          if (
-            group.day ===
-            this.$moment()
-              .endOf("day")
-              .format("YYYY-MM-DD")
-          ) {
-            if (group.type === 1) {
-              infoValuesMap.todayIncome.value = this.$filterCurrency(
-                item.value
-              );
-            } else if (group.type === 0) {
-              infoValuesMap.todayOutcomeCount.value = item.count;
-              infoValuesMap.todayOutcome.value = this.$filterCurrency(
-                item.value
-              );
-              infoValuesMap.todayLessBudget.value = this.$filterCurrency(
-                (this.dayAvgBudget - item.value) 
-              );
-              // this.dayAvgBudget < item.value &&
-              //   (infoValuesMap.todayLessBudget.title = "今日超出预算");
-            }
-          } else if (
-            group.day ===
-            this.$moment()
-              .subtract(1, "day")
-              .startOf("day")
-              .format("YYYY-MM-DD")
-          ) {
-            if (group.type === 1) {
-              infoValuesMap.yesterdayIncome.value = this.$filterCurrency(
-                item.value
-              );
-            } else if (group.type === 0) {
-              infoValuesMap.yesterdayOutcomeCount.value = item.count;
-              infoValuesMap.yesterdayOutcome.value = this.$filterCurrency(
-                item.value
-              );
-              infoValuesMap.yesterdayLessBudget.value = this.$filterCurrency(
-                (this.dayAvgBudget - item.value) 
-              );
-              // this.dayAvgBudget < item.value &&
-              //   (infoValuesMap.yesterdayLessBudget.title = "昨日超出预算");
-            }
-          }
-        });
-      });
-        this.infoValuesMap = infoValuesMap;
+            infoRes.data.result.forEach(item => {
+              const group = item._id;
+              if (
+                group.day ===
+                this.$moment()
+                  .endOf("day")
+                  .format("YYYY-MM-DD")
+              ) {
+                if (group.type === 1) {
+                  infoValuesMap.todayIncome.value = this.$filterCurrency(
+                    item.value
+                  );
+                } else if (group.type === 0) {
+                  infoValuesMap.todayOutcomeCount.value = item.count;
+                  infoValuesMap.todayOutcome.value = this.$filterCurrency(
+                    item.value
+                  );
+                  infoValuesMap.todayLessBudget.value = this.$filterCurrency(
+                    this.dayAvgBudget - item.value
+                  );
+                  // this.dayAvgBudget < item.value &&
+                  //   (infoValuesMap.todayLessBudget.title = "今日超出预算");
+                }
+              } else if (
+                group.day ===
+                this.$moment()
+                  .subtract(1, "day")
+                  .startOf("day")
+                  .format("YYYY-MM-DD")
+              ) {
+                if (group.type === 1) {
+                  infoValuesMap.yesterdayIncome.value = this.$filterCurrency(
+                    item.value
+                  );
+                } else if (group.type === 0) {
+                  infoValuesMap.yesterdayOutcomeCount.value = item.count;
+                  infoValuesMap.yesterdayOutcome.value = this.$filterCurrency(
+                    item.value
+                  );
+                  infoValuesMap.yesterdayLessBudget.value = this.$filterCurrency(
+                    this.dayAvgBudget - item.value
+                  );
+                  // this.dayAvgBudget < item.value &&
+                  //   (infoValuesMap.yesterdayLessBudget.title = "昨日超出预算");
+                }
+              }
+            });
+            this.infoValuesMap = infoValuesMap;
 
-      getUserInfo().then(res => {
-        this.budgetValue = res.data.budgetValue;
-      });
+          })
+        );
     },
     onRefresh() {
       this.init();
