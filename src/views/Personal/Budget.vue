@@ -23,7 +23,7 @@
 <script>
 import { updateBudget, getBudget, getCategoryList } from "../../api/api.js";
 export default {
-  name: "personal-budget",
+  name: "personal-budgetEdit",
   data() {
     return {
       value: 0,
@@ -32,11 +32,11 @@ export default {
         "0": "每周",
         "1": "每月",
         "2": "每年"
-      },
+      }
     };
   },
   created() {
-    this.init()
+    this.init();
   },
   methods: {
     init() {
@@ -49,10 +49,29 @@ export default {
       const data = {
         value: this.value,
         period: this.period
-      }
-      updateBudget(data, {goBack: true, successDialog: true}).then(res => {})
+      };
+      updateBudget(data, {
+        goBack: true,
+        successDialog: true,
+        errorDialog: false
+      }).then(res => {
+        if (res.code === "update_value_wrong") {
+          this.$dialog
+            .confirm({
+              title: "提示",
+              message: res.summary + ", 是否将总预算设为分类预算之和"
+            })
+            .then(() => {
+              updateBudget({value: res.data.budgetValue}, {
+                goBack: true,
+                successDialog: true
+              }).then();
+            })
+            .catch(() => {});
+        }
+      });
     }
-  },
+  }
 };
 </script>
 

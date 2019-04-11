@@ -53,7 +53,7 @@ export default {
             type: "liquidFill",
             data: [this.data],
             radius: '100%',
-            amplitude: '8%',
+            amplitude: '3%',
             waveLength: '120%',
             outline: {
               show: false

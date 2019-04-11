@@ -40,12 +40,13 @@ axios.interceptors.response.use(
     Vue.$loading.hide();
     const CODE = response.data.code;
     if (CODE === "success") {
-      response.config &&
-        response.config.showSuccess === true &&
+      
+        response.config.showSuccess &&
         Notify({
           message: response.data.summary,
           background: "#47bb51"
         });
+      response.config.goBack && router.go(-1);      
       return response.data;
     } else if (CODE === "token_wrong") {
       return Dialog.confirm({
@@ -56,8 +57,9 @@ axios.interceptors.response.use(
         router.push("/login");
       });
     } else {
-      Notify(response.data.summary);
-      return;
+      response.config.showError &&
+        Notify(response.data.summary);
+      return response.data;
     }
   },
   error => {
@@ -101,6 +103,7 @@ export default {
     options.setToken === undefined && (options.setToken = true);
     options.loadingToast === undefined && (options.loadingToast = true);
     options.successDialog === undefined && (options.successDialog = false);
+    options.errorDialog === undefined && (options.errorDialog = true);
     options.goBack === undefined && (options.goBack = false);
     return new Promise((resolve, reject) => {
       axios
@@ -109,12 +112,13 @@ export default {
             Authorization: options.setToken ? getToken() : ""
           },
           showLoading: options.loadingToast,
-          showSuccess: options.successDialog
+          showSuccess: options.successDialog,
+          showError: options.errorDialog,
+          goBack: options.goBack
         })
         .then(
           response => {
             resolve(response);
-            options.goBack && router.go(-1);
           },
           err => {
             reject(err);

@@ -37,17 +37,17 @@
         :key="item._id">
         <category-card
          :data="item">
-         <van-button
-          size="small"
-          @click.prevent="handleEdit(item)">
-          编辑
-        </van-button>
-         <van-button
-        size="small"
-        :style="{marginLeft: '4px'}"
-        @click="handleUpdateCategory(item._id, {status: 1})">
-        开启
-      </van-button>
+          <van-button
+            size="small"
+            @click.prevent="handleEdit(item)">
+            编辑
+          </van-button>
+          <van-button
+            size="small"
+            :style="{marginLeft: '4px'}"
+            @click="handleUpdateCategory(item._id, {status: 1})">
+            开启
+          </van-button>
         </category-card>
       </div>
     </div>

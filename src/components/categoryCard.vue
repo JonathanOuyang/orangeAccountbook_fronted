@@ -79,7 +79,7 @@ export default {
 .card-category {
   display: flex;
   align-items: center;
-  padding: 0 10px;
+  padding: 0 0 0 10px;
   border-radius: 4px;
   border: 1px solid @dividerColor;
   background: #fff;

@@ -39,6 +39,7 @@ import accountCard from "./components/accountCard";
 import categoryCard from "./components/categoryCard";
 import dateSelector from "./components/dateSelector";
 import moneyField from "./components/moneyField";
+import moneyDialog from "./components/moneyDialog";
 import { filterDate, filterDatetime, filterCurrency } from './utils/filter'
 import Loading from './components/loading/loading'
 import moment from 'moment'
@@ -75,7 +76,8 @@ Vue.component("moneyList", moneyList);
 Vue.component("accountCard", accountCard);
 Vue.component('categoryCard', categoryCard)
 Vue.component("dateSelector", dateSelector);
-Vue.component('moneyField', moneyField)
+Vue.component("moneyField", moneyField);
+Vue.component('moneyDialog', moneyDialog)
 
 // Use v-calendar, v-date-picker & v-popover components
 Vue.use(VCalendar, {
