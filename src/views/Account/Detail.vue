@@ -44,12 +44,12 @@ export default {
     getAccountList({ accountId: this.accountId }).then(res => {
       this.detail = res.data.detail;
     });
+    this.handleListLoad()
   },
 
   methods: {
     handleListLoad() {
       const moment = this.$moment();
-      this.page += 1;
       const data = {
         searchValue: {
           accountId: this.accountId
@@ -70,6 +70,7 @@ export default {
 
           if (res.data.currPage === res.data.maxPage) {
             this.isListFinished = true;
+            this.page += 1;    
           }
         })
         .catch(err => {

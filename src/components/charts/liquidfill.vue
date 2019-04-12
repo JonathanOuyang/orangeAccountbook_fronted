@@ -1,7 +1,8 @@
 <!--  -->
 <template>
   <div :id="elId"
-       class="chart-liquidfill"></div>
+       class="chart-liquidfill"
+       :style="{width: radius+'px', height: radius+'px'}"></div>
 </template>
 
 <script>
@@ -17,6 +18,10 @@ export default {
       type: Number,
       default: 0
       // required: true
+    },
+    radius: {
+      type: Number,
+      default: 60
     }
   },
   data() {
@@ -65,7 +70,7 @@ export default {
               color: 'rgb(246, 113, 125)'              
             },
             label: {
-              fontSize: 16,
+              fontSize: this.radius/4,
               color: 'rgb(246, 113, 125)'  
             }
           }
@@ -79,8 +84,5 @@ export default {
 
 <style lang='less' scoped>
 @import "../../assets/variable.less";
-.chart-liquidfill {
-  width: 60px;
-  height: 60px;
-}
+.chart-liquidfill {}
 </style>

@@ -27,10 +27,10 @@
           @click="$router.push('/budgetEdit')">
           <div class="item-title">
             总预算
-            <Icon name="bianji" :size="12"/>
           </div>
           <div class="item-value">
             {{budgetValue | currency}}
+            <Icon name="bianji" :size="12"/>
           </div>
         </div>
         <div class="info-budget_item">
@@ -49,19 +49,29 @@
         <category-card
         :data="item">
           <div class="item-categoryCard_info">
-            <div class="title">剩余预算</div>
-            <div class="value">{{item.budgetValue - item.moneyValue | currency}}</div>
-          </div>
-          <div class="item-categoryCard_info">
             <div class="title">本月支出</div>
             <div class="value">{{item.moneyValue | currency}}</div>
           </div>
+          <div 
+            class="item-categoryCard_info"
+            @click="$router.push('/categoryBudgetEdit')">
+            <div class="title">剩余预算</div>
+            <div class="value">
+              {{item.budgetValue - item.moneyValue | currency}}
+              <Icon name="bianji" :size="14"/>
+            </div>
+          </div>
+          <liquidfill
+            v-if="budgetValue != 0"
+            :radius="40"
+            :data="item.budgetValue - item.moneyValue > 0? (item.budgetValue - item.moneyValue)/item.budgetValue : 0">
+          </liquidfill>
         </category-card>
       </div>
       <router-link 
         class="button-addCategoryBudget"
         to="/categoryBudgetEdit">
-        <Icon name="tianjia" :size="12"/>
+        <Icon name="tianjia" :size="14"/>
         添加分类预算
       </router-link>
     </div>
@@ -138,33 +148,36 @@ export default {
 #view-budget {
   background-color: @grey;
   .item-categoryCard {
-  margin: 6px 10px;
-  .card-category {
-    height: 60px;
-  }
-  .card-category_info {
-    display: flex;
-    align-items: center;
-    flex: 1;
-  }
+    margin: 6px 10px;
+    .card-category {
+      height: 60px;
+    }
+    .card-category_info {
+      display: flex;
+      align-items: center;
+      flex: 1.8;
+    }
 
-  &_info {
-    flex: 1;
-    text-align: center;
-    border-left: 1px solid @dividerColor;
-  }
+    &_info {
+      flex: 1;
+      text-align: center;
+      border-left: 1px solid @dividerColor;
+    }
 
-  .title {
-    font-size: 13px;
-    line-height: 20px;
-    color: @secondaryTextColor;
+    .title {
+      font-size: 13px;
+      line-height: 20px;
+      color: @secondaryTextColor;
+    }
+    .value {
+      font-size: 16px;
+      line-height: 24px;
+      color: @primaryTextColor;
+    }
+    .chart-liquidfill {
+      margin: 0 6px 0 0;
+    }
   }
-  .value {
-    font-size: 16px;
-    line-height: 24px;
-    color: @primaryTextColor;
-  }
-}
 
 }
 
