@@ -34,4 +34,4 @@ npm run dev
 
 ## 数据接口
 
-## 目标功能
+本项目使用node.js搭建服务端接口，[服务端项目](https://github.com/JonathanOuyang/orangeAccountbook_server)
