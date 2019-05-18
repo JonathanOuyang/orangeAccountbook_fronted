@@ -190,15 +190,16 @@ export default {
     // 更新账单列表
     initMoneyListByDay(date = this.selectedDate) {      
       const moment = this.$moment(date);
+      console.log('date: ', date);
       const data = {
         searchValue: {
           moneyTimeStart:
-            moment.startOf("day").format("YYYY-MM-DD") + " 00:00:00",
+            moment.startOf("day").format(),
           moneyTimeEnd:
             moment
               .startOf("day")
               .add(1, "days")
-              .format("YYYY-MM-DD") + " 00:00:00"
+              .format()
         },
         sortOption: {},
         page: 1,
@@ -228,7 +229,7 @@ export default {
     changePage(page) {
       this.selectedDate = new Date(page.year, page.month - 1, 1);
       this.page = 1;
-      this.initCalendarPage(page.year, page.month);
+      this.initMoneyListByDay();
     },
 
     // 切换排序类型
@@ -243,12 +244,7 @@ export default {
     },
 
     onRefresh() {
-      const date = this.selectedDate;
-      this.initCalendarPage(
-        date.getFullYear(),
-        date.getMonth() + 1,
-        date.getDate()
-      );
+      this.initMoneyListByDay();
     },
 
     handleListLoad() {

@@ -53,10 +53,12 @@ export default {
         loadingToast: false,
         successDialog: true
       }).then(res => {
-        localStorage.setItem("token", res.token);
-        setTimeout(() => {
-          this.$router.push("/home");
-        }, 800);
+        if (res.code === "success") {
+          localStorage.setItem("token", res.token);
+          setTimeout(() => {
+            this.$router.push("/home");
+          }, 800);
+        }
       });
     }
   }

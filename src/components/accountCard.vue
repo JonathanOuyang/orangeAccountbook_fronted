@@ -10,7 +10,7 @@
         <span class="title-summary">{{data.summary}}</span>
       </div>
       <div class="card-account_main">
-        <div class="value-number">¥{{data.value}}</div>
+        <div class="value-number">{{data.value | currency}}</div>
       </div>
     </div>
     <div 
@@ -24,7 +24,7 @@
           </div>
         </div>
         <div class="card-account_main">
-          <div class="value-number">¥{{data.value}}</div>
+          <div class="value-number">{{data.value | currency}}</div>
           <van-button 
             type="primary" 
             plain

@@ -1,6 +1,7 @@
 <template>
   <div id="view-chart">
     <van-tabs v-model="activeTab"
+              :sticky="true"
               color="#f6717d">
               <!-- @change="changeTab"> -->
       <van-tab title="分类占比">

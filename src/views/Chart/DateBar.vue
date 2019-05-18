@@ -43,7 +43,7 @@ import { getMoneySum } from "../../api/api.js";
 const DATE_TYPES = {
   month: {
     groupKey: 2,
-    format: 'M月D日',
+    format: 'D日',
     item: 'day'
   },
   year: {

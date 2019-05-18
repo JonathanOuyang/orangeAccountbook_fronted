@@ -174,6 +174,9 @@ export default {
       }
     }
 
+    .card-category_info {
+      padding-right: 10px;
+    }
 
     .info-value {
       text-align: right;

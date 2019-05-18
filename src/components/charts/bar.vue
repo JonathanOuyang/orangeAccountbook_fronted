@@ -61,7 +61,7 @@ export default {
           {
             data: this.data.map(item => item.name),
             position: "bottom",
-            minInterval: 5,
+            // minInterval: 5,
             axisTick: {
               show: false
             },

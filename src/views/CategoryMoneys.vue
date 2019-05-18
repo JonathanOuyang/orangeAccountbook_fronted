@@ -1,6 +1,6 @@
 <!--  -->
 <template>
-  <div class="view-categoryMoneys">
+  <div id="view-categoryMoneys">
     <div class="categoryMoneys-header">
       <category-card
         :data="detail">
@@ -66,7 +66,7 @@ export default {
       const data = {
         searchValue: {
           categoryId: this.categoryId,
-          moneyTimeStart: this.moment.format(),
+          moneyTimeStart: this.moment.startOf(this.dateType.key).format(),
           moneyTimeEnd: this.moment.endOf(this.dateType.key).format()
         },
         sortOption: {
@@ -97,8 +97,13 @@ export default {
 };
 </script>
 
-<style lang='less' scoped>
+<style lang='less'>
 @import "../assets/variable.less";
+#view-categoryMoneys {
+  .card-category_info {
+    padding-right: 10px;
+  }
+}
 .categoryMoneys-header {
   margin: 16px 14px 8px;
   .text-date {
